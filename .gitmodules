@@ -1,0 +1,3 @@
+[submodule "submodules/DD-GAN"]
+	path = submodules/DD-GAN
+	url = https://github.com/acse-jat20/DD-GAN
