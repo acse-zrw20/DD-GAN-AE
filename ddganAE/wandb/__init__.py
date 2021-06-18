@@ -1,1 +1,1 @@
-from .train_wandb import *
+from .train_wandb import train_wandb_cae
