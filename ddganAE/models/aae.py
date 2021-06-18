@@ -102,8 +102,8 @@ class AAE:
                 acc_cum += acc
 
             # Average the loss and accuracy over the entire dataset
-            loss = loss_cum/step
-            acc = acc_cum/step
+            loss = loss_cum/(step+1)
+            acc = acc_cum/(step+1)
 
             # Regularization phase
             d_loss_cum = 0
@@ -127,8 +127,8 @@ class AAE:
                 g_loss_cum += \
                     self.encoder_discriminator.train_on_batch(grids, valid)[0]
 
-            d_loss = d_loss_cum/step
-            g_loss = g_loss_cum/step
+            d_loss = d_loss_cum/(step+1)
+            g_loss = g_loss_cum/(step+1)
 
             with train_summary_writer.as_default():
                 tf.summary.scalar('loss - ae', loss, step=epoch)
@@ -177,10 +177,10 @@ class AAE:
                 self.encoder_discriminator.evaluate(val_grids, valid)[0]
 
         # Average the loss and accuracy over the entire dataset
-        loss = loss_cum/step
-        acc = acc_cum/step
-        d_loss = d_loss_cum/step
-        g_loss = g_loss_cum/step
+        loss = loss_cum/(step+1)
+        acc = acc_cum/(step+1)
+        d_loss = d_loss_cum/(step+1)
+        g_loss = g_loss_cum/(step+1)
 
         return loss, acc, d_loss, g_loss
 
@@ -294,8 +294,8 @@ class AAE_combined_loss:
                                                                 [grids,
                                                                  valid])[0]
 
-            d_loss = d_loss_cum/step
-            g_loss = g_loss_cum/step
+            d_loss = d_loss_cum/(step+1)
+            g_loss = g_loss_cum/(step+1)
 
             with train_summary_writer.as_default():
                 tf.summary.scalar('loss - g', g_loss, step=epoch)
@@ -335,8 +335,8 @@ class AAE_combined_loss:
                                                                  valid])[0]
 
         # Average the loss and accuracy over the entire dataset
-        d_loss = d_loss_cum/step
-        g_loss = g_loss_cum/step
+        d_loss = d_loss_cum/(step+1)
+        g_loss = g_loss_cum/(step+1)
 
         return d_loss, g_loss
 
