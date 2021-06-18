@@ -3,6 +3,7 @@ from keras.models import Model
 import tensorflow as tf
 import numpy as np
 import datetime
+import wandb
 
 
 class CAE:
@@ -35,7 +36,7 @@ class CAE:
                                  metrics=['accuracy'])
 
     def train(self, train_data, epochs, val_data=None, batch_size=128,
-              val_batch_size=128):
+              val_batch_size=128, wandb_log=False):
 
         loss_val = None
 
@@ -69,7 +70,7 @@ class CAE:
                 acc_cum += acc
 
             # Average the loss and accuracy over the entire dataset
-            loss = loss_cum/step
+            loss = loss_cum/(step+1)
             acc = acc_cum/step
 
             with train_summary_writer.as_default():
@@ -84,6 +85,18 @@ class CAE:
                     tf.summary.scalar('loss', loss_val, step=epoch)
                     tf.summary.scalar('accuracy', acc_val, step=epoch)
 
+            if wandb_log:
+                if val_data is not None:
+                    log = {"epoch": epoch, "train_loss": loss,
+                           "train_accuracy": acc,
+                           "valid_loss": loss_val,
+                           "valid_accuracy": acc_val}
+                else:
+                    log = {"epoch": epoch, "train_loss": loss,
+                           "train_accuracy": acc}
+
+                wandb.log(log)
+
     def validate(self, val_dataset):
 
         loss_cum = 0
@@ -96,8 +109,8 @@ class CAE:
             acc_cum += acc
 
         # Average the loss and accuracy over the entire dataset
-        loss = loss_cum/step
-        acc = acc_cum/step
+        loss = loss_cum/(step+1)
+        acc = acc_cum/(step+1)
 
         return loss, acc
 

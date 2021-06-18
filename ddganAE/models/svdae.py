@@ -105,8 +105,8 @@ class SVDAE:
                 acc_cum += acc
 
             # Average the loss and accuracy over the entire dataset
-            loss = loss_cum/step
-            acc = acc_cum/step
+            loss = loss_cum/(step+1)
+            acc = acc_cum/(step+1)
 
             with train_summary_writer.as_default():
                 tf.summary.scalar('loss', loss, step=epoch)
@@ -131,8 +131,8 @@ class SVDAE:
             acc_cum += acc
 
         # Average the loss and accuracy over the entire dataset
-        loss = loss_cum/step
-        acc = acc_cum/step
+        loss = loss_cum/(step+1)
+        acc = acc_cum/(step+1)
 
         return loss, acc
 
