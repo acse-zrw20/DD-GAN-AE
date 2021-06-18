@@ -61,6 +61,25 @@ def build_custom_discriminator(latent_dim, initializer, info=False):
     return discriminator
 
 
+def build_custom_wider_discriminator(latent_dim, initializer, info=False):
+    discriminator = Sequential()
+    discriminator.add(Dense(1000, activation='relu',
+                            kernel_initializer=initializer,
+                            input_dim=latent_dim, bias_initializer=initializer)
+                      )
+    discriminator.add(Dense(1000, activation='relu',
+                            kernel_initializer=initializer,
+                            bias_initializer=initializer))
+    discriminator.add(Dense(1, activation='sigmoid',
+                            kernel_initializer=initializer,
+                            bias_initializer=initializer))
+
+    if info:
+        print(discriminator.summary())
+
+    return discriminator
+
+
 def build_omata_encoder_decoder(input_shape, latent_dim, initializer,
                                 info=False, act="elu", dense_act=None):
     """

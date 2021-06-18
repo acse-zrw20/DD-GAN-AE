@@ -104,7 +104,8 @@ class CAE:
         for step, val_grids in enumerate(val_dataset):
 
             # Train the autoencoder reconstruction
-            loss, acc = self.autoencoder.evaluate(val_grids, val_grids)
+            loss, acc = self.autoencoder.evaluate(val_grids, val_grids,
+                                                  verbose=0)
             loss_cum += loss
             acc_cum += acc
 

@@ -3,6 +3,7 @@ from keras.models import Model
 import numpy as np
 import tensorflow as tf
 import datetime
+import wandb
 
 
 class AAE:
@@ -49,7 +50,7 @@ class AAE:
                                            metrics=['accuracy'])
 
     def train(self, train_data, epochs, val_data=None, batch_size=128,
-              val_batch_size=128):
+              val_batch_size=128, wandb_log=False):
         """
         Training model according to original paper on adversarial autoencoders
 
@@ -147,6 +148,24 @@ class AAE:
                     tf.summary.scalar('loss - g', g_loss_val, step=epoch)
                     tf.summary.scalar('loss - d', d_loss_val, step=epoch)
 
+            if wandb_log:
+                if val_data is not None:
+                    log = {"epoch": epoch, "train_loss": loss,
+                           "train_accuracy": acc,
+                           "g_train_loss": g_loss,
+                           "d_train_loss": d_loss,
+                           "g_valid_loss": g_loss_val,
+                           "d_valid_loss": d_loss_val,
+                           "valid_loss": loss_val,
+                           "valid_accuracy": acc_val}
+                else:
+                    log = {"epoch": epoch, "train_loss": loss,
+                           "train_accuracy": acc,
+                           "g_train_loss": g_loss,
+                           "d_train_loss": d_loss}
+
+                wandb.log(log)
+
     def validate(self, val_dataset, val_batch_size=128):
 
         # Adversarial ground truths
@@ -159,7 +178,8 @@ class AAE:
         g_loss_cum = 0
         for step, val_grids in enumerate(val_dataset):
 
-            loss, acc = self.autoencoder.evaluate(val_grids, val_grids)
+            loss, acc = self.autoencoder.evaluate(val_grids, val_grids, 
+                                                  verbose=0)
             loss_cum += loss
             acc_cum += acc
 
@@ -168,13 +188,14 @@ class AAE:
                                                  self.latent_dim))
 
             d_loss_real = self.discriminator.evaluate(latent_real,
-                                                      valid)[0]
+                                                      valid, verbose=0)[0]
             d_loss_fake = self.discriminator.evaluate(latent_fake,
-                                                      fake)[0]
+                                                      fake, verbose=0)[0]
             d_loss_cum += 0.5 * np.add(d_loss_real, d_loss_fake)
 
             g_loss_cum += \
-                self.encoder_discriminator.evaluate(val_grids, valid)[0]
+                self.encoder_discriminator.evaluate(val_grids, valid,
+                                                    verbose=0)[0]
 
         # Average the loss and accuracy over the entire dataset
         loss = loss_cum/(step+1)
@@ -227,7 +248,7 @@ class AAE_combined_loss:
                                              optimizer=self.optimizer)
 
     def train(self, train_data, epochs, val_data=None,
-              batch_size=128, val_batch_size=128):
+              batch_size=128, val_batch_size=128, wandb_log=False):
         """
         Training model where we use a training method that weights
         the losses of the discriminator and autoencoder and as such combines
