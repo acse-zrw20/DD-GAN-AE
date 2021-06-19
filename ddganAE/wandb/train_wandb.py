@@ -42,6 +42,8 @@ def train_wandb_cae(config=None):
             encoder, decoder = build_wide_omata_encoder_decoder(input_shape, 10, initializer, info=False, act=config.activation, dense_act=config.dense_activation)
         elif config.architecture == "denser_omata":
             encoder, decoder = build_denser_omata_encoder_decoder(input_shape, 10, initializer, info=False, act=config.activation, dense_act=config.dense_activation)
+        elif config.architecture == "densest_omata":
+            encoder, decoder = build_densest_omata_encoder_decoder(input_shape, 10, initializer, info=False, act=config.activation, dense_act=config.dense_activation)
 
         cae = CAE(encoder, decoder, optimizer)
         cae.compile(input_shape)
@@ -83,6 +85,8 @@ def train_wandb_aae(config=None):
             encoder, decoder = build_wide_omata_encoder_decoder(input_shape, 10, initializer, info=False, act=config.activation, dense_act=config.dense_activation)
         elif config.architecture == "denser_omata":
             encoder, decoder = build_denser_omata_encoder_decoder(input_shape, 10, initializer, info=False, act=config.activation, dense_act=config.dense_activation)
+        elif config.architecture == "densest_omata":
+            encoder, decoder = build_densest_omata_encoder_decoder(input_shape, 10, initializer, info=False, act=config.activation, dense_act=config.dense_activation)
 
         if config.discriminator_architecture == "custom":
             discriminator = build_custom_discriminator(10, initializer, info=False)
@@ -143,7 +147,7 @@ cae_sweep_config = {
     },
     'parameters': {    
       'architecture': {
-        'values': ['omata', 'wider_omata', 'wide_omata', 'denser_omata', 'deeper_omata']
+        'values': ['omata', 'wider_omata', 'wide_omata', 'denser_omata', 'deeper_omata', 'densest_omata']
       },
       'activation': {
         'values': ['relu', 'elu', 'sigmoid']
@@ -169,7 +173,7 @@ aae_sweep_config = {
     },
     'parameters': {    
       'architecture': {
-        'values': ['omata', 'wider_omata', 'wide_omata', 'denser_omata', 'deeper_omata']
+        'values': ['omata', 'wider_omata', 'wide_omata', 'denser_omata', 'deeper_omata', 'densest_omata']
       },
       'activation': {
         'values': ['relu', 'elu', 'sigmoid']

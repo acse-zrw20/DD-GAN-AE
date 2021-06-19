@@ -334,6 +334,63 @@ def build_denser_omata_encoder_decoder(input_shape, latent_dim, initializer,
     return encoder, decoder
 
 
+def build_densest_omata_encoder_decoder(input_shape, latent_dim, initializer,
+                                        info=False, act="elu", dense_act=None):
+    """
+    This encoder-decoder pair works for 55 by 42 grids
+    """
+    encoder = Sequential()
+    encoder.add(Conv2D(32, (5, 5), padding="same", activation=act,
+                       input_shape=input_shape,
+                       kernel_initializer=initializer))
+    encoder.add(MaxPool2D(padding="same"))
+    encoder.add(Conv2D(64, (3, 3), activation=act,
+                       padding="same", kernel_initializer=initializer))
+    encoder.add(MaxPool2D(padding="same"))
+    encoder.add(Flatten())
+    encoder.add(Dense(int(9856),
+                      kernel_initializer=initializer,
+                      activation=dense_act))
+    encoder.add(Dense(int(9856/2),
+                      kernel_initializer=initializer,
+                      activation=dense_act))
+    encoder.add(Dense(latent_dim, activation="linear"))
+
+    if info:
+        print(encoder.summary())
+
+    decoder = Sequential()
+    decoder.add(Dense(int(9856/2),
+                      kernel_initializer=initializer,
+                      activation=dense_act,
+                      input_shape=(latent_dim,)))
+    decoder.add(Dense(9856,
+                      kernel_initializer=initializer,
+                      activation=dense_act,
+                      input_shape=(int(9856/2),)))
+    decoder.add(Dense(9856,
+                      kernel_initializer=initializer,
+                      activation=dense_act,
+                      input_shape=(int(9856),)))
+    decoder.add(Reshape((encoder.layers[4].input_shape[1],
+                         encoder.layers[4].input_shape[2], 64)))
+    decoder.add(Conv2D(64, (3, 3), activation=act, padding="same",
+                       kernel_initializer=initializer))
+    decoder.add(UpSampling2D())
+    decoder.add(Conv2D(32, (3, 3), activation=act, padding="same",
+                       kernel_initializer=initializer))
+    decoder.add(UpSampling2D())
+    decoder.add(Conv2D(2, (3, 3), activation=act, padding="same",
+                kernel_initializer=initializer))
+    decoder.add(Cropping2D(cropping=((1, 0), (1, 1))))
+
+    decoder.build(input_shape)
+
+    if info:
+        print(decoder.summary())
+
+    return encoder, decoder
+
 def build_agostini_encoder_decoder(input_shape, latent_dim, initializer,
                                    info=False):
     """
