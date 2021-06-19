@@ -130,7 +130,7 @@ def train_wandb_svdae(config=None):
             decoder = build_slimmer_dense_decoder(100, 10, initializer, info=False, act=config.activation, dropout=config.dropout)
 
         svdae = SVDAE(encoder, decoder, optimizer)
-        svdae.compile(input_shape)
+        svdae.compile(100)
         svdae.train(x_train, 200, val_data=x_val, batch_size=config.batch_size, wandb_log=True)
 
 
