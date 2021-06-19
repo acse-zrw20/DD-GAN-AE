@@ -1,6 +1,6 @@
 import wandb
 import tensorflow as tf
-from ddganAE.models import CAE, AAE
+from ddganAE.models import CAE, AAE, SVDAE
 from ddganAE.architectures import * 
 from ddganAE.preprocessing import convert_2d
 from tensorflow.keras.layers.experimental import preprocessing
