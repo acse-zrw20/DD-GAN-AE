@@ -117,17 +117,17 @@ def train_wandb_svdae(config=None):
         optimizer = tf.keras.optimizers.Nadam(lr=config.learning_rate, beta_1=0.9, beta_2=0.999)
 
         if config.architecture == "dense":
-            encoder = build_dense_encoder(10, initializer, info=False, act=config.activation)
-            decoder = build_dense_decoder(100, 10, initializer, info=False, act=config.activation)
+            encoder = build_dense_encoder(10, initializer, info=False, act=config.activation, dropout=config.dropout)
+            decoder = build_dense_decoder(100, 10, initializer, info=False, act=config.activation, dropout=config.dropout)
         elif config.architecture == "deeper_dense":
-            encoder = build_deeper_dense_encoder(10, initializer, info=False, act=config.activation)
-            decoder = build_deeper_dense_decoder(100, 10, initializer, info=False, act=config.activation)
+            encoder = build_deeper_dense_encoder(10, initializer, info=False, act=config.activation, dropout=config.dropout)
+            decoder = build_deeper_dense_decoder(100, 10, initializer, info=False, act=config.activation, dropout=config.dropout)
         elif config.architecture == "wider_dense":
-            encoder = build_wider_dense_encoder(10, initializer, info=False, act=config.activation)
-            decoder = build_wider_dense_decoder(100, 10, initializer, info=False, act=config.activation)
+            encoder = build_wider_dense_encoder(10, initializer, info=False, act=config.activation, dropout=config.dropout)
+            decoder = build_wider_dense_decoder(100, 10, initializer, info=False, act=config.activation, dropout=config.dropout)
         elif config.architecture == "slimmer_dense":
-            encoder = build_slimmer_dense_encoder(10, initializer, info=False, act=config.activation)
-            decoder = build_slimmer_dense_decoder(100, 10, initializer, info=False, act=config.activation)
+            encoder = build_slimmer_dense_encoder(10, initializer, info=False, act=config.activation, dropout=config.dropout)
+            decoder = build_slimmer_dense_decoder(100, 10, initializer, info=False, act=config.activation, dropout=config.dropout)
 
         svdae = SVDAE(encoder, decoder, optimizer)
         svdae.compile(input_shape)
@@ -208,6 +208,9 @@ svdae_sweep_config = {
       },
       'learning_rate': {
         'values': [5e-1, 5e-2, 5e-3, 5e-4, 5e-5]
+      },
+      'dropout': {
+        'values': [0.3, 0.55, 0.8]
       },
     }
 }
