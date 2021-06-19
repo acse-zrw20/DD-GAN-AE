@@ -4,6 +4,7 @@ import tensorflow as tf
 import datetime
 from ..utils import calc_pod
 import numpy as np
+import wandb
 
 
 class SVDAE:
@@ -52,7 +53,7 @@ class SVDAE:
                                  )
 
     def train(self, train_data, epochs, val_data=None, batch_size=128,
-              val_batch_size=128):
+              val_batch_size=128, wandb_log=False):
 
         loss_val = None
         # Returns POD as list of pod coefficients per subgrid
@@ -120,13 +121,26 @@ class SVDAE:
                     tf.summary.scalar('loss', loss_val, step=epoch)
                     tf.summary.scalar('accuracy', acc_val, step=epoch)
 
+            if wandb_log:
+                if val_data is not None:
+                    log = {"epoch": epoch, "train_loss": loss,
+                           "train_accuracy": acc,
+                           "valid_loss": loss_val,
+                           "valid_accuracy": acc_val}
+                else:
+                    log = {"epoch": epoch, "train_loss": loss,
+                           "train_accuracy": acc}
+
+                wandb.log(log)
+
     def validate(self, val_dataset):
         loss_cum = 0
         acc_cum = 0
         for step, val_grids in enumerate(val_dataset):
 
             # Train the autoencoder reconstruction
-            loss, acc = self.autoencoder.evaluate(val_grids, val_grids)
+            loss, acc = self.autoencoder.evaluate(val_grids, val_grids, 
+                                                  verbose=0)
             loss_cum += loss
             acc_cum += acc
 

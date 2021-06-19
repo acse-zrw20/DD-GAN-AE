@@ -9,7 +9,7 @@ from sklearn.model_selection import train_test_split
 
 
 def train_wandb_cae(config=None):
-    with wandb.init(config=config, tags=["non-normalized"]):
+    with wandb.init(config=config):
         # If called by wandb.agent, as below,
         # this config will be set by Sweep Controller
         config = wandb.config
@@ -46,11 +46,11 @@ def train_wandb_cae(config=None):
         cae = CAE(encoder, decoder, optimizer)
         cae.compile(input_shape)
 
-        cae.train(x_train, 200, val_data=x_val, wandb_log=True)
+        cae.train(x_train, 200, val_data=x_val, batch_size=config.batch_size, wandb_log=True)
 
 
 def train_wandb_aae(config=None):
-    with wandb.init(config=config, tags=["non-normalized"]):
+    with wandb.init(config=config):
         # If called by wandb.agent, as below,
         # this config will be set by Sweep Controller
         config = wandb.config
@@ -91,11 +91,49 @@ def train_wandb_aae(config=None):
 
         aae = AAE(encoder, decoder, discriminator, optimizer)
         aae.compile(input_shape)
-        aae.train(x_train, 200, val_data=x_val, wandb_log=True)
+        aae.train(x_train, 200, val_data=x_val, batch_size=config.batch_size, wandb_log=True)
+
+
+def train_wandb_svdae(config=None):
+    with wandb.init(config=config):
+        # If called by wandb.agent, as below,
+        # this config will be set by Sweep Controller
+        config = wandb.config
+
+        # Data processing
+        snapshots_grids = np.load(config.datafile)
+
+        # Data normalization
+        layer = preprocessing.Normalization()
+        layer.adapt(snapshots_grids)
+
+        snapshots_grids = snapshots_grids.swapaxes(0, 2)
+
+        x_train, x_val = train_test_split(snapshots_grids, test_size=0.1)
+        x_train = layer(x_train).numpy().swapaxes(0, 2)
+        x_val = layer(x_val).numpy().swapaxes(0, 2)
+
+        initializer = tf.keras.initializers.RandomNormal(mean=0.0, stddev=0.05, seed=None)
+        optimizer = tf.keras.optimizers.Nadam(lr=config.learning_rate, beta_1=0.9, beta_2=0.999)
+
+        if config.architecture == "dense":
+            encoder = build_dense_encoder(10, initializer, info=False, act=config.activation)
+            decoder = build_dense_decoder(100, 10, initializer, info=False, act=config.activation)
+        elif config.architecture == "deeper_dense":
+            encoder = build_deeper_dense_encoder(10, initializer, info=False, act=config.activation)
+            decoder = build_deeper_dense_decoder(100, 10, initializer, info=False, act=config.activation)
+        elif config.architecture == "wider_dense":
+            encoder = build_wider_dense_encoder(10, initializer, info=False, act=config.activation)
+            decoder = build_wider_dense_decoder(100, 10, initializer, info=False, act=config.activation)
+
+        svdae = SVDAE(encoder, decoder, optimizer)
+        svdae.compile(input_shape)
+        svdae.train(x_train, 200, val_data=x_val, batch_size=config.batch_size, wandb_log=True)
+
 
 # Configuration options for hyperparameter optimization
 cae_sweep_config = {
-    'method': 'bayes',
+    'method': 'random',
     'metric': {
       'name': 'valid_loss',
       'goal': 'minimize'  
@@ -121,7 +159,7 @@ cae_sweep_config = {
 
 # Configuration options for hyperparameter optimization
 aae_sweep_config = {
-    'method': 'bayes',
+    'method': 'random',
     'metric': {
       'name': 'valid_loss',
       'goal': 'minimize'  
@@ -144,6 +182,29 @@ aae_sweep_config = {
       },
       'discriminator_architecture': {
         'values': ['custom', 'custom_wider']
+      },
+    }
+}
+
+# Configuration options for hyperparameter optimization
+svdae_sweep_config = {
+    'method': 'random',
+    'metric': {
+      'name': 'valid_loss',
+      'goal': 'minimize'
+    },
+    'parameters': {    
+      'architecture': {
+        'values': ['dense', 'deeper_dense', 'wider_dense']
+      },
+      'activation': {
+        'values': ['relu', 'elu', 'sigmoid']
+      },
+      'batch_size': {
+        'values': [32, 64, 128]
+      },
+      'learning_rate': {
+        'values': [5e-1, 5e-2, 5e-3, 5e-4, 5e-5]
       },
     }
 }
