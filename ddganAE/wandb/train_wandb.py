@@ -125,6 +125,9 @@ def train_wandb_svdae(config=None):
         elif config.architecture == "wider_dense":
             encoder = build_wider_dense_encoder(10, initializer, info=False, act=config.activation)
             decoder = build_wider_dense_decoder(100, 10, initializer, info=False, act=config.activation)
+        elif config.architecture == "slimmer_dense":
+            encoder = build_slimmer_dense_encoder(10, initializer, info=False, act=config.activation)
+            decoder = build_slimmer_dense_decoder(100, 10, initializer, info=False, act=config.activation)
 
         svdae = SVDAE(encoder, decoder, optimizer)
         svdae.compile(input_shape)
@@ -195,7 +198,7 @@ svdae_sweep_config = {
     },
     'parameters': {    
       'architecture': {
-        'values': ['dense', 'deeper_dense', 'wider_dense']
+        'values': ['dense', 'deeper_dense', 'wider_dense', 'slimmer_dense']
       },
       'activation': {
         'values': ['relu', 'elu', 'sigmoid']
