@@ -104,7 +104,7 @@ def train_wandb_svdae(config=None):
         snapshots_grids = np.load(config.datafile)
 
         # Data normalization
-        layer = preprocessing.Normalization()
+        layer = preprocessing.Normalization(axis=None)
         layer.adapt(snapshots_grids)
 
         snapshots_grids = snapshots_grids.swapaxes(0, 2)
