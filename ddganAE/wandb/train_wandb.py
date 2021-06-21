@@ -30,7 +30,12 @@ def train_wandb_cae(config=None):
         x_val = layer(x_val)
 
         initializer = tf.keras.initializers.RandomNormal(mean=0.0, stddev=0.05, seed=None)
-        optimizer = tf.keras.optimizers.Nadam(lr=config.learning_rate, beta_1=0.9, beta_2=0.999)
+        if config.optimizer == "nadam":
+            optimizer = tf.keras.optimizers.Nadam(lr=config.learning_rate, beta_1=config.momentum, beta_2=config.beta_2)
+        elif config.optimizer == "adam":
+            optimizer = tf.keras.optimizers.Adam(lr=config.learning_rate, beta_1=config.momentum, beta_2=config.beta_2)
+        elif config.optimizer == "sgd":
+            optimizer = tf.keras.optimizers.SGD(learning_rate=config.learning_rate, momentum=config.momentum)
 
         if config.architecture == "omata":
             encoder, decoder = build_omata_encoder_decoder(input_shape, 10, initializer, info=False, act=config.activation, dense_act=config.dense_activation)
@@ -73,7 +78,12 @@ def train_wandb_aae(config=None):
         x_val = layer(x_val)
 
         initializer = tf.keras.initializers.RandomNormal(mean=0.0, stddev=0.05, seed=None)
-        optimizer = tf.keras.optimizers.Nadam(lr=config.learning_rate, beta_1=0.9, beta_2=0.999)
+        if config.optimizer == "nadam":
+        	optimizer = tf.keras.optimizers.Nadam(lr=config.learning_rate, beta_1=config.momentum, beta_2=config.beta_2)
+        elif config.optimizer == "adam":
+            optimizer = tf.keras.optimizers.Adam(lr=config.learning_rate, beta_1=config.momentum, beta_2=config.beta_2)
+        elif config.optimizer == "sgd":
+            optimizer = tf.keras.optimizers.SGD(learning_rate=config.learning_rate, momentum=config.momentum)
 
         if config.architecture == "omata":
             encoder, decoder = build_omata_encoder_decoder(input_shape, 10, initializer, info=False, act=config.activation, dense_act=config.dense_activation)
@@ -118,7 +128,12 @@ def train_wandb_svdae(config=None):
         x_val = layer(x_val).numpy().swapaxes(0, 2)
 
         initializer = tf.keras.initializers.RandomNormal(mean=0.0, stddev=0.05, seed=None)
-        optimizer = tf.keras.optimizers.Nadam(lr=config.learning_rate, beta_1=0.9, beta_2=0.999)
+        if config.optimizer == "nadam":
+            optimizer = tf.keras.optimizers.Nadam(lr=config.learning_rate, beta_1=config.momentum, beta_2=config.beta_2)
+        elif config.optimizer == "adam":
+            optimizer = tf.keras.optimizers.Adam(lr=config.learning_rate, beta_1=config.momentum, beta_2=config.beta_2)
+        elif config.optimizer == "sgd":
+            optimizer = tf.keras.optimizers.SGD(learning_rate=config.learning_rate, momentum=config.momentum)
 
         if config.architecture == "dense":
             encoder = build_dense_encoder(10, initializer, info=False, act=config.activation, dropout=config.dropout)
@@ -147,20 +162,29 @@ cae_sweep_config = {
     },
     'parameters': {    
       'architecture': {
-        'values': ['omata', 'wider_omata', 'wide_omata', 'denser_omata', 'deeper_omata', 'densest_omata']
+        'values': ['denser_omata', 'densest_omata']
       },
       'activation': {
-        'values': ['relu', 'elu', 'sigmoid']
+        'values': ['elu']
       },
       'dense_activation': {
         'values': ['relu', None]
       },
       'batch_size': {
-        'values': [32, 64, 128]
+        'values': [64, 128]
       },
       'learning_rate': {
-        'values': [5e-1, 5e-2, 5e-3, 5e-4, 5e-5]
+        'values': [5e-4, 5e-5, 5e-6]
       },
+      'optimizer': {
+          'values': ['nadam', 'adam', 'sgd']
+      },
+      'momentum': {
+          'values': [0.8, 0.9, 0.98]
+      },
+      'beta_2': {
+          'values': [0.9, 0.999, 0.99999]
+      }
     }
 }
 
