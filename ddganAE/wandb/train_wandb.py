@@ -79,7 +79,7 @@ def train_wandb_aae(config=None):
 
         initializer = tf.keras.initializers.RandomNormal(mean=0.0, stddev=0.05, seed=None)
         if config.optimizer == "nadam":
-        	optimizer = tf.keras.optimizers.Nadam(lr=config.learning_rate, beta_1=config.momentum, beta_2=config.beta_2)
+            optimizer = tf.keras.optimizers.Nadam(lr=config.learning_rate, beta_1=config.momentum, beta_2=config.beta_2)
         elif config.optimizer == "adam":
             optimizer = tf.keras.optimizers.Adam(lr=config.learning_rate, beta_1=config.momentum, beta_2=config.beta_2)
         elif config.optimizer == "sgd":
