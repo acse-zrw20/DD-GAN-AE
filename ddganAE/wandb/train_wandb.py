@@ -9,7 +9,7 @@ from sklearn.model_selection import train_test_split
 
 
 def train_wandb_cae(config=None):
-    with wandb.init(config=config, tags=['new_hyperparams']):
+    with wandb.init(config=config):
         # If called by wandb.agent, as below,
         # this config will be set by Sweep Controller
         config = wandb.config
@@ -57,7 +57,7 @@ def train_wandb_cae(config=None):
 
 
 def train_wandb_aae(config=None):
-    with wandb.init(config=config, tags=['new_hyperparams']):
+    with wandb.init(config=config):
         # If called by wandb.agent, as below,
         # this config will be set by Sweep Controller
         config = wandb.config
@@ -109,7 +109,7 @@ def train_wandb_aae(config=None):
 
 
 def train_wandb_svdae(config=None):
-    with wandb.init(config=config, tags=['new_hyperparams']):
+    with wandb.init(config=config):
         # If called by wandb.agent, as below,
         # this config will be set by Sweep Controller
         config = wandb.config
