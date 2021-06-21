@@ -9,7 +9,7 @@ from sklearn.model_selection import train_test_split
 
 
 def train_wandb_cae(config=None):
-    with wandb.init(config=config):
+    with wandb.init(config=config, tags=['new_hyperparams']):
         # If called by wandb.agent, as below,
         # this config will be set by Sweep Controller
         config = wandb.config
@@ -57,7 +57,7 @@ def train_wandb_cae(config=None):
 
 
 def train_wandb_aae(config=None):
-    with wandb.init(config=config):
+    with wandb.init(config=config, tags=['new_hyperparams']):
         # If called by wandb.agent, as below,
         # this config will be set by Sweep Controller
         config = wandb.config
@@ -109,7 +109,7 @@ def train_wandb_aae(config=None):
 
 
 def train_wandb_svdae(config=None):
-    with wandb.init(config=config):
+    with wandb.init(config=config, tags=['new_hyperparams']):
         # If called by wandb.agent, as below,
         # this config will be set by Sweep Controller
         config = wandb.config
@@ -197,23 +197,32 @@ aae_sweep_config = {
     },
     'parameters': {    
       'architecture': {
-        'values': ['omata', 'wider_omata', 'wide_omata', 'denser_omata', 'deeper_omata', 'densest_omata']
+        'values': ['denser_omata', 'densest_omata']
       },
       'activation': {
-        'values': ['relu', 'elu', 'sigmoid']
+        'values': ['elu']
       },
       'dense_activation': {
         'values': ['relu', None]
       },
       'batch_size': {
-        'values': [32, 64, 128]
+        'values': [64, 128]
       },
       'learning_rate': {
-        'values': [5e-1, 5e-2, 5e-3, 5e-4, 5e-5]
+        'values': [5e-4, 5e-5, 5e-6]
       },
       'discriminator_architecture': {
         'values': ['custom', 'custom_wider']
       },
+      'optimizer': {
+          'values': ['nadam', 'adam', 'sgd']
+      },
+      'momentum': {
+          'values': [0.8, 0.9, 0.98]
+      },
+      'beta_2': {
+          'values': [0.9, 0.999, 0.99999]
+      }
     }
 }
 
@@ -235,10 +244,19 @@ svdae_sweep_config = {
         'values': [32, 64, 128]
       },
       'learning_rate': {
-        'values': [5e-1, 5e-2, 5e-3, 5e-4, 5e-5]
+        'values': [5e-3, 5e-4, 5e-5]
       },
       'dropout': {
         'values': [0.3, 0.55, 0.8]
       },
+      'optimizer': {
+          'values': ['nadam', 'adam', 'sgd']
+      },
+      'momentum': {
+          'values': [0.8, 0.9, 0.98]
+      },
+      'beta_2': {
+          'values': [0.9, 0.999, 0.99999]
+      }
     }
 }
