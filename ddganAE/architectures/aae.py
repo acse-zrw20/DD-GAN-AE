@@ -380,7 +380,7 @@ def build_densest_omata_encoder_decoder(input_shape, latent_dim, initializer,
     decoder.add(Conv2D(32, (3, 3), activation=act, padding="same",
                        kernel_initializer=initializer))
     decoder.add(UpSampling2D())
-    decoder.add(Conv2D(2, (3, 3), activation=act, padding="same",
+    decoder.add(Conv2D(2, (3, 3), activation="linear", padding="same",
                 kernel_initializer=initializer))
     decoder.add(Cropping2D(cropping=((1, 0), (1, 1))))
 
