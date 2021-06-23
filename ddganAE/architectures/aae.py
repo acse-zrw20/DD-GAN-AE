@@ -51,7 +51,7 @@ def build_custom_discriminator(latent_dim, initializer, info=False):
     discriminator.add(Dense(500, activation='relu',
                             kernel_initializer=initializer,
                             bias_initializer=initializer))
-    discriminator.add(Dense(1, activation='sigmoid',
+    discriminator.add(Dense(1, activation="sigmoid",
                             kernel_initializer=initializer,
                             bias_initializer=initializer))
 
@@ -70,7 +70,7 @@ def build_custom_wider_discriminator(latent_dim, initializer, info=False):
     discriminator.add(Dense(1000, activation='relu',
                             kernel_initializer=initializer,
                             bias_initializer=initializer))
-    discriminator.add(Dense(1, activation='sigmoid',
+    discriminator.add(Dense(1, activation="sigmoid",
                             kernel_initializer=initializer,
                             bias_initializer=initializer))
 
@@ -117,7 +117,7 @@ def build_omata_encoder_decoder(input_shape, latent_dim, initializer,
     decoder.add(Conv2D(16, (3, 3), activation=act, padding="same",
                        kernel_initializer=initializer))
     decoder.add(UpSampling2D())
-    decoder.add(Conv2D(2, (3, 3), activation="sigmoid", padding="same",
+    decoder.add(Conv2D(2, (3, 3), activation="linear", padding="same",
                        kernel_initializer=initializer))
     decoder.add(Cropping2D(cropping=((1, 0), (1, 1))))
 
@@ -164,7 +164,7 @@ def build_wider_omata_encoder_decoder(input_shape, latent_dim, initializer,
     decoder.add(Conv2D(16, (5, 5), activation=act, padding="same",
                        kernel_initializer=initializer))
     decoder.add(UpSampling2D())
-    decoder.add(Conv2D(2, (3, 3), activation="sigmoid", padding="same",
+    decoder.add(Conv2D(2, (3, 3), activation="linear", padding="same",
                        kernel_initializer=initializer))
     decoder.add(Cropping2D(cropping=((1, 0), (3, 3))))
 
@@ -214,7 +214,7 @@ def build_wide_omata_encoder_decoder(input_shape, latent_dim, initializer,
     decoder.add(Conv2D(32, (3, 3), activation=act, padding="same",
                        kernel_initializer=initializer))
     decoder.add(UpSampling2D())
-    decoder.add(Conv2D(2, (3, 3), activation="sigmoid", padding="same",
+    decoder.add(Conv2D(2, (3, 3), activation="linear", padding="same",
                 kernel_initializer=initializer))
     decoder.add(Cropping2D(cropping=((1, 0), (3, 3))))
 
@@ -267,7 +267,7 @@ def build_deeper_omata_encoder_decoder(input_shape, latent_dim, initializer,
     decoder.add(Conv2D(32, (3, 3), activation=act, padding="valid",
                        kernel_initializer=initializer))
     decoder.add(UpSampling2D())
-    decoder.add(Conv2D(2, (3, 3), activation="sigmoid", padding="valid",
+    decoder.add(Conv2D(2, (3, 3), activation="linear", padding="valid",
                 kernel_initializer=initializer))
     decoder.add(Cropping2D(cropping=((2, 1), (0, 0))))
 
@@ -322,7 +322,7 @@ def build_denser_omata_encoder_decoder(input_shape, latent_dim, initializer,
     decoder.add(Conv2D(32, (3, 3), activation=act, padding="same",
                        kernel_initializer=initializer))
     decoder.add(UpSampling2D())
-    decoder.add(Conv2D(2, (3, 3), activation=act, padding="same",
+    decoder.add(Conv2D(2, (3, 3), activation="linear", padding="same",
                 kernel_initializer=initializer))
     decoder.add(Cropping2D(cropping=((1, 0), (3, 3))))
 
