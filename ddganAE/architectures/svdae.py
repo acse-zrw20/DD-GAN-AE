@@ -32,7 +32,7 @@ def build_dense_decoder(input_dim, latent_dim, initializer, info=False,
     decoder.add(Dense(1000, activation=act, kernel_initializer=initializer,
                       bias_initializer=initializer))
     decoder.add(Dropout(dropout))
-    decoder.add(Dense(input_dim, activation='sigmoid',
+    decoder.add(Dense(input_dim, activation='linear',
                       kernel_initializer=initializer,
                       bias_initializer=initializer))
 
@@ -72,7 +72,7 @@ def build_wider_dense_decoder(input_dim, latent_dim, initializer, info=False,
     decoder.add(Dense(2000, activation=act, kernel_initializer=initializer,
                       bias_initializer=initializer))
     decoder.add(Dropout(dropout))
-    decoder.add(Dense(input_dim, activation='sigmoid',
+    decoder.add(Dense(input_dim, activation='linear',
                       kernel_initializer=initializer,
                       bias_initializer=initializer))
 
@@ -112,7 +112,7 @@ def build_slimmer_dense_decoder(input_dim, latent_dim, initializer, info=False,
     decoder.add(Dense(500, activation=act, kernel_initializer=initializer,
                       bias_initializer=initializer))
     decoder.add(Dropout(dropout))
-    decoder.add(Dense(input_dim, activation='sigmoid',
+    decoder.add(Dense(input_dim, activation='linear',
                       kernel_initializer=initializer,
                       bias_initializer=initializer))
 
@@ -158,7 +158,7 @@ def build_deeper_dense_decoder(input_dim, latent_dim, initializer, info=False,
     decoder.add(Dense(500, activation=act, kernel_initializer=initializer,
                       bias_initializer=initializer))
     decoder.add(Dropout(dropout))
-    decoder.add(Dense(input_dim, activation='sigmoid',
+    decoder.add(Dense(input_dim, activation='linear',
                       kernel_initializer=initializer,
                       bias_initializer=initializer))
 
