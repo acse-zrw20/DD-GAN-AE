@@ -232,11 +232,11 @@ class AAE_combined_loss:
                                    loss='binary_crossentropy',
                                    metrics=['accuracy'])
 
+        self.discriminator.trainable = False
+
         grid = Input(shape=self.input_shape)
         encoded_repr = self.encoder(grid)
         reconstructed_grid = self.decoder(encoded_repr)
-
-        self.discriminator.trainable = False
 
         valid = self.discriminator(encoded_repr)
 
@@ -248,7 +248,8 @@ class AAE_combined_loss:
                                              optimizer=self.optimizer)
 
     def train(self, train_data, epochs, val_data=None,
-              batch_size=128, val_batch_size=128, wandb_log=False):
+              batch_size=128, val_batch_size=128, wandb_log=False,
+              n_discriminator=5):
         """
         Training model where we use a training method that weights
         the losses of the discriminator and autoencoder and as such combines
@@ -296,10 +297,11 @@ class AAE_combined_loss:
             # Regularization phase
             d_loss_cum = 0
             g_loss_cum = 0
+            g_step = 0
             for step, grids in enumerate(train_dataset):
 
                 latent_fake = self.encoder.predict(grids)
-                latent_real = np.random.normal(size=(batch_size, 
+                latent_real = np.random.normal(size=(batch_size,
                                                      self.latent_dim))
 
                 # Train the discriminator
@@ -309,14 +311,16 @@ class AAE_combined_loss:
                                                                 fake)[0]
                 d_loss_cum += 0.5 * np.add(d_loss_real, d_loss_fake)
 
-                # Train the generator
-                g_loss_cum += \
-                    self.adversarial_autoencoder.train_on_batch(grids,
-                                                                [grids,
-                                                                 valid])[0]
+                if step % n_discriminator == 0:
+
+                    g_loss_cum += \
+                        self.adversarial_autoencoder.train_on_batch(grids,
+                                                                    [grids,
+                                                                     valid])[0]
+                    g_step += 1
 
             d_loss = d_loss_cum/(step+1)
-            g_loss = g_loss_cum/(step+1)
+            g_loss = g_loss_cum/(g_step+1)
 
             with train_summary_writer.as_default():
                 tf.summary.scalar('loss - g', g_loss, step=epoch)
@@ -330,6 +334,20 @@ class AAE_combined_loss:
                 with val_summary_writer.as_default():
                     tf.summary.scalar('loss - g', g_loss_val, step=epoch)
                     tf.summary.scalar('loss - d', d_loss_val, step=epoch)
+
+            if wandb_log:
+                if val_data is not None:
+                    log = {"epoch": epoch,
+                           "g_train_loss": g_loss,
+                           "d_train_loss": d_loss,
+                           "g_valid_loss": g_loss_val,
+                           "d_valid_loss": d_loss_val}
+                else:
+                    log = {"epoch": epoch,
+                           "g_train_loss": g_loss,
+                           "d_train_loss": d_loss}
+
+                wandb.log(log)
 
     def validate(self, val_dataset, val_batch_size=128):
 
@@ -346,14 +364,15 @@ class AAE_combined_loss:
                                                  self.latent_dim))
 
             d_loss_real = self.discriminator.evaluate(latent_real,
-                                                      valid)[0]
+                                                      valid, verbose=0)[0]
             d_loss_fake = self.discriminator.evaluate(latent_fake,
-                                                      fake)[0]
+                                                      fake, verbose=0)[0]
             d_loss_cum += 0.5 * np.add(d_loss_real, d_loss_fake)
 
             g_loss_cum += self.adversarial_autoencoder.evaluate(val_grids,
                                                                 [val_grids,
-                                                                 valid])[0]
+                                                                 valid],
+                                                                verbose=0)[0]
 
         # Average the loss and accuracy over the entire dataset
         d_loss = d_loss_cum/(step+1)
