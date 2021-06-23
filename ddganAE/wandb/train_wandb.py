@@ -1,6 +1,6 @@
 import wandb
 import tensorflow as tf
-from ddganAE.models import CAE, AAE, SVDAE
+from ddganAE.models import CAE, AAE, SVDAE, AAE_combined_loss
 from ddganAE.architectures import * 
 from ddganAE.preprocessing import convert_2d
 from tensorflow.keras.layers.experimental import preprocessing
@@ -103,7 +103,10 @@ def train_wandb_aae(config=None):
         elif config.discriminator_architecture == "custom_wider":
             discriminator = build_custom_wider_discriminator(10, initializer, info=False)
 
-        aae = AAE(encoder, decoder, discriminator, optimizer)
+        if config.train_method == "default":
+            aae = AAE(encoder, decoder, discriminator, optimizer)
+        elif config.train_method == "combined_loss":
+            aae = AAE_combined_loss(encoder, decoder, discriminator, optimizer)
         aae.compile(input_shape)
         aae.train(x_train, 200, val_data=x_val, batch_size=config.batch_size, wandb_log=True)
 
