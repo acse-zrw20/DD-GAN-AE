@@ -1,8 +1,8 @@
-from keras.layers import Input
+from keras.layers import Input, Conv1D
 from keras.models import Model
 import tensorflow as tf
 import datetime
-from ..utils import calc_pod
+from ..utils import calc_pod, mse_weighted
 import numpy as np
 import wandb
 
@@ -30,27 +30,42 @@ class SVDAE:
         """
 
         # Essentially just wraps a utility function
-        coeffs, R = calc_pod(snapshots, nPOD, cumulative_tol)
+        coeffs, R, S = calc_pod(snapshots, nPOD, cumulative_tol)
+        self.S = S  # Storing the singular values
         self.R = R
         return coeffs
 
     def reconstruct_from_pod(coeffs, R):
         return R @ coeffs
 
-    def compile(self, nPOD):
+    def compile(self, nPOD, weight_loss=False):
 
         self.nPOD = nPOD
-        self.input_shape = (nPOD,)
+        if isinstance(self.encoder.layers[0], Conv1D):
+            # Convolutional networks require a slightly different input shape
+            self.input_shape = (1, nPOD)
+        else:
+            self.input_shape = (nPOD,)
+
+        self.weight_loss = weight_loss
 
         vec = Input(shape=self.input_shape)
         encoded_repr = self.encoder(vec)
         gen_vec = self.decoder(encoded_repr)
         self.autoencoder = Model(vec, gen_vec)
 
-        self.autoencoder.compile(optimizer=self.optimizer,
-                                 loss='mse',
-                                 metrics=['accuracy']
-                                 )
+        if not weight_loss:
+            self.loss_f = None
+            self.autoencoder.compile(optimizer=self.optimizer,
+                                     loss='mse',
+                                     metrics=['accuracy']
+                                     )
+        else:
+            self.loss_f = mse_weighted()
+            self.autoencoder.compile(optimizer=self.optimizer,
+                                     loss=self.loss_f,
+                                     metrics=['accuracy']
+                                     )
 
     def train(self, train_data, epochs, val_data=None, batch_size=128,
               val_batch_size=128, wandb_log=False):
@@ -59,12 +74,22 @@ class SVDAE:
         # Returns POD as list of pod coefficients per subgrid
         coeffs = self.calc_pod(train_data, self.nPOD)
 
+        if self.weight_loss:
+            # Rescale
+            self.loss_f.weights = np.interp(np.sqrt(self.S),
+                                            (0, np.sqrt(self.S.max())),
+                                            (0, +1))
+
         # Reshape to have multiple subgrids account for multiple batches
         out = np.zeros((coeffs[0].shape[0], len(coeffs)*coeffs[0].shape[-1]))
         for i, coeff in enumerate(coeffs):
             out[:, i*coeffs[0].shape[-1]:(i+1)*coeffs[0].shape[-1]] = coeff
 
         train_data = out.T
+
+        if isinstance(self.encoder.layers[0], Conv1D):
+            # Convolutional networks require a slightly different input shape
+            train_data = np.expand_dims(train_data, 1)
 
         train_dataset = tf.data.Dataset.from_tensor_slices(train_data)
         train_dataset = train_dataset.shuffle(buffer_size=train_data.shape[0],
@@ -82,6 +107,11 @@ class SVDAE:
 
             val_data = out.T
 
+            if isinstance(self.encoder.layers[0], Conv1D):
+                # Convolutional networks require a slightly different input
+                # shape
+                val_data = np.expand_dims(val_data, 1)
+
             val_dataset = tf.data.Dataset.from_tensor_slices(val_data)
             val_dataset = val_dataset.shuffle(
                 buffer_size=val_data.shape[0],
@@ -94,6 +124,8 @@ class SVDAE:
         val_log_dir = 'logs/' + current_time + '/val'
         train_summary_writer = tf.summary.create_file_writer(train_log_dir)
         val_summary_writer = tf.summary.create_file_writer(val_log_dir)
+
+
 
         for epoch in range(epochs):
             loss_cum = 0

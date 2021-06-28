@@ -1,5 +1,6 @@
 from keras.layers import Dense, Flatten, Reshape, Conv2D, UpSampling2D, \
-                         Cropping2D, MaxPool2D
+                         Cropping2D, MaxPool2D, Conv1D, MaxPool1D, UpSampling1D
+from tensorflow.python.keras.layers.normalization import BatchNormalization
 from keras.models import Sequential
 
 
