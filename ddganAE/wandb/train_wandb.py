@@ -152,19 +152,19 @@ def train_wandb_svdae(config=None):
             encoder = build_slimmer_dense_encoder(10, initializer, info=False, act=config.activation, dropout=config.dropout)
             decoder = build_slimmer_dense_decoder(100, 10, initializer, info=False, act=config.activation, dropout=config.dropout)
         elif config.architecture == "vinicius":
-            encoder = build_vinicius_encoder_decoder(100, 10, initializer, act=config.activation,
+            encoder, decoder = build_vinicius_encoder_decoder(100, 10, initializer, act=config.activation,
                                                      dense_act=config.dense_activation, dropout=config.dropout, reg=config.regularization,
                                                      batchnorm=config.batch_normalization)
         elif config.architecture == "smaller_vinicius":
-            encoder = build_smaller_vinicius_encoder_decoder(100, 10, initializer, act=config.activation,
+            encoder, decoder = build_smaller_vinicius_encoder_decoder(100, 10, initializer, act=config.activation,
                                                              dense_act=config.dense_activation, dropout=config.dropout, reg=config.regularization,
                                                              batchnorm=config.batch_normalization)
         elif config.architecture == "slimmer_vinicius":
-            encoder = build_slimmer_vinicius_encoder_decoder(100, 10, initializer, act=config.activation,
+            encoder, decoder = build_slimmer_vinicius_encoder_decoder(100, 10, initializer, act=config.activation,
                                                              dense_act=config.dense_activation, dropout=config.dropout, reg=config.regularization,
                                                              batchnorm=config.batch_normalization)
         svdae = SVDAE(encoder, decoder, optimizer)
-        svdae.compile(100)
+        svdae.compile(100, weight_loss=False)
         svdae.train(x_train, 200, val_data=x_val, batch_size=config.batch_size, wandb_log=True)
 
 
@@ -250,7 +250,7 @@ svdae_sweep_config = {
     },
     'parameters': {    
       'architecture': {
-        'values': ['dense', 'deeper_dense', 'wider_dense', 'slimmer_dense']
+        'values': ['dense', 'deeper_dense', 'wider_dense', 'slimmer_dense', 'vinicius', 'smaller_vinicius', 'slimmer_vinicius']
       },
       'activation': {
         'values': ['relu', 'elu', 'sigmoid']
