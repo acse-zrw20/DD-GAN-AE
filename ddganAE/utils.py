@@ -1,4 +1,6 @@
 import numpy as np
+import keras.backend as K
+import tensorflow as tf
 
 
 def calc_pod(snapshots, nPOD=-2, cumulative_tol=0.99):
@@ -53,9 +55,39 @@ def calc_pod(snapshots, nPOD=-2, cumulative_tol=0.99):
 
         coeffs.append(np.dot(R.T, snapshots_per_grid))
 
-    return coeffs, R
+    s = s[:nPOD]
+
+    return coeffs, R, s
 
 
 def reconstruct_pod(coeffs, R):
 
     return R @ coeffs
+
+
+def create_weighted_mse(weights):
+    def mse_weighted(y_true, y_pred):
+        return K.mean(K.square(y_pred*weights - y_true*weights), axis=-1)
+
+    return mse_weighted
+
+
+class mse_weighted:
+
+    def __init__(self) -> None:
+        self.weights = None
+        self.__name__ = "mse_weighted"
+
+    def __call__(self, y_true, y_pred):
+        """
+        For debugging:
+
+        K.print_tensor(K.mean(K.square(y_pred - y_true),
+                              axis=-1))
+        K.print_tensor(K.mean(K.square(y_pred*self.weights -
+                                       y_true*self.weights),
+                              axis=-1))
+        K.print_tensor(self.weights)
+        """
+        return K.mean(K.square(y_pred*self.weights - y_true*self.weights),
+                      axis=-1)

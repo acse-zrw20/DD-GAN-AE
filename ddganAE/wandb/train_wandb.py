@@ -1,3 +1,4 @@
+from tensorflow.python.keras.backend import dropout
 import wandb
 import tensorflow as tf
 from ddganAE.models import CAE, AAE, SVDAE, AAE_combined_loss
@@ -150,7 +151,18 @@ def train_wandb_svdae(config=None):
         elif config.architecture == "slimmer_dense":
             encoder = build_slimmer_dense_encoder(10, initializer, info=False, act=config.activation, dropout=config.dropout)
             decoder = build_slimmer_dense_decoder(100, 10, initializer, info=False, act=config.activation, dropout=config.dropout)
-
+        elif config.architecture == "vinicius":
+            encoder = build_vinicius_encoder_decoder(100, 10, initializer, act=config.activation,
+                                                     dense_act=config.dense_activation, dropout=config.dropout, reg=config.regularization,
+                                                     batchnorm=config.batch_normalization)
+        elif config.architecture == "smaller_vinicius":
+            encoder = build_smaller_vinicius_encoder_decoder(100, 10, initializer, act=config.activation,
+                                                             dense_act=config.dense_activation, dropout=config.dropout, reg=config.regularization,
+                                                             batchnorm=config.batch_normalization)
+        elif config.architecture == "slimmer_vinicius":
+            encoder = build_slimmer_vinicius_encoder_decoder(100, 10, initializer, act=config.activation,
+                                                             dense_act=config.dense_activation, dropout=config.dropout, reg=config.regularization,
+                                                             batchnorm=config.batch_normalization)
         svdae = SVDAE(encoder, decoder, optimizer)
         svdae.compile(100)
         svdae.train(x_train, 200, val_data=x_val, batch_size=config.batch_size, wandb_log=True)
@@ -243,6 +255,9 @@ svdae_sweep_config = {
       'activation': {
         'values': ['relu', 'elu', 'sigmoid']
       },
+      'dense_activation': {
+        'values': ['relu', 'linear']
+      },
       'batch_size': {
         'values': [32, 64, 128]
       },
@@ -260,6 +275,12 @@ svdae_sweep_config = {
       },
       'beta_2': {
           'values': [0.9, 0.999, 0.99999]
+      },
+      'batch_normalization': {
+          'values': [True, False]
+      },
+      'regularization': {
+          'values': [1e-4, 1e-5, 0]
       }
     }
 }
