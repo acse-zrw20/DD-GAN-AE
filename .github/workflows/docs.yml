@@ -1,0 +1,38 @@
+name: generate-docs
+on: [push, pull_request]
+
+jobs:
+  # This job generates documentation
+  generate-docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install data & dependencies
+      run: |
+        pip install pytest
+        pip install -r requirements.txt
+
+    # Install dependencies
+    - uses: ammaraskar/sphinx-action@master
+      with:
+        docs-folder: "docs/"
+        pre-build-command: "apt-get update -y && apt-get install -y latexmk texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended"
+        build-command: "make latexpdf"
+
+    - name: move docs
+      run: |
+        sudo mv docs/build/latex/dd-gan.pdf docs/docs.pdf
+
+    - name: commit files
+      run: |
+        git add docs
+        git config --global user.email "zrw20@ic.ac.uk"
+        git config --global user.name "acse-zrw20"
+        git commit -m "automatically added docs"
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}

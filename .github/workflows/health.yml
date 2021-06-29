@@ -1,0 +1,53 @@
+# General code health checks
+name: run-health
+on: [push, pull_request]
+
+jobs:
+  # This job installs dependencies and runs flake8
+  run-lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    # Install dependencies
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+
+    - name: Install data & dependencies
+      run: |
+        pip install pytest
+        pip install -r requirements.txt
+
+    # Run flake8 linter, exclude vtktools as it is not self made
+    - name: run flake8
+      run: |
+        python -m flake8 . --exclude=./submodules/*
+
+  # This job installs dependencies and runs tests
+  run-tests-codecov:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    # Install dependencies
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+
+    - name: Install data & dependencies
+      run: |
+        pip install pytest
+        pip install -r requirements.txt
+
+    # Run tests
+    - name: run tests
+      run: |
+        python -m pytest --cov=ddganAE --cov-report=xml ./tests/tests.py
+    - uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: coverage.xml # optional
+        fail_ci_if_error: true # optional (default = false)
