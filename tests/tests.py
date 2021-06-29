@@ -25,8 +25,7 @@ def snapshots():
     Load in snapshots
     """
 
-    snapshots_grids = np.load("./submodules/DD-GAN/data/processed/\
-snaphsots_field_Velocity_new_4_2000steps.npy")
+    snapshots_grids = np.load("./tests/data/test_snapshots.npy")
 
     return snapshots_grids
 
