@@ -71,7 +71,7 @@ def test_convert_2D(snapshots):
     input_shape = (55, 42, 2)
     snapshots = convert_2d(snapshots, input_shape, 200)
     snapshots = np.array(snapshots).reshape(800, *input_shape)
-    
+
     assert snapshots.shape == (800, 55, 42, 2)
 
     # Load in the correct snapshots
