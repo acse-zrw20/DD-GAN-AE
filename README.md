@@ -5,7 +5,7 @@
 [![codecov](https://codecov.io/gh/acse-zrw20/DD-GAN-AE/branch/main/graph/badge.svg?token=1LU7UG5OF9)](https://codecov.io/gh/acse-zrw20/DD-GAN-AE)
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/acse-zrw20/DD-GAN-AE/blob/main/LICENSE)
 [![Documentation Status](https://github.com/acse-zrw20/DD-GAN-AE/actions/workflows/docs.yml/badge.svg)](https://github.com/acse-zrw220/DD-GAN-AE/blob/main/docs/docs.pdf)
-![example workflow](https://github.com/acse-zrw20/DD-GAN/actions/workflows/health.yml/badge.svg)
+![example workflow](https://github.com/acse-zrw20/DD-GAN-AE/actions/workflows/health.yml/badge.svg)
 
 <!-- PROJECT LOGO -->
 
