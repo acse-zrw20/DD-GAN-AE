@@ -12,7 +12,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/acse-zrw20/DD-GAN-AE">
-    <img src="images/dataflow.png" alt="Logo" width="360" height="246">
+    <img src="images/dataflow.png" alt="Logo" width="1000" height="600">
   </a>
 
 <p align="center">
@@ -50,7 +50,7 @@
 
 ## About The Project
 
-This project contains an intuitive library for interacting with a domain decomposition predictive GAN. This draws on ideas from recent research on [domain decomposition methods for reduced order modelling](https://www.sciencedirect.com/science/article/pii/S0045793019300350) and [predictive GANs](https://arxiv.org/abs/2105.07729). It also contains some test examples. 
+This project contains an intuitive library for interacting with compression methods for use in conjunction with a [domain decomposition predictive GAN](https://github.com/acse-jat20/DD-GAN). This draws on ideas from recent research on [domain decomposition methods for reduced order modelling](https://www.sciencedirect.com/science/article/pii/S0045793019300350) and [predictive GANs](https://arxiv.org/abs/2105.07729). It also contains some test examples.
 
 <!-- GETTING STARTED -->
 
@@ -62,13 +62,13 @@ This project contains an intuitive library for interacting with a domain decompo
 ## Getting Started
 
 ```sh
-git clone https://github.com/acse-jat20/DD-GAN
+git clone https://github.com/acse-zrw20/DD-GAN-AE
 ```
 
 ## Installation
 
-1. ```git clone https://github.com/acse-jat20/DD-GAN```
-2. ```cd ./DD-GAN```
+1. ```git clone https://github.com/acse-zrw20/DD-GAN-AE```
+2. ```cd ./DD-GAN-AE```
 3. ```pip install -e .```
 
 <!-- USAGE EXAMPLES -->
@@ -78,8 +78,10 @@ git clone https://github.com/acse-jat20/DD-GAN
 In a python file, import the following to use all of the functions:
 
 ```python
-import ddgan
+import ddganAE
 ```
+
+For examples, see examples folder which contains a jupyter notebook with examples
 
 <!-- ACKNOWLEDGEMENTS 
 _For more information, please refer to the report in this repo_
@@ -95,8 +97,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-* Tómasson, Jón Atli jon.tomasson20@imperial.ac.uk
-* Wolffs, Zef zef.wolffs20@imperial.ac.uk
+* Wolffs, Zef zefwolffs@gmail.com
 
 <!-- ACKNOWLEDGEMENTS -->
 
@@ -109,8 +110,8 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- MARKDOWN LINKS & IMAGES -->
 
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links 
-[contributors-shield]: https://img.shields.io/github/contributors/acse-2020/group-project-the-uploaders.svg?style=for-the-badge
-[contributors-url]: https://github.com/acse-2020/acse-4-x-ray-classification-losslandscape/graphs/contributors
+[contributors-shield]: https://img.shields.io/github/contributors/acse-zrw20/group-project-the-uploaders.svg?style=for-the-badge
+[contributors-url]: https://github.com/acse-zrw20/DD-GAN-AE/graphs/contributors
 [issues-shield]: https://img.shields.io/github/issues/acse-2020/group-project-the-uploaders.svg?style=for-the-badge
 [issues-url]: https://github.com/acse-2020/acse-4-x-ray-classification-losslandscape/issues
 [license-shield]: https://img.shields.io/github/license/acse-2020/group-project-the-uploaders.svg?style=for-the-badge
