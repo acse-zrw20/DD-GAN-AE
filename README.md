@@ -11,16 +11,16 @@
 
 <br />
 <p align="center">
-  <a href="https://github.com/acse-jat20/DD-GAN">
-    <img src="images/logo.png" alt="Logo" width="360" height="246">
+  <a href="https://github.com/acse-zrw20/DD-GAN-AE">
+    <img src="images/dataflow.png" alt="Logo" width="360" height="246">
   </a>
 
 <p align="center">
     <br />
-    <a href="https://github.com/acse-jat20/DD-GAN/blob/main/docs/docs.pdf"><strong>Explore the docs»</strong></a>
+    <a href="https://github.com/acse-zrw20/DD-GAN-AE/blob/main/docs/docs.pdf"><strong>Explore the docs»</strong></a>
     <br />
     <br />
-    <a href="https://github.com/acse-jat20/DD-GAN/issues">Report Bug</a>
+    <a href="https://github.com/acse-zrw20/DD-GAN-AE/issues">Report Bug</a>
   </p>
 </p>
 
