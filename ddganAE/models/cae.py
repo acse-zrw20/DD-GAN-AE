@@ -1,9 +1,23 @@
+"""
+
+Convolutional autoencoder model. Can be used with any of the convolutional
+encoder and decoder architectures in architectures directory.
+
+"""
+
 from keras.layers import Input
 from keras.models import Model
 import tensorflow as tf
-import numpy as np
 import datetime
 import wandb
+
+__author__ = "Zef Wolffs"
+__credits__ = []
+__license__ = "MIT"
+__version__ = "1.0.0"
+__maintainer__ = "Zef Wolffs"
+__email__ = "zefwolffs@gmail.com"
+__status__ = "Development"
 
 
 class CAE:

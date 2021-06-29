@@ -1,11 +1,25 @@
+"""
+
+Library of a collection of encoders and decoders that can readily be imported
+and used by the SVD autoencoder model.
+
+"""
+
 from keras.layers import Dense, Dropout, Conv1D, Conv2D, MaxPool1D, MaxPool2D,\
                          Flatten, UpSampling2D, UpSampling1D, Reshape,\
                          BatchNormalization
 from keras.regularizers import l2
 from keras.models import Sequential
 
+__author__ = "Zef Wolffs"
+__credits__ = []
+__license__ = "MIT"
+__version__ = "1.0.0"
+__maintainer__ = "Zef Wolffs"
+__email__ = "zefwolffs@gmail.com"
+__status__ = "Development"
 
-# We make the encoder model
+
 def build_dense_encoder(latent_dim, initializer, info=False,
                         act='relu', dropout=0.6):
     encoder = Sequential()

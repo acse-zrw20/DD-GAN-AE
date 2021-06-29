@@ -1,9 +1,31 @@
+"""
+
+Contains two classes with a slightly different implementation of the
+adversarial autoencoder model. The former corresponds to the original paper
+on adversarial autoencoders:
+
+https://arxiv.org/abs/1511.05644
+
+and the second is an adaptation with weighted losses inspired by:
+
+https://arxiv.org/abs/2104.06297
+
+"""
+
 from keras.layers import Input
 from keras.models import Model
 import numpy as np
 import tensorflow as tf
 import datetime
 import wandb
+
+__author__ = "Zef Wolffs"
+__credits__ = []
+__license__ = "MIT"
+__version__ = "1.0.0"
+__maintainer__ = "Zef Wolffs"
+__email__ = "zefwolffs@gmail.com"
+__status__ = "Development"
 
 
 class AAE:
@@ -178,13 +200,13 @@ class AAE:
         g_loss_cum = 0
         for step, val_grids in enumerate(val_dataset):
 
-            loss, acc = self.autoencoder.evaluate(val_grids, val_grids, 
+            loss, acc = self.autoencoder.evaluate(val_grids, val_grids,
                                                   verbose=0)
             loss_cum += loss
             acc_cum += acc
 
             latent_fake = self.encoder.predict(val_grids)
-            latent_real = np.random.normal(size=(val_batch_size, 
+            latent_real = np.random.normal(size=(val_batch_size,
                                                  self.latent_dim))
 
             d_loss_real = self.discriminator.evaluate(latent_real,
