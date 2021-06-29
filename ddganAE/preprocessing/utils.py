@@ -1,4 +1,19 @@
+"""
+
+Collection of preprocessing utilities. Further preprocessing utilities can be
+found in DD-GAN submodule.
+
+"""
+
 import numpy as np
+
+__author__ = "Zef Wolffs"
+__credits__ = []
+__license__ = "MIT"
+__version__ = "1.0.0"
+__maintainer__ = "Zef Wolffs"
+__email__ = "zefwolffs@gmail.com"
+__status__ = "Development"
 
 
 def convert_2d(subgrid_snapshots, shape, timesteps):
@@ -24,4 +39,3 @@ def convert_2d(subgrid_snapshots, shape, timesteps):
         subgrid_snapshots_out.append(subgrid_snapshot)
 
     return subgrid_snapshots_out
-

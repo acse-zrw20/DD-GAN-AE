@@ -1,6 +1,19 @@
+"""
+
+General utilities for package
+
+"""
+
 import numpy as np
 import keras.backend as K
-import tensorflow as tf
+
+__author__ = "Zef Wolffs"
+__credits__ = ["Claire Heaney"]
+__license__ = "MIT"
+__version__ = "1.0.0"
+__maintainer__ = "Zef Wolffs"
+__email__ = "zefwolffs@gmail.com"
+__status__ = "Development"
 
 
 def calc_pod(snapshots, nPOD=-2, cumulative_tol=0.99):
@@ -61,33 +74,44 @@ def calc_pod(snapshots, nPOD=-2, cumulative_tol=0.99):
 
 
 def reconstruct_pod(coeffs, R):
+    """
+    Reconstruct grid from POD coefficients and transormation matrix R.
+
+    Args:
+        coeffs (np.array): POD coefficients
+        R (np.array): Transformation matrix R
+
+    Returns:
+        np.array: Reconstructed grid
+    """
 
     return R @ coeffs
 
 
-def create_weighted_mse(weights):
-    def mse_weighted(y_true, y_pred):
-        return K.mean(K.square(y_pred*weights - y_true*weights), axis=-1)
-
-    return mse_weighted
-
-
 class mse_weighted:
+    """
+    Custom weighted mean squared error loss
+    """
 
     def __init__(self) -> None:
+        """
+        Constructor, name is required for TensorFlow custom losses. Since
+        we only know weights after compiling the model needs to be attribute
+        """
         self.weights = None
         self.__name__ = "mse_weighted"
 
     def __call__(self, y_true, y_pred):
         """
-        For debugging:
+        Tensorflow loss needs to be callable.
 
-        K.print_tensor(K.mean(K.square(y_pred - y_true),
-                              axis=-1))
-        K.print_tensor(K.mean(K.square(y_pred*self.weights -
-                                       y_true*self.weights),
-                              axis=-1))
-        K.print_tensor(self.weights)
+        Args:
+            y_true (np.array or tf.tensor): True values
+            y_pred (np.array or tf.tensor): Predicted values
+
+        Returns:
+            float: Weighted MSE loss
         """
+
         return K.mean(K.square(y_pred*self.weights - y_true*self.weights),
                       axis=-1)

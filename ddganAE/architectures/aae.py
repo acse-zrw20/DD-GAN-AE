@@ -1,7 +1,21 @@
+"""
+
+Library of a collection of encoders and decoders that can readily be imported
+and used by the adversarial and convolutional autoencoder models.
+
+"""
+
 from keras.layers import Dense, Flatten, Reshape, Conv2D, UpSampling2D, \
-                         Cropping2D, MaxPool2D, Conv1D, MaxPool1D, UpSampling1D
-from tensorflow.python.keras.layers.normalization import BatchNormalization
+                         Cropping2D, MaxPool2D
 from keras.models import Sequential
+
+__author__ = "Zef Wolffs"
+__credits__ = []
+__license__ = "MIT"
+__version__ = "1.0.0"
+__maintainer__ = "Zef Wolffs"
+__email__ = "zefwolffs@gmail.com"
+__status__ = "Development"
 
 
 def build_custom_conv_encoder(input_shape, latent_dim, initializer,
@@ -391,6 +405,7 @@ def build_densest_omata_encoder_decoder(input_shape, latent_dim, initializer,
         print(decoder.summary())
 
     return encoder, decoder
+
 
 def build_agostini_encoder_decoder(input_shape, latent_dim, initializer,
                                    info=False):

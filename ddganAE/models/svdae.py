@@ -1,3 +1,10 @@
+"""
+
+SVD autoencoder model. Can be used with any of the dense (or 1D convolutional)
+encoder and decoder architectures in architectures directory.
+
+"""
+
 from keras.layers import Input, Conv1D
 from keras.models import Model
 import tensorflow as tf
@@ -5,6 +12,14 @@ import datetime
 from ..utils import calc_pod, mse_weighted
 import numpy as np
 import wandb
+
+__author__ = "Zef Wolffs"
+__credits__ = []
+__license__ = "MIT"
+__version__ = "1.0.0"
+__maintainer__ = "Zef Wolffs"
+__email__ = "zefwolffs@gmail.com"
+__status__ = "Development"
 
 
 class SVDAE:
@@ -125,8 +140,6 @@ class SVDAE:
         train_summary_writer = tf.summary.create_file_writer(train_log_dir)
         val_summary_writer = tf.summary.create_file_writer(val_log_dir)
 
-
-
         for epoch in range(epochs):
             loss_cum = 0
             acc_cum = 0
@@ -171,7 +184,7 @@ class SVDAE:
         for step, val_grids in enumerate(val_dataset):
 
             # Train the autoencoder reconstruction
-            loss, acc = self.autoencoder.evaluate(val_grids, val_grids, 
+            loss, acc = self.autoencoder.evaluate(val_grids, val_grids,
                                                   verbose=0)
             loss_cum += loss
             acc_cum += acc
