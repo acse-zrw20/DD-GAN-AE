@@ -9,6 +9,7 @@ import numpy as np
 from tensorflow.keras.layers.experimental import preprocessing
 import tensorflow as tf
 from ddganAE.utils import calc_pod
+from ddganAE.preprocessing import convert_2d
 
 __author__ = "Zef Wolffs"
 __credits__ = []
@@ -32,10 +33,10 @@ def snapshots():
 
 def test_POD(snapshots):
     """
-    Test that setting a seed works as expected
+    Test that POD works as expected
 
     Args:
-        ddgan (module): ddgan module with all functions
+        snapshots (np.array): snapshots data
     """
 
     # Data normalization
@@ -56,3 +57,24 @@ def test_POD(snapshots):
                                         snapshots[j, :, i]).numpy()/800
 
     assert mean < 1e-3
+
+
+def test_convert_2D(snapshots):
+    """
+    Test that the preprocessing utility to convert to 2D works as expected
+
+    Args:
+        snapshots (np.array): snapshots data
+    """
+
+    # Do the conversion to 2D and create numpy array
+    input_shape = (55, 42, 2)
+    snapshots = convert_2d(snapshots, input_shape, 200)
+    snapshots = np.array(snapshots).reshape(800, *input_shape)
+    
+    assert snapshots.shape == (800, 55, 42, 2)
+
+    # Load in the correct snapshots
+    snapshots_corr = np.load("./tests/data/test_snapshots_2D_converted.npy")
+
+    assert np.allclose(snapshots_corr, snapshots)
