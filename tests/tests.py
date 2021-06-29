@@ -51,8 +51,8 @@ def test_POD(snapshots):
     mean = 0
     for j in range(4):
         recon = R @ coeffs[j]
-        for i in range(2000):
+        for i in range(200):
             mean += tf.keras.losses.MSE(recon[:, i],
-                                        snapshots[j, :, i]).numpy()/8000
+                                        snapshots[j, :, i]).numpy()/800
 
     assert mean < 1e-3
