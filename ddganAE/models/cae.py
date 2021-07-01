@@ -7,6 +7,7 @@ encoder and decoder architectures in architectures directory.
 
 from keras.layers import Input
 from keras.models import Model
+from ..utils import mse_PI
 import tensorflow as tf
 import datetime
 import wandb
@@ -29,7 +30,7 @@ class CAE:
 
         self.optimizer = optimizer
 
-    def compile(self, input_shape):
+    def compile(self, input_shape, pi_loss=False):
         """
         Compilation of models according to original paper on adversarial
         autoencoders
@@ -45,8 +46,13 @@ class CAE:
         gen_grid = self.decoder(encoded_repr)
         self.autoencoder = Model(grid, gen_grid)
 
+        if pi_loss:
+            loss_f = mse_PI(dx=2.2/55, dy=0.41/42)
+        else:
+            loss_f = "mse"
+
         self.autoencoder.compile(optimizer=self.optimizer,
-                                 loss='mse',
+                                 loss=loss_f,
                                  metrics=['accuracy'])
 
     def train(self, train_data, epochs, val_data=None, batch_size=128,
