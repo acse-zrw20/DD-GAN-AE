@@ -6,6 +6,7 @@ General utilities for package
 
 import numpy as np
 import keras.backend as K
+from keras.losses import mse
 
 __author__ = "Zef Wolffs"
 __credits__ = ["Claire Heaney"]
@@ -115,3 +116,38 @@ class mse_weighted:
 
         return K.mean(K.square(y_pred*self.weights - y_true*self.weights),
                       axis=-1)
+
+
+class mse_PI:
+
+    def __init__(self, dx=None, dy=None):
+        self.dx = dx
+        self.dy = dx
+        self.__name__ = "mse_PI"
+
+    def __call__(self, y_true, y_pred):
+        if self.dx is None or self.dy is None:
+            raise ValueError("First set dx and dy")
+
+        # cty is the value of the continuity equation
+        cty = 0
+
+        # keep a count such that we can average later
+        count = 0
+
+        for k in range(y_pred.shape[0]):
+            print(k)
+            # K is the grid in the batch
+            for i in range(1, y_pred.shape[1]-1):
+                # index in x direction
+                for j in range(1, y_pred.shape[2]-1):
+                    # index in y direction
+                    cty += (y_pred[k, i+1, j, 0] - y_pred[k, i-1, j, 0]) / \
+                             (2*self.dx) + \
+                           (y_pred[k, i, j+1, 1] - y_pred[k, i, j-1, 1]) / \
+                             (2*self.dy)
+                    count += 1
+
+        cty = cty/count
+
+        return K.mean(mse(y_true, y_pred)) + abs(cty)
