@@ -9,7 +9,7 @@ cd /rds/general/user/zrw20/home/DD-GAN-AE/submodules/DD-GAN/preprocessing/src
 module purge
 module load anaconda3/personal
 source activate py2
-python get_snapshots_3D.py --ndatapoints=20 --nfiles=799 --in_file_base="/rds/general/user/zrw20/home/data/slug_255_exp_projected_compressed_"
+python get_snapshots_3D.py --ndatapoints=20 --nfiles=80 --offset=0 --in_file_base="$HOME/data/slug_255_exp_projected_compressed_"
 
 mkdir $WORK/$PBS_JOBID
 cp * $WORK/$PBS_JOBID
