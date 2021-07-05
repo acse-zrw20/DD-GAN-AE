@@ -2,9 +2,11 @@
 #PBS -N wandb_run_sf
 #PBS -o wandb_run_sf.out
 #PBS -j oe
-#PBS -lselect=1:ncpus=4:mem=24gb:ngpus=4:gpu_type=RTX6000
+#PBS -lselect=1:ncpus=4:mem=24gb:ngpus=1:gpu_type=RTX6000
 #PBS -lwalltime=24:00:00
 set -vx
+
+export WANDB_API_KEY=$api_key
 
 module purge
 module load anaconda3/personal
