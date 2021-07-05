@@ -333,7 +333,7 @@ def train_wandb_svdae(config=None):
                 snapshots_grids[:, :, :, :, :3].reshape(-1, 1)).reshape(
                     snapshots_grids[:, :, :, :, :3].shape)
 
-        x_train, x_val = train_test_split(snapshots_grids, test_size=0.1)
+        x_train, x_val = train_test_split(snapshots_grids, test_size=0.2)
 
         # Do a little data reshaping for POD
         x_train_long = np.moveaxis(np.moveaxis(x_train, 4, 0), 1, 4).reshape(
