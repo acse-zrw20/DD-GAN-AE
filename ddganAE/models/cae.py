@@ -121,6 +121,7 @@ class CAE:
 
         loss_cum = 0
         acc_cum = 0
+        step = 0
         for step, val_grids in enumerate(val_dataset):
 
             # Train the autoencoder reconstruction
