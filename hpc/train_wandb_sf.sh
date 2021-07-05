@@ -6,11 +6,16 @@
 #PBS -lwalltime=24:00:00
 set -vx
 
-cd /rds/general/user/zrw20/home/DD-GAN-AE/ddganAE/wandb
 module purge
 module load anaconda3/personal
 module load cuda/11.0.1
-source activate tf 
+source activate tf
+
+# Always install newest version of local package
+cd /rds/general/user/zrw20/home/DD-GAN-AE/ddganAE
+pip install -e .
+
+cd /rds/general/user/zrw20/home/DD-GAN-AE/ddganAE/wandb
 nvidia-smi
 python train_wandb_sf.py --model="$model" --datafile="$HOME/data/processed/sf_snapshots_200timesteps_rand.npy"
 
