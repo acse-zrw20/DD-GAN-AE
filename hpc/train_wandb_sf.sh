@@ -12,7 +12,7 @@ module load cuda/11.0.1
 source activate tf
 
 # Always install newest version of local package
-cd /rds/general/user/zrw20/home/DD-GAN-AE/ddganAE
+cd /rds/general/user/zrw20/home/DD-GAN-AE
 pip install -e .
 
 cd /rds/general/user/zrw20/home/DD-GAN-AE/ddganAE/wandb
