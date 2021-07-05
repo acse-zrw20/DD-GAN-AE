@@ -24,7 +24,8 @@ def calc_pod(snapshots, nPOD=-2, cumulative_tol=0.99):
     Args:
         snapshots (list of ndarrays): List of arrays with subgrid
                                         snapshots. shape:
-                                        (n_grids, n_nodes, n_timelevels)
+                                        (n_grids or n_scalar, n_nodes, 
+                                        n_timelevels)
 
     Returns:
         list of ndarrays: POD coefficients per subgrid

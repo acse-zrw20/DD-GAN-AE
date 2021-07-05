@@ -320,6 +320,7 @@ class AAE_combined_loss:
             d_loss_cum = 0
             g_loss_cum = 0
             g_step = 0
+            step = 0
             for step, grids in enumerate(train_dataset):
 
                 latent_fake = self.encoder.predict(grids)
@@ -379,6 +380,7 @@ class AAE_combined_loss:
 
         d_loss_cum = 0
         g_loss_cum = 0
+        step = 0
         for step, val_grids in enumerate(val_dataset):
 
             latent_fake = self.encoder.predict(val_grids)
