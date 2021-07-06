@@ -9,7 +9,7 @@ from keras.layers import Input, Conv1D
 from keras.models import Model
 import tensorflow as tf
 import datetime
-from ..utils import calc_pod, mse_weighted
+from ddganAE.utils import calc_pod, mse_weighted
 import numpy as np
 import wandb
 

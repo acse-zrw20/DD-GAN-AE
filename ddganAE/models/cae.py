@@ -7,7 +7,7 @@ encoder and decoder architectures in architectures directory.
 
 from keras.layers import Input
 from keras.models import Model
-from ..utils import mse_PI
+from ddganAE.utils import mse_PI
 import tensorflow as tf
 import datetime
 import wandb
