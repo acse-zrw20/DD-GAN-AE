@@ -7,7 +7,7 @@
     "parameters": {
         "architecture": {
             "values": [
-                "slimmer_vinicius"
+                "vinicius"
             ]
         },
         "activation": {
@@ -37,7 +37,7 @@
         },
         "optimizer": {
             "values": [
-                "adam"
+                "nadam"
             ]
         },
         "momentum": {
@@ -47,7 +47,7 @@
         },
         "beta_2": {
             "values": [
-                0.9
+                0.999
             ]
         },
         "batch_normalization": {
