@@ -63,7 +63,7 @@ def train_wandb_cae(config=None):
         # this config will be set by Sweep Controller
         config = wandb.config
 
-        print(config)
+        print(dir(wandb))
 
         # Data processing
         snapshots_grids = np.load(config.datafile)
