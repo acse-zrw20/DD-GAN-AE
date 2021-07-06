@@ -6,6 +6,7 @@
 #PBS -lwalltime=24:00:00
 set -vx
 
+# Need to set the weights and biases API key
 export WANDB_API_KEY=$api_key
 
 module purge
@@ -19,7 +20,7 @@ pip install -e .
 
 cd /rds/general/user/zrw20/home/DD-GAN-AE/ddganAE/wandb
 nvidia-smi
-python train_wandb_sf.py --model="$model" --datafile="$HOME/data/processed/sf_snapshots_200timesteps_rand.npy"
+python train_wandb_sf.py --model="$model" --datafile="$HOME/data/processed/sf_snapshots_200timesteps_rand.npy" --niters=200 --savemodel="False"
 
 mkdir $WORK/$PBS_JOBID
 cp * $WORK/$PBS_JOBID
