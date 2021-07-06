@@ -3,6 +3,8 @@
 Library of a collection of encoders and decoders that can readily be imported
 and used by the adversarial and convolutional autoencoder models.
 
+Shapes are adjusted to the flow past a cylinder problem.
+
 """
 
 from keras.layers import Dense, Flatten, Reshape, Conv2D, UpSampling2D, \

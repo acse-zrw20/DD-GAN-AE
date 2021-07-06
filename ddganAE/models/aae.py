@@ -29,6 +29,9 @@ __status__ = "Development"
 
 
 class AAE:
+    """
+    Adversarial autoencoder class
+    """
 
     def __init__(self, encoder, decoder, discriminator, optimizer):
         self.encoder = encoder
@@ -189,6 +192,17 @@ class AAE:
                 wandb.log(log)
 
     def validate(self, val_dataset, val_batch_size=128):
+        """
+        Validate model on previously unseen dataset.
+
+        Args:
+            val_dataset (np.array): Validation dataset
+            val_batch_size (int, optional): Validation batch size. Defaults to
+                                            128.
+
+        Returns:
+            tuple: Validation losses and accuracies
+        """
 
         # Adversarial ground truths
         valid = np.ones((val_batch_size, 1))
@@ -229,6 +243,9 @@ class AAE:
 
 
 class AAE_combined_loss:
+    """
+    Adversarial autoencoder with combined loss class
+    """
 
     def __init__(self, encoder, decoder, discriminator, optimizer):
         self.encoder = encoder
@@ -373,6 +390,17 @@ class AAE_combined_loss:
                 wandb.log(log)
 
     def validate(self, val_dataset, val_batch_size=128):
+        """
+        Validate model on previously unseen dataset.
+
+        Args:
+            val_dataset (np.array): Validation dataset
+            val_batch_size (int, optional): Validation batch size. Defaults to
+                                            128.
+
+        Returns:
+            tuple: Validation losses and accuracies
+        """
 
         # Adversarial ground truths
         valid = np.ones((val_batch_size, 1))
@@ -403,30 +431,3 @@ class AAE_combined_loss:
         g_loss = g_loss_cum/(step+1)
 
         return d_loss, g_loss
-
-
-def print_losses(d_loss, g_loss, epoch, d_loss_val=None, g_loss_val=None):
-    print("%d: [D loss: %f, acc: %.2f%%] [G loss: %f, mse: %f]" %
-          (epoch, d_loss[0], 100*d_loss[1], g_loss[0], g_loss[1]))
-
-    if d_loss_val is not None and g_loss_val is not None:
-        print("%d val: [D loss: %f, acc: %.2f%%] [G loss: %f, mse: %f]" %
-              (epoch, d_loss_val[0], 100*d_loss_val[1], g_loss_val[0],
-               g_loss_val[1]))
-
-
-def plot_losses(d_loss, g_loss, liveloss, d_loss_val=None,
-                g_loss_val=None):
-
-    if d_loss_val is not None and g_loss_val is not None:
-        liveloss.update({'val_generator_loss_training': g_loss[0],
-                         'generator_loss_validation': g_loss_val[0],
-                         'discriminator_loss_training': d_loss[0],
-                         'val_discriminator_loss_validation':
-                         d_loss_val[0]}
-                        )
-    else:
-        liveloss.update({'generator_loss_training': g_loss[0],
-                         'discriminator_loss_training': d_loss[0]})
-
-    liveloss.send()

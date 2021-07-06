@@ -94,11 +94,10 @@ class mse_weighted:
     """
     Custom weighted mean squared error loss
     """
-
     def __init__(self) -> None:
         """
         Constructor, name is required for TensorFlow custom losses. Since
-        we only know weights after compiling the model needs to be attribute
+        we only know weights after compiling the model needs to be attributes
         """
         self.weights = None
         self.__name__ = "mse_weighted"
@@ -120,13 +119,28 @@ class mse_weighted:
 
 
 class mse_PI:
-
+    """
+    Mean squared error loss class.
+    """
     def __init__(self, dx=None, dy=None):
         self.dx = dx
         self.dy = dx
         self.__name__ = "mse_PI"
 
     def __call__(self, y_true, y_pred):
+        """
+        Call the class, calculate the physics informed MSE loss
+
+        Args:
+            y_true (np.array): True values
+            y_pred (np.array): Predictions by model
+
+        Raises:
+            ValueError: Raises error if intervals dx and dy are not set
+
+        Returns:
+            float: Physics informed loss value
+        """
         if self.dx is None or self.dy is None:
             raise ValueError("First set dx and dy")
 
@@ -152,3 +166,55 @@ class mse_PI:
         cty = cty/count
 
         return K.mean(mse(y_true, y_pred)) + abs(cty)
+
+
+def print_losses(d_loss, g_loss, epoch, d_loss_val=None, g_loss_val=None):
+    """
+    Convenience function to print a set of losses. Can be used by adversarial
+    type of networks
+
+    Args:
+        d_loss (float): Discriminator loss value
+        g_loss (float): Generator loss value
+        epoch (int): Current epoch
+        d_loss_val (float, optional): Validation discriminator loss value. 
+                                      Defaults to None.
+        g_loss_val (float, optional): Validation generator loss value.
+                                      Defaults to None.
+    """
+    print("%d: [D loss: %f, acc: %.2f%%] [G loss: %f, mse: %f]" %
+          (epoch, d_loss[0], 100*d_loss[1], g_loss[0], g_loss[1]))
+
+    if d_loss_val is not None and g_loss_val is not None:
+        print("%d val: [D loss: %f, acc: %.2f%%] [G loss: %f, mse: %f]" %
+              (epoch, d_loss_val[0], 100*d_loss_val[1], g_loss_val[0],
+               g_loss_val[1]))
+
+
+def plot_losses(d_loss, g_loss, liveloss, d_loss_val=None,
+                g_loss_val=None):
+    """
+    Convenience function to plot a set of losses. Can be used by adversarial
+    type of networks
+
+    Args:
+        d_loss (float): Discriminator loss value
+        g_loss (float): Generator loss value
+        livaloss (object): livelossplot class instance
+        d_loss_val (float, optional): Validation discriminator loss value.
+                                      Defaults to None.
+        g_loss_val (float, optional): Validation generator loss value.
+                                      Defaults to None.
+    """
+    if d_loss_val is not None and g_loss_val is not None:
+        liveloss.update({'val_generator_loss_training': g_loss[0],
+                         'generator_loss_validation': g_loss_val[0],
+                         'discriminator_loss_training': d_loss[0],
+                         'val_discriminator_loss_validation':
+                         d_loss_val[0]}
+                        )
+    else:
+        liveloss.update({'generator_loss_training': g_loss[0],
+                         'discriminator_loss_training': d_loss[0]})
+
+    liveloss.send()
