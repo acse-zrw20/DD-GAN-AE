@@ -3,6 +3,8 @@
 Library of a collection of encoders and decoders that can readily be imported
 and used by the 3D adversarial and convolutional autoencoder models.
 
+Shapes are adjusted to the slug flow problem.
+
 """
 
 from keras.layers import Dense, Flatten, Reshape, Conv3D, UpSampling3D, \

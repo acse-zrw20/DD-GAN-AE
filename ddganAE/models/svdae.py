@@ -23,6 +23,9 @@ __status__ = "Development"
 
 
 class SVDAE:
+    """
+    SVD Autoencoder class
+    """
 
     def __init__(self, encoder, decoder, optimizer):
         self.encoder = encoder

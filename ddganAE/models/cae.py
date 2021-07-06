@@ -22,6 +22,9 @@ __status__ = "Development"
 
 
 class CAE:
+    """
+    Convolutional autoencoder class
+    """
 
     def __init__(self, encoder, decoder, optimizer):
         self.encoder = encoder
