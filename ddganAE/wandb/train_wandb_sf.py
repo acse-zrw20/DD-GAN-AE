@@ -8,6 +8,7 @@ dataset
 import wandb
 import tensorflow as tf
 import argparse
+import os
 from sklearn.preprocessing import MinMaxScaler
 from ddganAE.models import CAE, AAE, SVDAE, AAE_combined_loss
 from ddganAE.architectures.cae.D3 import (
@@ -61,6 +62,8 @@ def train_wandb_cae(config=None):
         # If called by wandb.agent, as below,
         # this config will be set by Sweep Controller
         config = wandb.config
+
+        print(config)
 
         # Data processing
         snapshots_grids = np.load(config.datafile)
@@ -301,6 +304,12 @@ def train_wandb_aae(config=None):
             wandb_log=True,
         )
 
+        if config.savemodel:
+            os.mkdir("model")
+            aae.encoder.save('model/encoder')
+            aae.decoder.save('model/decoder')
+            aae.discriminator.save('model/discriminator')
+
 
 def train_wandb_svdae(config=None):
     """
@@ -487,6 +496,7 @@ cae_sweep_config = {
         "optimizer": {"values": ["nadam", "adam", "sgd"]},
         "momentum": {"values": [0.8, 0.9, 0.98]},
         "beta_2": {"values": [0.9, 0.999, 0.99999]},
+        "savemodel": {"values": [False]}
     },
 }
 
@@ -507,6 +517,7 @@ aae_sweep_config = {
         "optimizer": {"values": ["nadam", "adam", "sgd"]},
         "momentum": {"values": [0.8, 0.9, 0.98]},
         "beta_2": {"values": [0.9, 0.999, 0.99999]},
+        "savemodel": {"values": [False]}
     },
 }
 
@@ -536,6 +547,7 @@ svdae_sweep_config = {
         "beta_2": {"values": [0.9, 0.999, 0.99999]},
         "batch_normalization": {"values": [True, False]},
         "regularization": {"values": [1e-4, 1e-5, 0]},
+        "savemodel": {"values": [False]}
     },
 }
 
@@ -549,7 +561,13 @@ optimization with')
     parser.add_argument('--datafile', type=str, nargs='?',
                         default="processed/sf_snapshots_200timesteps_rand.npy",
                         help='path to structured grid data file')
-
+    parser.add_argument('--savemodel', type=str, nargs='?',
+                        default="False",
+                        help='Wether or not to save the models, set "True" for \
+saving')
+    parser.add_argument('--niters', type=int, nargs='?',
+                        default=200,
+                        help='Number of sweeps to execute')
     args = parser.parse_args()
 
     arg_dict = vars(args)
@@ -563,20 +581,37 @@ optimization with')
         print("Please install GPU version of TF")
 
     if arg_dict['model'] == "cae":
+        if arg_dict["savemodel"] == "True":
+            cae_sweep_config['parameters']['savemodel'] = \
+                {'values': [True]}
+
         cae_sweep_config['parameters']['datafile'] = \
             {'values': [arg_dict['datafile']]}
+
         sweep_id = wandb.sweep(cae_sweep_config, project='cae-sf',
                                entity='zeff020')
-        wandb.agent(sweep_id, train_wandb_cae, count=200)
+        wandb.agent(sweep_id, train_wandb_cae, count=arg_dict['niters'])
+
     if arg_dict['model'] == "aae":
+        if arg_dict["savemodel"] == "True":
+            aae_sweep_config['parameters']['savemodel'] = \
+                {'values': [True]}
+
         aae_sweep_config['parameters']['datafile'] = \
             {'values': [arg_dict['datafile']]}
+
         sweep_id = wandb.sweep(aae_sweep_config, project='aae-sf',
                                entity='zeff020')
-        wandb.agent(sweep_id, train_wandb_aae, count=200)
+        wandb.agent(sweep_id, train_wandb_aae, count=arg_dict['niters'])
+
     if arg_dict['model'] == "svdae":
+        if arg_dict["savemodel"] == "True":
+            svdae_sweep_config['parameters']['savemodel'] = \
+                {'values': [True]}
+
         svdae_sweep_config['parameters']['datafile'] = \
             {'values': [arg_dict['datafile']]}
+
         sweep_id = wandb.sweep(svdae_sweep_config, project='svdae-sf',
                                entity='zeff020')
-        wandb.agent(sweep_id, train_wandb_svdae, count=200)
+        wandb.agent(sweep_id, train_wandb_svdae, count=arg_dict['niters'])
