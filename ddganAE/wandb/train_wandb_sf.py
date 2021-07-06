@@ -163,7 +163,7 @@ def train_wandb_cae(config=None):
 
         cae.train(
             x_train,
-            100,
+            5,
             val_data=x_val,
             batch_size=config.batch_size,
             wandb_log=True,
