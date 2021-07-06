@@ -63,8 +63,6 @@ def train_wandb_cae(config=None):
         # this config will be set by Sweep Controller
         config = wandb.config
 
-        print(wandb.run)
-
         # Data processing
         snapshots_grids = np.load(config.datafile)
 
@@ -170,6 +168,12 @@ def train_wandb_cae(config=None):
             batch_size=config.batch_size,
             wandb_log=True,
         )
+
+        if config.savemodel:
+            dirname = "model" + wandb.run.name
+            os.mkdir(dirname)
+            cae.encoder.save(dirname + '/encoder')
+            cae.decoder.save(dirname + '/decoder')
 
 
 def train_wandb_aae(config=None):
@@ -305,10 +309,11 @@ def train_wandb_aae(config=None):
         )
 
         if config.savemodel:
-            os.mkdir("model")
-            aae.encoder.save('model/encoder')
-            aae.decoder.save('model/decoder')
-            aae.discriminator.save('model/discriminator')
+            dirname = "model" + wandb.run.name
+            os.mkdir(dirname)
+            aae.encoder.save(dirname + '/encoder')
+            aae.decoder.save(dirname + '/decoder')
+            aae.discriminator.save(dirname + '/discriminator')
 
 
 def train_wandb_svdae(config=None):
@@ -479,6 +484,13 @@ def train_wandb_svdae(config=None):
             batch_size=config.batch_size,
             wandb_log=True,
         )
+
+        if config.savemodel:
+            dirname = "model" + wandb.run.name
+            os.mkdir(dirname)
+            svdae.encoder.save(dirname + '/encoder')
+            svdae.decoder.save(dirname + '/decoder')
+            np.save(dirname + "/R.npy", svdae.R)
 
 
 # Configuration options for hyperparameter optimization
