@@ -9,6 +9,7 @@ import wandb
 import tensorflow as tf
 import argparse
 import os
+import json
 from sklearn.preprocessing import MinMaxScaler
 from ddganAE.models import CAE, AAE, SVDAE, AAE_combined_loss
 from ddganAE.architectures.cae.D3 import (
@@ -163,14 +164,14 @@ def train_wandb_cae(config=None):
 
         cae.train(
             x_train,
-            5,
+            100,
             val_data=x_val,
             batch_size=config.batch_size,
             wandb_log=True,
         )
 
         if config.savemodel:
-            dirname = "model" + wandb.run.name
+            dirname = "model_" + wandb.run.name
             os.mkdir(dirname)
             cae.encoder.save(dirname + '/encoder')
             cae.decoder.save(dirname + '/decoder')
@@ -309,7 +310,7 @@ def train_wandb_aae(config=None):
         )
 
         if config.savemodel:
-            dirname = "model" + wandb.run.name
+            dirname = "model_" + wandb.run.name
             os.mkdir(dirname)
             aae.encoder.save(dirname + '/encoder')
             aae.decoder.save(dirname + '/decoder')
@@ -486,7 +487,7 @@ def train_wandb_svdae(config=None):
         )
 
         if config.savemodel:
-            dirname = "model" + wandb.run.name
+            dirname = "model_" + wandb.run.name
             os.mkdir(dirname)
             svdae.encoder.save(dirname + '/encoder')
             svdae.decoder.save(dirname + '/decoder')
@@ -580,19 +581,18 @@ saving')
     parser.add_argument('--niters', type=int, nargs='?',
                         default=200,
                         help='Number of sweeps to execute')
+    parser.add_argument('--custom_config', type=str, nargs='?',
+                        default=None,
+                        help='json file with custom configurations for sweep')
     args = parser.parse_args()
 
     arg_dict = vars(args)
 
-    if tf.test.gpu_device_name():
-
-        print('Default GPU Device:\
-        {}'.format(tf.test.gpu_device_name()))
-
-    else:
-        print("Please install GPU version of TF")
-
     if arg_dict['model'] == "cae":
+        if arg_dict['custom_config'] is not None:
+            with open(arg_dict["custom_config"]) as json_file:
+                cae_sweep_config = json.load(json_file)
+
         if arg_dict["savemodel"] == "True":
             cae_sweep_config['parameters']['savemodel'] = \
                 {'values': [True]}
@@ -605,6 +605,10 @@ saving')
         wandb.agent(sweep_id, train_wandb_cae, count=arg_dict['niters'])
 
     if arg_dict['model'] == "aae":
+        if arg_dict['custom_config'] is not None:
+            with open(arg_dict["custom_config"]) as json_file:
+                aae_sweep_config = json.load(json_file)
+
         if arg_dict["savemodel"] == "True":
             aae_sweep_config['parameters']['savemodel'] = \
                 {'values': [True]}
@@ -617,6 +621,10 @@ saving')
         wandb.agent(sweep_id, train_wandb_aae, count=arg_dict['niters'])
 
     if arg_dict['model'] == "svdae":
+        if arg_dict['custom_config'] is not None:
+            with open(arg_dict["custom_config"]) as json_file:
+                svdae_sweep_config = json.load(json_file)
+
         if arg_dict["savemodel"] == "True":
             svdae_sweep_config['parameters']['savemodel'] = \
                 {'values': [True]}
