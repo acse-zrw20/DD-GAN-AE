@@ -1,0 +1,69 @@
+{
+    "method": "random",
+    "metric": {
+        "name": "valid_loss",
+        "goal": "minimize"
+    },
+    "parameters": {
+        "architecture": {
+            "values": [
+                "slimmer_vinicius"
+            ]
+        },
+        "activation": {
+            "values": [
+                "elu"
+            ]
+        },
+        "dense_activation": {
+            "values": [
+                "linear"
+            ]
+        },
+        "batch_size": {
+            "values": [
+                64
+            ]
+        },
+        "learning_rate": {
+            "values": [
+                0.0005
+            ]
+        },
+        "dropout": {
+            "values": [
+                0.3
+            ]
+        },
+        "optimizer": {
+            "values": [
+                "adam"
+            ]
+        },
+        "momentum": {
+            "values": [
+                0.8
+            ]
+        },
+        "beta_2": {
+            "values": [
+                0.9
+            ]
+        },
+        "batch_normalization": {
+            "values": [
+                false
+            ]
+        },
+        "regularization": {
+            "values": [
+                0
+            ]
+        },
+        "savemodel": {
+            "values": [
+                false
+            ]
+        }
+    }
+}
