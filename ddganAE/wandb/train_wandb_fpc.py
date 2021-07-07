@@ -6,6 +6,9 @@ Functions used for weights and biases hyperparameter optimization
 
 import wandb
 import tensorflow as tf
+import argparse
+import json
+import os
 from ddganAE.models import CAE, AAE, SVDAE, AAE_combined_loss
 from ddganAE.architectures.cae.D2 import (
     build_omata_encoder_decoder,
@@ -156,11 +159,17 @@ def train_wandb_cae(config=None):
 
         cae.train(
             x_train,
-            200,
+            100,
             val_data=x_val,
             batch_size=config.batch_size,
             wandb_log=True,
         )
+
+        if config.savemodel:
+            dirname = "model_" + wandb.run.name
+            os.mkdir(dirname)
+            cae.encoder.save(dirname + '/encoder')
+            cae.decoder.save(dirname + '/decoder')
 
 
 def train_wandb_aae(config=None):
@@ -284,11 +293,18 @@ def train_wandb_aae(config=None):
         aae.compile(input_shape)
         aae.train(
             x_train,
-            200,
+            100,
             val_data=x_val,
             batch_size=config.batch_size,
             wandb_log=True,
         )
+
+        if config.savemodel:
+            dirname = "model_" + wandb.run.name
+            os.mkdir(dirname)
+            aae.encoder.save(dirname + '/encoder')
+            aae.decoder.save(dirname + '/decoder')
+            aae.discriminator.save(dirname + '/discriminator')
 
 
 def train_wandb_svdae(config=None):
@@ -440,11 +456,18 @@ def train_wandb_svdae(config=None):
         svdae.compile(100, weight_loss=False)
         svdae.train(
             x_train,
-            200,
+            100,
             val_data=x_val,
             batch_size=config.batch_size,
             wandb_log=True,
         )
+
+        if config.savemodel:
+            dirname = "model_" + wandb.run.name
+            os.mkdir(dirname)
+            svdae.encoder.save(dirname + '/encoder')
+            svdae.decoder.save(dirname + '/decoder')
+            np.save(dirname + "/R.npy", svdae.R)
 
 
 # Configuration options for hyperparameter optimization
@@ -460,6 +483,7 @@ cae_sweep_config = {
         "optimizer": {"values": ["nadam", "adam", "sgd"]},
         "momentum": {"values": [0.8, 0.9, 0.98]},
         "beta_2": {"values": [0.9, 0.999, 0.99999]},
+        "savemodel": {"values": [False]}
     },
 }
 
@@ -473,10 +497,12 @@ aae_sweep_config = {
         "dense_activation": {"values": ["relu", None]},
         "batch_size": {"values": [64, 128]},
         "learning_rate": {"values": [5e-4, 5e-5, 5e-6]},
+        "train_method": {"values": ["default", "combined_loss"]},
         "discriminator_architecture": {"values": ["custom", "custom_wider"]},
         "optimizer": {"values": ["nadam", "adam", "sgd"]},
         "momentum": {"values": [0.8, 0.9, 0.98]},
         "beta_2": {"values": [0.9, 0.999, 0.99999]},
+        "savemodel": {"values": [False]}
     },
 }
 
@@ -506,5 +532,78 @@ svdae_sweep_config = {
         "beta_2": {"values": [0.9, 0.999, 0.99999]},
         "batch_normalization": {"values": [True, False]},
         "regularization": {"values": [1e-4, 1e-5, 0]},
+        "savemodel": {"values": [False]}
     },
 }
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Do hyperparameter \
+optimization on flow past cylinder dataset")
+    parser.add_argument('--model', type=str, nargs='?',
+                        default="cae",
+                        help='select the model to run hyperparameter \
+optimization with')
+    parser.add_argument('--datafile', type=str, nargs='?',
+                        default="processed/sf_snapshots_200timesteps_rand.npy",
+                        help='path to structured grid data file')
+    parser.add_argument('--savemodel', type=str, nargs='?',
+                        default="False",
+                        help='Wether or not to save the models, set "True" for \
+saving')
+    parser.add_argument('--niters', type=int, nargs='?',
+                        default=200,
+                        help='Number of sweeps to execute')
+    parser.add_argument('--custom_config', type=str, nargs='?',
+                        default=None,
+                        help='json file with custom configurations for sweep')
+    args = parser.parse_args()
+
+    arg_dict = vars(args)
+
+    if arg_dict['model'] == "cae":
+        if arg_dict['custom_config'] is not None:
+            with open(arg_dict["custom_config"]) as json_file:
+                cae_sweep_config = json.load(json_file)
+
+        if arg_dict["savemodel"] == "True":
+            cae_sweep_config['parameters']['savemodel'] = \
+                {'values': [True]}
+
+        cae_sweep_config['parameters']['datafile'] = \
+            {'values': [arg_dict['datafile']]}
+
+        sweep_id = wandb.sweep(cae_sweep_config, project='cae-fpc',
+                               entity='zeff020')
+        wandb.agent(sweep_id, train_wandb_cae, count=arg_dict['niters'])
+
+    if arg_dict['model'] == "aae":
+        if arg_dict['custom_config'] is not None:
+            with open(arg_dict["custom_config"]) as json_file:
+                aae_sweep_config = json.load(json_file)
+
+        if arg_dict["savemodel"] == "True":
+            aae_sweep_config['parameters']['savemodel'] = \
+                {'values': [True]}
+
+        aae_sweep_config['parameters']['datafile'] = \
+            {'values': [arg_dict['datafile']]}
+
+        sweep_id = wandb.sweep(aae_sweep_config, project='aae-fpc',
+                               entity='zeff020')
+        wandb.agent(sweep_id, train_wandb_aae, count=arg_dict['niters'])
+
+    if arg_dict['model'] == "svdae":
+        if arg_dict['custom_config'] is not None:
+            with open(arg_dict["custom_config"]) as json_file:
+                svdae_sweep_config = json.load(json_file)
+
+        if arg_dict["savemodel"] == "True":
+            svdae_sweep_config['parameters']['savemodel'] = \
+                {'values': [True]}
+
+        svdae_sweep_config['parameters']['datafile'] = \
+            {'values': [arg_dict['datafile']]}
+
+        sweep_id = wandb.sweep(svdae_sweep_config, project='svdae-fpc',
+                               entity='zeff020')
+        wandb.agent(sweep_id, train_wandb_svdae, count=arg_dict['niters'])
