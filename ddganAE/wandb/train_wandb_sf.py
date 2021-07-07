@@ -499,7 +499,7 @@ cae_sweep_config = {
     "method": "random",
     "metric": {"name": "valid_loss", "goal": "minimize"},
     "parameters": {
-        "architecture": {"values": ["denser_omata", "densest_omata",
+        "architecture": {"values": ["denser_omata",
                                     "densest_thinner_omata", "omata",
                                     "wide_omata"]},
         "activation": {"values": ["elu", "sigmoid", "relu", "tanh"]},
@@ -518,7 +518,7 @@ aae_sweep_config = {
     "method": "random",
     "metric": {"name": "valid_loss", "goal": "minimize"},
     "parameters": {
-        "architecture": {"values": ["denser_omata", "densest_omata",
+        "architecture": {"values": ["denser_omata",
                                     "densest_thinner_omata", "omata",
                                     "wide_omata"]},
         "activation": {"values": ["elu", "sigmoid", "relu", "tanh"]},
