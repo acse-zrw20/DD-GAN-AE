@@ -1,0 +1,84 @@
+{
+    "method": "random",
+    "metric": {
+        "name": "valid_loss",
+        "goal": "minimize"
+    },
+    "parameters": {
+        "architecture": {
+            "values": [
+                "denser_omata",
+                "densest_thinner_omata",
+                "omata",
+                "wide_omata"
+            ]
+        },
+        "activation": {
+            "values": [
+                "elu",
+                "sigmoid",
+                "relu",
+                "tanh"
+            ]
+        },
+        "dense_activation": {
+            "values": [
+                "relu",
+                null
+            ]
+        },
+        "batch_size": {
+            "values": [
+                32,
+                64,
+                128
+            ]
+        },
+        "train_method": {
+            "values": [
+                "default",
+                "combined_loss"
+            ]
+        },
+        "learning_rate": {
+            "values": [
+                0.005,
+                0.0005,
+                5e-05,
+                5e-06
+            ]
+        },
+        "discriminator_architecture": {
+            "values": [
+                "custom",
+                "custom_wider"
+            ]
+        },
+        "optimizer": {
+            "values": [
+                "nadam",
+                "adam",
+                "sgd"
+            ]
+        },
+        "momentum": {
+            "values": [
+                0.8,
+                0.9,
+                0.98
+            ]
+        },
+        "beta_2": {
+            "values": [
+                0.9,
+                0.999,
+                0.99999
+            ]
+        },
+        "savemodel": {
+            "values": [
+                false
+            ]
+        }
+    }
+}

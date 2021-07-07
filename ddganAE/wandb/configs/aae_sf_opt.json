@@ -1,0 +1,64 @@
+{
+    "method": "random",
+    "metric": {
+        "name": "valid_loss",
+        "goal": "minimize"
+    },
+    "parameters": {
+        "architecture": {
+            "values": [
+                "wide_omata"
+            ]
+        },
+        "activation": {
+            "values": [
+                "elu"
+            ]
+        },
+        "dense_activation": {
+            "values": [
+                "relu"
+            ]
+        },
+        "batch_size": {
+            "values": [
+                32
+            ]
+        },
+        "train_method": {
+            "values": [
+                "combined_loss"
+            ]
+        },
+        "learning_rate": {
+            "values": [
+                0.0005
+            ]
+        },
+        "discriminator_architecture": {
+            "values": [
+                "custom"
+            ]
+        },
+        "optimizer": {
+            "values": [
+                "nadam"
+            ]
+        },
+        "momentum": {
+            "values": [
+                0.8
+            ]
+        },
+        "beta_2": {
+            "values": [
+                0.9
+            ]
+        },
+        "savemodel": {
+            "values": [
+                true
+            ]
+        }
+    }
+}

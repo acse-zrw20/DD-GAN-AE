@@ -1,0 +1,54 @@
+{
+    "method": "random",
+    "metric": {
+        "name": "valid_loss",
+        "goal": "minimize"
+    },
+    "parameters": {
+        "architecture": {
+            "values": [
+                "wide_omata"
+            ]
+        },
+        "activation": {
+            "values": [
+                "relu"
+            ]
+        },
+        "dense_activation": {
+            "values": [
+                "relu"
+            ]
+        },
+        "batch_size": {
+            "values": [
+                64
+            ]
+        },
+        "learning_rate": {
+            "values": [
+                0.0005
+            ]
+        },
+        "optimizer": {
+            "values": [
+                "adam"
+            ]
+        },
+        "momentum": {
+            "values": [
+                0.98
+            ]
+        },
+        "beta_2": {
+            "values": [
+                0.99999
+            ]
+        },
+        "savemodel": {
+            "values": [
+                false
+            ]
+        }
+    }
+}
