@@ -107,7 +107,7 @@ def train_wandb_cae(config=None):
         if config.architecture == "omata":
             encoder, decoder = build_omata_encoder_decoder(
                 input_shape,
-                10,
+                config.latent_vars,
                 initializer,
                 info=False,
                 act=config.activation,
@@ -116,7 +116,7 @@ def train_wandb_cae(config=None):
         elif config.architecture == "densest_thinner_omata":
             encoder, decoder = build_densest_thinner_omata_encoder_decoder(
                 input_shape,
-                10,
+                config.latent_vars,
                 initializer,
                 info=False,
                 act=config.activation,
@@ -125,7 +125,7 @@ def train_wandb_cae(config=None):
         elif config.architecture == "deeper_omata":
             encoder, decoder = build_deeper_omata_encoder_decoder(
                 input_shape,
-                10,
+                config.latent_vars,
                 initializer,
                 info=False,
                 act=config.activation,
@@ -134,7 +134,7 @@ def train_wandb_cae(config=None):
         elif config.architecture == "wide_omata":
             encoder, decoder = build_wide_omata_encoder_decoder(
                 input_shape,
-                10,
+                config.latent_vars,
                 initializer,
                 info=False,
                 act=config.activation,
@@ -143,7 +143,7 @@ def train_wandb_cae(config=None):
         elif config.architecture == "denser_omata":
             encoder, decoder = build_denser_omata_encoder_decoder(
                 input_shape,
-                10,
+                config.latent_vars,
                 initializer,
                 info=False,
                 act=config.activation,
@@ -152,7 +152,7 @@ def train_wandb_cae(config=None):
         elif config.architecture == "densest_omata":
             encoder, decoder = build_densest_omata_encoder_decoder(
                 input_shape,
-                10,
+                config.latent_vars,
                 initializer,
                 info=False,
                 act=config.activation,
@@ -235,7 +235,7 @@ def train_wandb_aae(config=None):
         if config.architecture == "omata":
             encoder, decoder = build_omata_encoder_decoder(
                 input_shape,
-                10,
+                config.latent_vars,
                 initializer,
                 info=False,
                 act=config.activation,
@@ -244,7 +244,7 @@ def train_wandb_aae(config=None):
         elif config.architecture == "densest_thinner_omata":
             encoder, decoder = build_densest_thinner_omata_encoder_decoder(
                 input_shape,
-                10,
+                config.latent_vars,
                 initializer,
                 info=False,
                 act=config.activation,
@@ -253,7 +253,7 @@ def train_wandb_aae(config=None):
         elif config.architecture == "deeper_omata":
             encoder, decoder = build_deeper_omata_encoder_decoder(
                 input_shape,
-                10,
+                config.latent_vars,
                 initializer,
                 info=False,
                 act=config.activation,
@@ -262,7 +262,7 @@ def train_wandb_aae(config=None):
         elif config.architecture == "wide_omata":
             encoder, decoder = build_wide_omata_encoder_decoder(
                 input_shape,
-                10,
+                config.latent_vars,
                 initializer,
                 info=False,
                 act=config.activation,
@@ -271,7 +271,7 @@ def train_wandb_aae(config=None):
         elif config.architecture == "denser_omata":
             encoder, decoder = build_denser_omata_encoder_decoder(
                 input_shape,
-                10,
+                config.latent_vars,
                 initializer,
                 info=False,
                 act=config.activation,
@@ -280,7 +280,7 @@ def train_wandb_aae(config=None):
         elif config.architecture == "densest_omata":
             encoder, decoder = build_densest_omata_encoder_decoder(
                 input_shape,
-                10,
+                config.latent_vars,
                 initializer,
                 info=False,
                 act=config.activation,
@@ -289,11 +289,11 @@ def train_wandb_aae(config=None):
 
         if config.discriminator_architecture == "custom":
             discriminator = build_custom_discriminator(
-                10, initializer, info=False
+                config.latent_vars, initializer, info=False
             )
         elif config.discriminator_architecture == "custom_wider":
             discriminator = build_custom_wider_discriminator(
-                10, initializer, info=False
+                config.latent_vars, initializer, info=False
             )
 
         if config.train_method == "default":
@@ -381,7 +381,7 @@ def train_wandb_svdae(config=None):
 
         if config.architecture == "dense":
             encoder = build_dense_encoder(
-                10,
+                config.latent_vars,
                 initializer,
                 info=False,
                 act=config.activation,
@@ -389,7 +389,7 @@ def train_wandb_svdae(config=None):
             )
             decoder = build_dense_decoder(
                 100,
-                10,
+                config.latent_vars,
                 initializer,
                 info=False,
                 act=config.activation,
@@ -397,7 +397,7 @@ def train_wandb_svdae(config=None):
             )
         elif config.architecture == "deeper_dense":
             encoder = build_deeper_dense_encoder(
-                10,
+                config.latent_vars,
                 initializer,
                 info=False,
                 act=config.activation,
@@ -405,7 +405,7 @@ def train_wandb_svdae(config=None):
             )
             decoder = build_deeper_dense_decoder(
                 100,
-                10,
+                config.latent_vars,
                 initializer,
                 info=False,
                 act=config.activation,
@@ -413,7 +413,7 @@ def train_wandb_svdae(config=None):
             )
         elif config.architecture == "wider_dense":
             encoder = build_wider_dense_encoder(
-                10,
+                config.latent_vars,
                 initializer,
                 info=False,
                 act=config.activation,
@@ -421,7 +421,7 @@ def train_wandb_svdae(config=None):
             )
             decoder = build_wider_dense_decoder(
                 100,
-                10,
+                config.latent_vars,
                 initializer,
                 info=False,
                 act=config.activation,
@@ -429,7 +429,7 @@ def train_wandb_svdae(config=None):
             )
         elif config.architecture == "slimmer_dense":
             encoder = build_slimmer_dense_encoder(
-                10,
+                config.latent_vars,
                 initializer,
                 info=False,
                 act=config.activation,
@@ -437,7 +437,7 @@ def train_wandb_svdae(config=None):
             )
             decoder = build_slimmer_dense_decoder(
                 100,
-                10,
+                config.latent_vars,
                 initializer,
                 info=False,
                 act=config.activation,
@@ -446,7 +446,7 @@ def train_wandb_svdae(config=None):
         elif config.architecture == "vinicius":
             encoder, decoder = build_vinicius_encoder_decoder(
                 100,
-                10,
+                config.latent_vars,
                 initializer,
                 act=config.activation,
                 dense_act=config.dense_activation,
@@ -457,7 +457,7 @@ def train_wandb_svdae(config=None):
         elif config.architecture == "smaller_vinicius":
             encoder, decoder = build_smaller_vinicius_encoder_decoder(
                 100,
-                10,
+                config.latent_vars,
                 initializer,
                 act=config.activation,
                 dense_act=config.dense_activation,
@@ -468,7 +468,7 @@ def train_wandb_svdae(config=None):
         elif config.architecture == "slimmer_vinicius":
             encoder, decoder = build_slimmer_vinicius_encoder_decoder(
                 100,
-                10,
+                config.latent_vars,
                 initializer,
                 act=config.activation,
                 dense_act=config.dense_activation,
@@ -509,7 +509,8 @@ cae_sweep_config = {
         "optimizer": {"values": ["nadam", "adam", "sgd"]},
         "momentum": {"values": [0.8, 0.9, 0.98]},
         "beta_2": {"values": [0.9, 0.999, 0.99999]},
-        "savemodel": {"values": [False]}
+        "savemodel": {"values": [False]},
+        "latent_vars": {"values": [10]}
     },
 }
 
@@ -530,7 +531,8 @@ aae_sweep_config = {
         "optimizer": {"values": ["nadam", "adam", "sgd"]},
         "momentum": {"values": [0.8, 0.9, 0.98]},
         "beta_2": {"values": [0.9, 0.999, 0.99999]},
-        "savemodel": {"values": [False]}
+        "savemodel": {"values": [False]},
+        "latent_vars": {"values": [10]}
     },
 }
 
@@ -560,7 +562,8 @@ svdae_sweep_config = {
         "beta_2": {"values": [0.9, 0.999, 0.99999]},
         "batch_normalization": {"values": [True, False]},
         "regularization": {"values": [1e-4, 1e-5, 0]},
-        "savemodel": {"values": [False]}
+        "savemodel": {"values": [False]},
+        "latent_vars": {"values": [10]}
     },
 }
 
