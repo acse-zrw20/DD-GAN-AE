@@ -522,7 +522,13 @@ cae_sweep_config = {
         "momentum": {"values": [0.8, 0.9, 0.98]},
         "beta_2": {"values": [0.9, 0.999, 0.99999]},
         "savemodel": {"values": [False]},
-        "latent_vars": {"values": [10]}
+        "latent_vars": {"values": [10, 100]},
+        "final_act": {
+            "values": [
+              "linear",
+              "sigmoid"
+            ]
+        }
     },
 }
 
@@ -544,7 +550,13 @@ aae_sweep_config = {
         "momentum": {"values": [0.8, 0.9, 0.98]},
         "beta_2": {"values": [0.9, 0.999, 0.99999]},
         "savemodel": {"values": [False]},
-        "latent_vars": {"values": [10]}
+        "latent_vars": {"values": [10, 100]},
+        "final_act": {
+            "values": [
+              "linear",
+              "sigmoid"
+            ]
+        }
     },
 }
 
@@ -575,7 +587,7 @@ svdae_sweep_config = {
         "batch_normalization": {"values": [True, False]},
         "regularization": {"values": [1e-4, 1e-5, 0]},
         "savemodel": {"values": [False]},
-        "latent_vars": {"values": [10]}
+        "latent_vars": {"values": [10]},
     },
 }
 
