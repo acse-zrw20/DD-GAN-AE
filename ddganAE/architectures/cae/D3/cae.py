@@ -21,7 +21,8 @@ __status__ = "Development"
 
 
 def build_omata_encoder_decoder(input_shape, latent_dim, initializer,
-                                info=False, act="elu", dense_act=None):
+                                info=False, act="elu", dense_act=None,
+                                final_act="linear"):
     """
     This encoder-decoder pair works for 55 by 42 grids
     """
@@ -58,7 +59,7 @@ def build_omata_encoder_decoder(input_shape, latent_dim, initializer,
     decoder.add(Conv3D(16, (3, 3, 3), activation=act, padding="valid",
                        kernel_initializer=initializer))
     decoder.add(UpSampling3D())
-    decoder.add(Conv3D(4, (3, 3, 3), activation="linear", padding="same",
+    decoder.add(Conv3D(4, (3, 3, 3), activation=final_act, padding="same",
                        kernel_initializer=initializer))
     decoder.add(Cropping3D(cropping=((0, 0), (0, 0), (0, 0))))
 
@@ -69,7 +70,8 @@ def build_omata_encoder_decoder(input_shape, latent_dim, initializer,
 
 
 def build_denser_omata_encoder_decoder(input_shape, latent_dim, initializer,
-                                       info=False, act="elu", dense_act=None):
+                                       info=False, act="elu", dense_act=None,
+                                       final_act="linear"):
     """
 
     """
@@ -114,7 +116,7 @@ def build_denser_omata_encoder_decoder(input_shape, latent_dim, initializer,
     decoder.add(Conv3D(32, (3, 3, 3), activation=act, padding="valid",
                        kernel_initializer=initializer))
     decoder.add(UpSampling3D())
-    decoder.add(Conv3D(4, (3, 3, 3), activation="linear", padding="same",
+    decoder.add(Conv3D(4, (3, 3, 3), activation=final_act, padding="same",
                 kernel_initializer=initializer))
     decoder.add(Cropping3D(cropping=((0, 0), (0, 0), (0, 0))))
 
@@ -128,7 +130,8 @@ def build_denser_omata_encoder_decoder(input_shape, latent_dim, initializer,
 
 def build_densest_omata_encoder_decoder(input_shape, latent_dim,
                                         initializer, info=False,
-                                        act="elu", dense_act=None):
+                                        act="elu", dense_act=None,
+                                        final_act="linear"):
     """
 
     """
@@ -174,7 +177,7 @@ def build_densest_omata_encoder_decoder(input_shape, latent_dim,
     decoder.add(Conv3D(32, (3, 3, 3), activation=act, padding="same",
                        kernel_initializer=initializer))
     decoder.add(UpSampling3D())
-    decoder.add(Conv3D(4, (3, 3, 3), activation="linear", padding="same",
+    decoder.add(Conv3D(4, (3, 3, 3), activation=final_act, padding="same",
                 kernel_initializer=initializer))
     decoder.add(Cropping3D(cropping=((0, 0), (0, 0), (0, 0))))
 
@@ -189,7 +192,8 @@ def build_densest_omata_encoder_decoder(input_shape, latent_dim,
 def build_densest_thinner_omata_encoder_decoder(input_shape, latent_dim,
                                                 initializer,
                                                 info=False, act="elu",
-                                                dense_act=None):
+                                                dense_act=None,
+                                                final_act="linear"):
     """
 
     """
@@ -235,7 +239,7 @@ def build_densest_thinner_omata_encoder_decoder(input_shape, latent_dim,
     decoder.add(Conv3D(16, (3, 3, 3), activation=act, padding="same",
                        kernel_initializer=initializer))
     decoder.add(UpSampling3D())
-    decoder.add(Conv3D(4, (3, 3, 3), activation="linear", padding="same",
+    decoder.add(Conv3D(4, (3, 3, 3), activation=final_act, padding="same",
                 kernel_initializer=initializer))
     decoder.add(Cropping3D(cropping=((0, 0), (0, 0), (0, 0))))
 
@@ -248,7 +252,8 @@ def build_densest_thinner_omata_encoder_decoder(input_shape, latent_dim,
 
 
 def build_wide_omata_encoder_decoder(input_shape, latent_dim, initializer,
-                                     info=False, act="elu", dense_act=None):
+                                     info=False, act="elu", dense_act=None,
+                                     final_act="linear"):
     """
     relatively wide model omata encoder decoder
 
@@ -286,7 +291,7 @@ def build_wide_omata_encoder_decoder(input_shape, latent_dim, initializer,
     decoder.add(Conv3D(32, (3, 3, 3), activation=act, padding="valid",
                        kernel_initializer=initializer))
     decoder.add(UpSampling3D())
-    decoder.add(Conv3D(4, (3, 3, 3), activation="linear", padding="same",
+    decoder.add(Conv3D(4, (3, 3, 3), activation=final_act, padding="same",
                 kernel_initializer=initializer))
     decoder.add(Cropping3D(cropping=((0, 0), (0, 0), (0, 0))))
 
@@ -297,7 +302,8 @@ def build_wide_omata_encoder_decoder(input_shape, latent_dim, initializer,
 
 
 def build_deeper_omata_encoder_decoder(input_shape, latent_dim, initializer,
-                                       info=False, act="elu", dense_act=None):
+                                       info=False, act="elu", dense_act=None,
+                                       final_act="linear"):
     """
     This encoder-decoder pair works for 55 by 42 grids
     """
@@ -341,7 +347,7 @@ def build_deeper_omata_encoder_decoder(input_shape, latent_dim, initializer,
                        padding="valid",
                        kernel_initializer=initializer))
     decoder.add(UpSampling3D())
-    decoder.add(Conv3D(4, (3, 3, 3), activation="linear",
+    decoder.add(Conv3D(4, (3, 3, 3), activation=final_act,
                        padding="same",
                 kernel_initializer=initializer))
     decoder.add(Cropping3D(cropping=((0, 0), (4, 4), (4, 4))))
