@@ -112,6 +112,7 @@ def train_wandb_cae(config=None):
                 info=False,
                 act=config.activation,
                 dense_act=config.dense_activation,
+                final_act=config.final_act
             )
         elif config.architecture == "densest_thinner_omata":
             encoder, decoder = build_densest_thinner_omata_encoder_decoder(
@@ -121,6 +122,7 @@ def train_wandb_cae(config=None):
                 info=False,
                 act=config.activation,
                 dense_act=config.dense_activation,
+                final_act=config.final_act
             )
         elif config.architecture == "deeper_omata":
             encoder, decoder = build_deeper_omata_encoder_decoder(
@@ -130,6 +132,7 @@ def train_wandb_cae(config=None):
                 info=False,
                 act=config.activation,
                 dense_act=config.dense_activation,
+                final_act=config.final_act
             )
         elif config.architecture == "wide_omata":
             encoder, decoder = build_wide_omata_encoder_decoder(
@@ -139,6 +142,7 @@ def train_wandb_cae(config=None):
                 info=False,
                 act=config.activation,
                 dense_act=config.dense_activation,
+                final_act=config.final_act
             )
         elif config.architecture == "denser_omata":
             encoder, decoder = build_denser_omata_encoder_decoder(
@@ -148,6 +152,7 @@ def train_wandb_cae(config=None):
                 info=False,
                 act=config.activation,
                 dense_act=config.dense_activation,
+                final_act=config.final_act
             )
         elif config.architecture == "densest_omata":
             encoder, decoder = build_densest_omata_encoder_decoder(
@@ -157,6 +162,7 @@ def train_wandb_cae(config=None):
                 info=False,
                 act=config.activation,
                 dense_act=config.dense_activation,
+                final_act=config.final_act
             )
 
         cae = CAE(encoder, decoder, optimizer)
@@ -240,6 +246,7 @@ def train_wandb_aae(config=None):
                 info=False,
                 act=config.activation,
                 dense_act=config.dense_activation,
+                final_act=config.final_act
             )
         elif config.architecture == "densest_thinner_omata":
             encoder, decoder = build_densest_thinner_omata_encoder_decoder(
@@ -249,6 +256,7 @@ def train_wandb_aae(config=None):
                 info=False,
                 act=config.activation,
                 dense_act=config.dense_activation,
+                final_act=config.final_act
             )
         elif config.architecture == "deeper_omata":
             encoder, decoder = build_deeper_omata_encoder_decoder(
@@ -258,6 +266,7 @@ def train_wandb_aae(config=None):
                 info=False,
                 act=config.activation,
                 dense_act=config.dense_activation,
+                final_act=config.final_act
             )
         elif config.architecture == "wide_omata":
             encoder, decoder = build_wide_omata_encoder_decoder(
@@ -267,6 +276,7 @@ def train_wandb_aae(config=None):
                 info=False,
                 act=config.activation,
                 dense_act=config.dense_activation,
+                final_act=config.final_act
             )
         elif config.architecture == "denser_omata":
             encoder, decoder = build_denser_omata_encoder_decoder(
@@ -276,6 +286,7 @@ def train_wandb_aae(config=None):
                 info=False,
                 act=config.activation,
                 dense_act=config.dense_activation,
+                final_act=config.final_act
             )
         elif config.architecture == "densest_omata":
             encoder, decoder = build_densest_omata_encoder_decoder(
@@ -285,6 +296,7 @@ def train_wandb_aae(config=None):
                 info=False,
                 act=config.activation,
                 dense_act=config.dense_activation,
+                final_act=config.final_act
             )
 
         if config.discriminator_architecture == "custom":
