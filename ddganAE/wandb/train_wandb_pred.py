@@ -64,6 +64,11 @@ def train_wandb_pred_aae(config=None):
 
         train_data = latent_vars_reshaped[:4]
 
+        # Scaling the latent variables
+        scaler = MinMaxScaler((-1, 1))
+        train_data = scaler.fit_transform(
+            train_data.reshape(-1, 1)).reshape(train_data.shape)
+
         initializer = tf.keras.initializers.RandomNormal(
             mean=0.0, stddev=0.05, seed=None
         )
