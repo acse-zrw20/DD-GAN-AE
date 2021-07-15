@@ -39,7 +39,8 @@ def build_dense_encoder(latent_dim, initializer, info=False,
 
 
 def build_conv_encoder_decoder(input_dim, latent_dim, initializer, info=False,
-                               act='relu', dense_act='relu', dropout=0.6):
+                               act='relu', dense_act='relu', dropout=0.6, 
+                               final_act="linear"):
     """
     These show terrible performance
     """
@@ -62,14 +63,14 @@ def build_conv_encoder_decoder(input_dim, latent_dim, initializer, info=False,
     decoder.add(Conv1D(16, 3, kernel_initializer=initializer, activation=act,
                        padding="same"))
     decoder.add(UpSampling1D())
-    decoder.add(Conv1D(1, 1, strides=1, activation="linear"))
+    decoder.add(Conv1D(1, 1, strides=1, activation=final_act))
 
     return encoder, decoder
 
 
 def build_wider_conv_encoder_decoder(input_dim, latent_dim, initializer,
                                      info=False, act='relu', dense_act='relu',
-                                     dropout=0.6):
+                                     dropout=0.6, final_act="linear"):
     """
     These show terrible performance
     """
@@ -100,7 +101,7 @@ def build_wider_conv_encoder_decoder(input_dim, latent_dim, initializer,
 
 # We make the decoder model
 def build_dense_decoder(input_dim, latent_dim, initializer, info=False,
-                        act='relu', dropout=0.6):
+                        act='relu', dropout=0.6, final_act="linear"):
     decoder = Sequential()
     decoder.add(Dense(1000, activation=act, input_dim=latent_dim,
                       kernel_initializer=initializer,
@@ -109,7 +110,7 @@ def build_dense_decoder(input_dim, latent_dim, initializer, info=False,
     decoder.add(Dense(1000, activation=act, kernel_initializer=initializer,
                       bias_initializer=initializer))
     decoder.add(Dropout(dropout))
-    decoder.add(Dense(input_dim, activation='linear',
+    decoder.add(Dense(input_dim, activation=final_act,
                       kernel_initializer=initializer,
                       bias_initializer=initializer))
 
@@ -121,10 +122,11 @@ def build_dense_decoder(input_dim, latent_dim, initializer, info=False,
 
 def build_vinicius_encoder_decoder(input_dim, latent_dim, initializer,
                                    info=False, act='elu', dense_act='elu',
-                                   dropout=0.6, reg=1e-3, batchnorm=True):
+                                   dropout=0.6, reg=1e-3, batchnorm=True,
+                                   final_act="linear"):
 
     encoder = Sequential()
-    encoder.add(Dense(8*8*128, activation=act, input_shape=(input_dim,),
+    encoder.add(Dense(8*8*128, activation=act,
                       kernel_regularizer=l2(reg), bias_regularizer=l2(reg),
                       kernel_initializer=initializer,
                       bias_initializer=initializer))
@@ -181,7 +183,7 @@ def build_vinicius_encoder_decoder(input_dim, latent_dim, initializer,
     if batchnorm:
         decoder.add(BatchNormalization())
     decoder.add(Flatten())
-    decoder.add(Dense(input_dim, activation="linear",
+    decoder.add(Dense(input_dim, activation=final_act,
                       kernel_regularizer=l2(reg),  bias_regularizer=l2(reg),
                       kernel_initializer=initializer,
                       bias_initializer=initializer))
@@ -196,10 +198,10 @@ def build_slimmer_vinicius_encoder_decoder(input_dim, latent_dim, initializer,
                                            info=False, act='elu',
                                            dense_act='elu',
                                            dropout=0.6, reg=1e-3,
-                                           batchnorm=True):
+                                           batchnorm=True, final_act="linear"):
 
     encoder = Sequential()
-    encoder.add(Dense(8*8*64, activation=act, input_shape=(input_dim,),
+    encoder.add(Dense(8*8*64, activation=act,
                       kernel_regularizer=l2(reg), bias_regularizer=l2(reg),
                       kernel_initializer=initializer,
                       bias_initializer=initializer))
@@ -256,7 +258,7 @@ def build_slimmer_vinicius_encoder_decoder(input_dim, latent_dim, initializer,
     if batchnorm:
         decoder.add(BatchNormalization())
     decoder.add(Flatten())
-    decoder.add(Dense(input_dim, activation="linear",
+    decoder.add(Dense(input_dim, activation=final_act,
                       kernel_regularizer=l2(reg),  bias_regularizer=l2(reg),
                       kernel_initializer=initializer,
                       bias_initializer=initializer))
@@ -271,10 +273,10 @@ def build_smaller_vinicius_encoder_decoder(input_dim, latent_dim, initializer,
                                            info=False, act='elu',
                                            dense_act='elu',
                                            dropout=0.6, reg=1e-3,
-                                           batchnorm=True):
+                                           batchnorm=True, final_act="linear"):
 
     encoder = Sequential()
-    encoder.add(Dense(4*4*64, activation=act, input_shape=(input_dim,),
+    encoder.add(Dense(4*4*64, activation=act,
                       kernel_regularizer=l2(reg), bias_regularizer=l2(reg),
                       kernel_initializer=initializer,
                       bias_initializer=initializer))
@@ -331,7 +333,7 @@ def build_smaller_vinicius_encoder_decoder(input_dim, latent_dim, initializer,
     if batchnorm:
         decoder.add(BatchNormalization())
     decoder.add(Flatten())
-    decoder.add(Dense(input_dim, activation="linear",
+    decoder.add(Dense(input_dim, activation=final_act,
                       kernel_regularizer=l2(reg),  bias_regularizer=l2(reg),
                       kernel_initializer=initializer,
                       bias_initializer=initializer))
@@ -363,7 +365,7 @@ def build_wider_dense_encoder(latent_dim, initializer, info=False,
 
 # We make the decoder model
 def build_wider_dense_decoder(input_dim, latent_dim, initializer, info=False,
-                              act='relu', dropout=0.6):
+                              act='relu', dropout=0.6, final_act="linear"):
     decoder = Sequential()
     decoder.add(Dense(1500, activation=act, input_dim=latent_dim,
                       kernel_initializer=initializer,
@@ -372,7 +374,7 @@ def build_wider_dense_decoder(input_dim, latent_dim, initializer, info=False,
     decoder.add(Dense(2000, activation=act, kernel_initializer=initializer,
                       bias_initializer=initializer))
     decoder.add(Dropout(dropout))
-    decoder.add(Dense(input_dim, activation='linear',
+    decoder.add(Dense(input_dim, activation=final_act,
                       kernel_initializer=initializer,
                       bias_initializer=initializer))
 
@@ -403,7 +405,7 @@ def build_slimmer_dense_encoder(latent_dim, initializer, info=False,
 
 # We make the decoder model
 def build_slimmer_dense_decoder(input_dim, latent_dim, initializer, info=False,
-                                act='relu', dropout=0.6):
+                                act='relu', dropout=0.6, final_act="linear"):
     decoder = Sequential()
     decoder.add(Dense(500, activation=act, input_dim=latent_dim,
                       kernel_initializer=initializer,
@@ -412,7 +414,7 @@ def build_slimmer_dense_decoder(input_dim, latent_dim, initializer, info=False,
     decoder.add(Dense(500, activation=act, kernel_initializer=initializer,
                       bias_initializer=initializer))
     decoder.add(Dropout(dropout))
-    decoder.add(Dense(input_dim, activation='linear',
+    decoder.add(Dense(input_dim, activation=final_act,
                       kernel_initializer=initializer,
                       bias_initializer=initializer))
 
@@ -446,7 +448,7 @@ def build_deeper_dense_encoder(latent_dim, initializer, info=False,
 
 # We make the decoder model
 def build_deeper_dense_decoder(input_dim, latent_dim, initializer, info=False,
-                               act='relu', dropout=0.6):
+                               act='relu', dropout=0.6, final_act="linear"):
     decoder = Sequential()
     decoder.add(Dense(1000, activation=act, input_dim=latent_dim,
                       kernel_initializer=initializer,
@@ -458,7 +460,7 @@ def build_deeper_dense_decoder(input_dim, latent_dim, initializer, info=False,
     decoder.add(Dense(500, activation=act, kernel_initializer=initializer,
                       bias_initializer=initializer))
     decoder.add(Dropout(dropout))
-    decoder.add(Dense(input_dim, activation='linear',
+    decoder.add(Dense(input_dim, activation=final_act,
                       kernel_initializer=initializer,
                       bias_initializer=initializer))
 
