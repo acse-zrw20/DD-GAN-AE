@@ -7,6 +7,7 @@ General utilities for package
 import numpy as np
 import keras.backend as K
 from keras.losses import mse
+from scipy.sparse.linalg import svds
 
 __author__ = "Zef Wolffs"
 __credits__ = ["Claire Heaney"]
@@ -24,7 +25,7 @@ def calc_pod(snapshots, nPOD=-2, cumulative_tol=0.99):
     Args:
         snapshots (list of ndarrays): List of arrays with subgrid
                                         snapshots. shape:
-                                        (n_grids or n_scalar, n_nodes, 
+                                        (n_grids, n_nodes*n_scalar, 
                                         n_timelevels)
 
     Returns:
@@ -37,29 +38,42 @@ def calc_pod(snapshots, nPOD=-2, cumulative_tol=0.99):
     for i, coeff in enumerate(snapshots):
         out[:, i*snapshots[0].shape[-1]:(i+1)*snapshots[0].shape[-1]] = coeff
 
-    u, s, v = np.linalg.svd(out)
+    snapshots_matrix = out
+    nrows, ncols = snapshots_matrix.shape
 
-    cumulative_info = np.zeros(len(s))
-    for j in range(len(s)):
+    if nrows > ncols/4:
+        SSmatrix = np.dot(snapshots_matrix.T, snapshots_matrix)
+    else:
+        SSmatrix = np.dot(snapshots_matrix, snapshots_matrix.T)
+        print('WARNING - CHECK HOW THE BASIS FUNCTIONS ARE CALCULATED WITH THIS METHOD')
+
+    print('SSmatrix', SSmatrix.shape)
+    eigvalues, v = np.linalg.eigh(SSmatrix)
+    eigvalues = eigvalues[::-1]
+    # get rid of small negative eigenvalues (there shouldn't be any as the
+    # eigenvalues of a real, symmetric
+    # matrix are non-negative, but sometimes very small negative values do
+    # appear)
+    eigvalues[eigvalues < 0] = 0
+    s = np.sqrt(eigvalues)
+    # print('s values', s_values[0:20]) 
+
+    cumulative_info = np.zeros(len(eigvalues))
+    for j in range(len(eigvalues)):
         if j == 0:
-            cumulative_info[j] = s[j]
+            cumulative_info[j] = eigvalues[j]
         else:
-            cumulative_info[j] = cumulative_info[j-1] + s[j]
+            cumulative_info[j] = cumulative_info[j-1] + eigvalues[j]
 
     cumulative_info = cumulative_info / cumulative_info[-1]
-    nAll = len(s)
+    nAll = len(eigvalues)
 
-    # if nPOD = -1, use cumulative tolerance
-    # if nPOD = -2 use all coefficients (or set nPOD = nTime)
-    # if nPOD > 0 use nPOD coefficients as defined by the user
+    basis_functions = np.zeros((out.shape[0], nPOD))  # nDim should be nScalar?
+    for j in reversed(range(nAll-nPOD, nAll)):
+        Av = np.dot(snapshots_matrix, v[:, j])
+        basis_functions[:, nAll-j-1] = Av/np.linalg.norm(Av)
 
-    if nPOD == -1:
-        # SVD truncation - percentage of information captured or number
-        nPOD = sum(cumulative_info <= cumulative_tol)  # tolerance
-    elif nPOD == -2:
-        nPOD = nAll
-
-    R = u[:, :nPOD]
+    R = basis_functions
 
     coeffs = []
 
@@ -69,8 +83,6 @@ def calc_pod(snapshots, nPOD=-2, cumulative_tol=0.99):
                 snapshots[0].shape[-1]]
 
         coeffs.append(np.dot(R.T, snapshots_per_grid))
-
-    s = s[:nPOD]
 
     return coeffs, R, s
 
