@@ -266,4 +266,10 @@ class Predictive_adversarial:
                         self.adversarial_autoencoder.predict(
                             pred_vars[k-1:k+2, :, i].reshape(1, -1))[0]
 
+                for k in range(init_values.shape[0], 0, -1):
+                    # Loop over the columns that are meant to be predicted
+                    pred_vars[k, :, i+1] = \
+                        self.adversarial_autoencoder.predict(
+                            pred_vars[k-1:k+2, :, i].reshape(1, -1))[0]
+
         return pred_vars
