@@ -211,7 +211,9 @@ def train_wandb_pred_aae(config=None):
             1000,
             interval=config.interval,
             batch_size=config.batch_size,
+            val_size=0.1,
             wandb_log=True,
+            noise_std=config.noise_std
         )
 
         if config.savemodel:
@@ -248,9 +250,10 @@ Predictive_adversarial_sweep_config = {
         "momentum": {"values": [0.8, 0.9, 0.98]},
         "beta_2": {"values": [0.9, 0.999, 0.99999]},
         "batch_normalization": {"values": [True, False]},
-        "regularization": {"values": [1e-4, 1e-5, 0]},
+        "regularization": {"values": [5e-3, 1e-4, 1e-5, 0]},
         "savemodel": {"values": [False]},
         "latent_vars": {"values": [10]},
+        "noise_std": {"values": [0.001, 0.01, 0.05, 0.1]}
     },
 }
 
