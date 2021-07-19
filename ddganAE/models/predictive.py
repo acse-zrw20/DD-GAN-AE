@@ -124,7 +124,10 @@ class Predictive_adversarial:
 
         train_dataset = tf.data.Dataset.from_tensor_slices((x_train_full,
                                                             y_train_full))
-        train_dataset = train_dataset.batch(batch_size, drop_remainder=True)
+        train_dataset = train_dataset. \
+            shuffle(buffer_size=train_data.shape[0],
+                    reshuffle_each_iteration=True).batch(batch_size,
+                                                         drop_remainder=True)
 
         # Set up tensorboard logging
         current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -248,7 +251,7 @@ class Predictive_adversarial:
             timesteps (int): Number of timesteps to predict
             iters (int): Number of iterations to do before a prediction
         """
-        boundaries = boundaries[:, :, ::self.interval][:, :, 1:]
+        boundaries = boundaries[:, :, ::self.interval]
 
         pred_vars = np.zeros((2 + init_values.shape[0], 10,
                               boundaries.shape[2]))
@@ -262,14 +265,28 @@ class Predictive_adversarial:
                 # Inner optimization loop within a timestep
                 for k in range(1, init_values.shape[0]+1):
                     # Loop over the columns that are meant to be predicted
+                    # pred_vars[k, :, i+1] = \
+                    #    self.adversarial_autoencoder.predict(
+                    #        pred_vars[k-1:k+2, :, i].reshape(1, -1))[0]
+
+                    pred_vars_t = \
+                        np.concatenate((pred_vars[k-1, :, i+1],
+                                        pred_vars[k, :, i],
+                                        pred_vars[k+1, :, i+1])).reshape(1, -1)
+
                     pred_vars[k, :, i+1] = \
-                        self.adversarial_autoencoder.predict(
-                            pred_vars[k-1:k+2, :, i].reshape(1, -1))[0]
+                        self.adversarial_autoencoder.predict(pred_vars_t)[0]
 
                 for k in range(init_values.shape[0], 0, -1):
                     # Loop over the columns that are meant to be predicted
+                    pred_vars_t = \
+                        np.concatenate((pred_vars[k-1, :, i+1],
+                                        pred_vars[k, :, i],
+                                        pred_vars[k+1, :, i+1])).reshape(1, -1)
+
                     pred_vars[k, :, i+1] = \
-                        self.adversarial_autoencoder.predict(
-                            pred_vars[k-1:k+2, :, i].reshape(1, -1))[0]
+                        self.adversarial_autoencoder.predict(pred_vars_t)[0]
+
+                #print(pred_vars[0:3, :, :3], "\n\n\n")
 
         return pred_vars
