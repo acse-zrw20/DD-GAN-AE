@@ -4,13 +4,14 @@ Predictive Models
 
 """
 
-from keras.layers import Input, Conv1D
+from keras.layers import Input, Conv1D, GaussianNoise
 from keras.models import Model
+from sklearn import preprocessing
 import tensorflow as tf
+from sklearn.model_selection import train_test_split
 import datetime
 import numpy as np
 import wandb
-from sklearn.preprocessing import MinMaxScaler
 
 
 class Predictive_adversarial:
@@ -57,38 +58,12 @@ class Predictive_adversarial:
                                              loss_weights=[0.999, 0.001],
                                              optimizer=self.optimizer)
 
-    def train(self, input_data, epochs, interval=5, val_data=None,
-              batch_size=128, val_batch_size=128, wandb_log=False,
-              n_discriminator=5):
-        """
-        Training model where we use a training method that weights
-        the losses of the discriminator and autoencoder and as such combines
-        them into one loss and trains on them simultaneously. Takes in POD
-        coefficients or latent variables. The timestep shifts will be done in
-        this function.
-
-        Args:
-            train_data (np.ndarray): Array with train data, in shape
-                                     (ngrids, nvars, ntime) (rescaled)
-            epochs (int): Number of epochs
-            interval (int): choose every `interval` variables to model
-            val_data (np.ndarray, optional): Array with validation data.
-                Defaults to None.
-            batch_size (int, optional): Batch size. Defaults to 128.
-            plot_losses (bool, optional): Whether to plot losses.
-                Defaults to False.
-            print_losses (bool, optional): Whether to print losses.
-                Defaults to False.
-        """
-
-        d_loss_val = g_loss_val = None
-        self.interval = interval
+    def preprocess(self, input_data):
 
         # Preprocessing
         # For now only select first 4 subdomains
-        for k in range(interval):
-            grid_coeffs = np.array(input_data)[:, :, k::interval]
-
+        for k in range(self.interval):
+            grid_coeffs = np.array(input_data)[:, :, k::self.interval]
             train_data = np.zeros((grid_coeffs.shape[0] - 2,
                                    grid_coeffs.shape[1]
                                    * 3, grid_coeffs.shape[2]))
@@ -122,12 +97,61 @@ class Predictive_adversarial:
                 x_train_full = np.concatenate([x_train_full, x_train])
                 y_train_full = np.concatenate([y_train_full, y_train])
 
-        train_dataset = tf.data.Dataset.from_tensor_slices((x_train_full,
-                                                            y_train_full))
-        train_dataset = train_dataset. \
-            shuffle(buffer_size=train_data.shape[0],
-                    reshuffle_each_iteration=True).batch(batch_size,
-                                                         drop_remainder=True)
+        return x_train_full, y_train_full
+
+    def train(self, input_data, epochs, interval=5, val_size=0,
+              batch_size=128, val_batch_size=128, wandb_log=False,
+              n_discriminator=5, noise_std=0):
+        """
+        Training model where we use a training method that weights
+        the losses of the discriminator and autoencoder and as such combines
+        them into one loss and trains on them simultaneously. Takes in POD
+        coefficients or latent variables. The timestep shifts will be done in
+        this function.
+
+        Args:
+            train_data (np.ndarray): Array with train data, in shape
+                                     (ngrids, nvars, ntime) (rescaled)
+            epochs (int): Number of epochs
+            interval (int): choose every `interval` variables to model
+            val_data (np.ndarray, optional): Array with validation data.
+                Defaults to None.
+            batch_size (int, optional): Batch size. Defaults to 128.
+            plot_losses (bool, optional): Whether to plot losses.
+                Defaults to False.
+            print_losses (bool, optional): Whether to print losses.
+                Defaults to False.
+        """
+
+        d_loss_val = g_loss_val = None
+        self.interval = interval
+
+        x_full, y_full = self.preprocess(input_data)
+
+        x_train, x_val, y_train, y_val = train_test_split(
+            x_full, y_full, test_size=val_size)
+
+        train_dataset = tf.data.Dataset.from_tensor_slices((x_train,
+                                                            y_train))
+        train_dataset = train_dataset.\
+            shuffle(buffer_size=x_train.shape[0],
+                    reshuffle_each_iteration=True).\
+            batch(batch_size,
+                  drop_remainder=True)
+
+        if noise_std > 0:
+            add_noise = tf.keras.Sequential([GaussianNoise(noise_std)])
+            train_dataset = train_dataset.map(lambda x, y:
+                                              (add_noise(float(x),
+                                                         training=True), y))
+
+        val_dataset = tf.data.Dataset.from_tensor_slices((x_val,
+                                                          y_val))
+        val_dataset = val_dataset. \
+            shuffle(buffer_size=x_val.shape[0],
+                    reshuffle_each_iteration=True).\
+            batch(val_batch_size,
+                  drop_remainder=True)
 
         # Set up tensorboard logging
         current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -169,21 +193,24 @@ class Predictive_adversarial:
                     g_step += 1
 
             d_loss = d_loss_cum/(step+1)
-            g_loss = g_loss_cum/(g_step+1)
+            g_loss = g_loss_cum/(g_step)
 
             with train_summary_writer.as_default():
                 tf.summary.scalar('loss - g', g_loss, step=epoch)
                 tf.summary.scalar('loss - d', d_loss, step=epoch)
 
             # Calculate the accuracies on the validation set
-            if val_data is not None:
+            if val_dataset is not None:
+
+                d_loss_val, g_loss_val = self.validate(val_dataset,
+                                                       val_batch_size)
 
                 with val_summary_writer.as_default():
                     tf.summary.scalar('loss - g', g_loss_val, step=epoch)
                     tf.summary.scalar('loss - d', d_loss_val, step=epoch)
 
             if wandb_log:
-                if val_data is not None:
+                if val_dataset is not None:
                     log = {"epoch": epoch,
                            "g_train_loss": g_loss,
                            "d_train_loss": d_loss,
@@ -216,9 +243,9 @@ class Predictive_adversarial:
         d_loss_cum = 0
         g_loss_cum = 0
         step = 0
-        for step, val_grids in enumerate(val_dataset):
+        for step, (x, y) in enumerate(val_dataset):
 
-            latent_fake = self.encoder.predict(val_grids)
+            latent_fake = self.encoder.predict(x)
             latent_real = np.random.normal(size=(val_batch_size,
                                                  self.latent_dim))
 
@@ -228,8 +255,8 @@ class Predictive_adversarial:
                                                       fake, verbose=0)[0]
             d_loss_cum += 0.5 * np.add(d_loss_real, d_loss_fake)
 
-            g_loss_cum += self.adversarial_autoencoder.evaluate(val_grids,
-                                                                [val_grids,
+            g_loss_cum += self.adversarial_autoencoder.evaluate(x,
+                                                                [y,
                                                                  valid],
                                                                 verbose=0)[0]
 
@@ -287,6 +314,6 @@ class Predictive_adversarial:
                     pred_vars[k, :, i+1] = \
                         self.adversarial_autoencoder.predict(pred_vars_t)[0]
 
-                #print(pred_vars[0:3, :, :3], "\n\n\n")
+                # print(pred_vars[0:3, :, :3], "\n\n\n")
 
         return pred_vars
