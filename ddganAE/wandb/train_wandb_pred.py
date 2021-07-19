@@ -208,7 +208,7 @@ def train_wandb_pred_aae(config=None):
         pred_adv.compile(config.in_vars)
         pred_adv.train(
             train_data,
-            180,
+            120,
             interval=config.interval,
             batch_size=config.batch_size,
             val_size=0.1,
