@@ -205,7 +205,7 @@ def train_wandb_pred_aae(config=None):
 
         pred_adv = Predictive_adversarial(encoder, decoder, discriminator, 
                                           optimizer)
-        pred_adv.compile(config.in_vars)
+        pred_adv.compile(config.in_vars, increment=config.increment)
         pred_adv.train(
             train_data,
             120,
@@ -215,6 +215,28 @@ def train_wandb_pred_aae(config=None):
             wandb_log=True,
             noise_std=config.noise_std
         )
+
+        # Check how well the model actually performs to also predict the
+        # results
+
+        # Create boundaries and initial values arrays for prediction later
+        boundaries = np.zeros((2, 10, 800))
+        boundaries[0] = train_data[0]
+        boundaries[1] = train_data[3]
+
+        init_values = np.zeros((2, 10))
+        init_values[0] = train_data[1][:, 0]
+        init_values[1] = train_data[2][:, 0]
+
+        predicted = pred_adv.predict(boundaries, init_values, 50, iters=10)
+        train_data_int = train_data[:, :, ::config.interval]
+
+        mse = tf.keras.losses.MeanSquaredError()
+        mse_pred = mse(predicted[:, :, :50], train_data_int[:, :, :50]).numpy()
+
+        log = {"prediction_mse": mse_pred}
+
+        wandb.log(log)
 
         if config.savemodel:
             dirname = "model_" + wandb.run.name
@@ -253,7 +275,8 @@ Predictive_adversarial_sweep_config = {
         "regularization": {"values": [5e-3, 1e-4, 1e-5, 0]},
         "savemodel": {"values": [False]},
         "latent_vars": {"values": [10]},
-        "noise_std": {"values": [0.001, 0.01, 0.05, 0.1]}
+        "noise_std": {"values": [0.001, 0.01, 0.05, 0.1]},
+        "increment": {"values": [True, False]}
     },
 }
 
