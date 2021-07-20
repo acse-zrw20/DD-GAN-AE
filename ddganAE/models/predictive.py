@@ -30,8 +30,8 @@ class Predictive_adversarial:
     def reconstruct_from_pod(coeffs, R):
         return R @ coeffs
 
-    def compile(self, nPOD):
-
+    def compile(self, nPOD, increment=False):
+        self.increment = increment
         self.nPOD = nPOD
         if isinstance(self.encoder.layers[0], Conv1D):
             # Convolutional networks require a slightly different input shape
@@ -82,7 +82,14 @@ class Predictive_adversarial:
             step[:, :, self.nPOD*2:] = step_forward[:, :, self.nPOD*2:]
 
             x_train = step
-            y_train = step_forward
+
+            if self.increment:
+                # For if we use the time increment approach
+                y_train = step
+                y_train = np.diff(y_train, axis=0)
+                x_train = x_train[:-1]
+            else:
+                y_train = step_forward
 
             x_train = np.concatenate(x_train, 0)
             y_train = np.concatenate(y_train, 0)
@@ -301,8 +308,14 @@ class Predictive_adversarial:
                                         pred_vars[k, :, i],
                                         pred_vars[k+1, :, i+1])).reshape(1, -1)
 
-                    pred_vars[k, :, i+1] = \
-                        self.adversarial_autoencoder.predict(pred_vars_t)[0]
+                    if self.increment:
+                        pred_vars[k, :, i+1] = pred_vars[k, :, i] + \
+                            self.adversarial_autoencoder.predict(
+                                pred_vars_t)[0]
+                    else:
+                        pred_vars[k, :, i+1] = \
+                            self.adversarial_autoencoder.predict(
+                                pred_vars_t)[0]
 
                 for k in range(init_values.shape[0], 0, -1):
                     # Loop over the columns that are meant to be predicted
@@ -311,8 +324,14 @@ class Predictive_adversarial:
                                         pred_vars[k, :, i],
                                         pred_vars[k+1, :, i+1])).reshape(1, -1)
 
-                    pred_vars[k, :, i+1] = \
-                        self.adversarial_autoencoder.predict(pred_vars_t)[0]
+                    if self.increment:
+                        pred_vars[k, :, i+1] = pred_vars[k, :, i] + \
+                            self.adversarial_autoencoder.predict(
+                                pred_vars_t)[0]
+                    else:
+                        pred_vars[k, :, i+1] = \
+                            self.adversarial_autoencoder.predict(
+                                pred_vars_t)[0]
 
                 # print(pred_vars[0:3, :, :3], "\n\n\n")
 
