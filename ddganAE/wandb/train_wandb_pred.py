@@ -208,7 +208,7 @@ def train_wandb_pred_aae(config=None):
         pred_adv.compile(config.in_vars, increment=config.increment)
         pred_adv.train(
             train_data,
-            120,
+            config.epochs,
             interval=config.interval,
             batch_size=config.batch_size,
             val_size=0.1,
@@ -276,7 +276,8 @@ Predictive_adversarial_sweep_config = {
         "savemodel": {"values": [False]},
         "latent_vars": {"values": [10]},
         "noise_std": {"values": [0.001, 0.01, 0.05, 0.1]},
-        "increment": {"values": [True, False]}
+        "increment": {"values": [True, False]},
+        "epochs": {"values": [30, 100, 200, 500, 1000]}
     },
 }
 
