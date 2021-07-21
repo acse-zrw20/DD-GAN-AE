@@ -288,7 +288,7 @@ Predictive_adversarial_sweep_config = {
         },
         "noise_std": {"values": [0.001, 0.01, 0.05, 0.1]},
         "increment": {"values": [True, False]},
-        "epochs": {"values": [200, 500, 1000]},
+        "epochs": {"values": [200, 500, 1000, 2000]},
         "n_discriminator": {"values": [1, 2, 4, 5]},
         "n_gradient_ascent": {"values": [3, 8, 15, 30]}
     },
