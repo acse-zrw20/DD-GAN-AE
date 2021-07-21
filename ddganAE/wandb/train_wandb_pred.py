@@ -234,7 +234,7 @@ def train_wandb_pred_aae(config=None):
         train_data_int = train_data[:, :, ::config.interval]
 
         mse = tf.keras.losses.MeanSquaredError()
-        mse_pred = mse(predicted[:, :, :50], 
+        mse_pred = mse(predicted[:, :, :50],
                        train_data_int[:4, :, :50]).numpy()
 
         log = {"prediction_mse": mse_pred}
@@ -275,12 +275,20 @@ Predictive_adversarial_sweep_config = {
         "momentum": {"values": [0.8, 0.9, 0.98]},
         "beta_2": {"values": [0.9, 0.999, 0.99999]},
         "batch_normalization": {"values": [True, False]},
-        "regularization": {"values": [5e-3, 1e-4, 1e-5, 0]},
+        "regularization": {"values": [1e-3, 1e-4, 1e-5, 1e-6, 0]},
         "savemodel": {"values": [False]},
-        "latent_vars": {"values": [10]},
+        "latent_vars": {"values": [30]},
+        "interval": {"values": [1, 2, 5, 10]},
+        "final_act": {
+            "values": [
+              "linear",
+              "sigmoid",
+              "tanh"
+            ]
+        },
         "noise_std": {"values": [0.001, 0.01, 0.05, 0.1]},
         "increment": {"values": [True, False]},
-        "epochs": {"values": [30, 100, 200, 500, 1000]},
+        "epochs": {"values": [200, 500, 1000]},
         "n_discriminator": {"values": [1, 2, 4, 5]},
         "n_gradient_ascent": {"values": [3, 8, 15, 30]}
     },
@@ -290,7 +298,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Do hyperparameter \
 optimization on slug flow dataset")
     parser.add_argument('--datafile', type=str, nargs='?',
-                        default="processed/sf_snapshots_200timesteps_rand.npy",
+                        default="/home/zef/Documents/master/acse-9/DD-GAN-AE/\
+submodules/DD-GAN/data/processed/cae_latent_sf_10vars_800steps_different.npy",
                         help='path to structured grid data file')
     parser.add_argument('--savemodel', type=str, nargs='?',
                         default="False",
@@ -308,12 +317,12 @@ saving')
 
     if arg_dict['custom_config'] is not None:
         with open(arg_dict["custom_config"]) as json_file:
-            cae_sweep_config = json.load(json_file)
+            Predictive_adversarial_sweep_config = json.load(json_file)
     if arg_dict["savemodel"] == "True":
-        cae_sweep_config['parameters']['savemodel'] = \
+        Predictive_adversarial_sweep_config['parameters']['savemodel'] = \
             {'values': [True]}
 
-    cae_sweep_config['parameters']['datafile'] = \
+    Predictive_adversarial_sweep_config['parameters']['datafile'] = \
         {'values': [arg_dict['datafile']]}
 
     sweep_id = wandb.sweep(Predictive_adversarial_sweep_config,
