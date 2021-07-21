@@ -86,8 +86,8 @@ class Predictive_adversarial:
             if self.increment:
                 # For if we use the time increment approach
                 y_train = step
-                y_train = np.diff(y_train, axis=0)
-                x_train = x_train[:-1]
+                y_train = np.diff(y_train, axis=1)
+                x_train = x_train[:, :-1, :]
             else:
                 y_train = step_forward
 
@@ -345,7 +345,5 @@ class Predictive_adversarial:
                         pred_vars[k, :, i+1] = \
                             self.adversarial_autoencoder.predict(
                                 pred_vars_t)[0]
-
-                # print(pred_vars[0:3, :, :3], "\n\n\n")
 
         return pred_vars
