@@ -108,7 +108,7 @@ class Predictive_adversarial:
 
     def train(self, input_data, epochs, interval=5, val_size=0,
               batch_size=128, val_batch_size=128, wandb_log=False,
-              n_discriminator=5, noise_std=0):
+              n_discriminator=5, n_gradient_ascent=np.inf, noise_std=0):
         """
         Training model where we use a training method that weights
         the losses of the discriminator and autoencoder and as such combines
@@ -184,12 +184,25 @@ class Predictive_adversarial:
                 latent_real = np.random.normal(size=(batch_size,
                                                      self.latent_dim))
 
-                # Train the discriminator
-                d_loss_real = self.discriminator.train_on_batch(latent_real,
-                                                                valid)[0]
-                d_loss_fake = self.discriminator.train_on_batch(latent_fake,
-                                                                fake)[0]
-                d_loss_cum += 0.5 * np.add(d_loss_real, d_loss_fake)
+                if step % n_gradient_ascent == 0:
+                    # Every so many timesteps do a step of gradient ascent to
+                    # inhibit the discriminator from becoming too good
+                    d_loss_real = self.discriminator.train_on_batch(
+                        latent_real,
+                        fake)[0]
+                    d_loss_fake = self.discriminator.train_on_batch(
+                        latent_fake,
+                        valid)[0]
+                    d_loss_cum += 0.5 * np.add(d_loss_real, d_loss_fake)
+                else:
+                    # Actually train the discriminator all of the other steps
+                    d_loss_real = self.discriminator.train_on_batch(
+                        latent_real,
+                        valid)[0]
+                    d_loss_fake = self.discriminator.train_on_batch(
+                        latent_fake,
+                        fake)[0]
+                    d_loss_cum += 0.5 * np.add(d_loss_real, d_loss_fake)
 
                 if step % n_discriminator == 0:
 

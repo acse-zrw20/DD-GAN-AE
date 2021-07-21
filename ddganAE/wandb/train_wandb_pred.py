@@ -214,7 +214,8 @@ def train_wandb_pred_aae(config=None):
             val_size=0.1,
             wandb_log=True,
             noise_std=config.noise_std,
-            n_discriminator=config.n_discriminator
+            n_discriminator=config.n_discriminator,
+            n_gradient_ascent=config.n_gradient_ascent
         )
 
         # Check how well the model actually performs to also predict the
@@ -279,7 +280,8 @@ Predictive_adversarial_sweep_config = {
         "noise_std": {"values": [0.001, 0.01, 0.05, 0.1]},
         "increment": {"values": [True, False]},
         "epochs": {"values": [30, 100, 200, 500, 1000]},
-        "n_discriminator": {"values": [1, 2, 4, 5]}
+        "n_discriminator": {"values": [1, 2, 4, 5]},
+        "n_gradient_ascent": {"values": [3, 8, 15, 30]}
     },
 }
 
