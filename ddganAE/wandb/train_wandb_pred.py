@@ -62,7 +62,7 @@ def train_wandb_pred_aae(config=None):
         latent_vars_reshaped = np.moveaxis(latent_vars.reshape(800, 10, 10),
                                            0, 2)
 
-        train_data = latent_vars_reshaped[:4]
+        train_data = latent_vars_reshaped
 
         # Scaling the latent variables
         scaler = MinMaxScaler((-1, 1))
