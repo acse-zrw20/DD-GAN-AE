@@ -250,8 +250,8 @@ def train_wandb_pred_aae(config=None):
 
 # Configuration options for hyperparameter optimization
 Predictive_adversarial_sweep_config = {
-    "method": "random",
-    "metric": {"name": "valid_loss", "goal": "minimize"},
+    "method": "bayes",
+    "metric": {"name": "prediction_mse", "goal": "minimize"},
     "parameters": {
         "architecture": {
             "values": [
