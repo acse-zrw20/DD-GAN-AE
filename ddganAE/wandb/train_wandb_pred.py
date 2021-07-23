@@ -62,7 +62,7 @@ def train_wandb_pred_aae(config=None):
         latent_vars_reshaped = np.moveaxis(latent_vars.reshape(800, 10, 10),
                                            0, 2)
 
-        train_data = latent_vars_reshaped[:4]
+        train_data = latent_vars_reshaped[:config.domains]
 
         # Scaling the latent variables
         scaler = MinMaxScaler((-1, 1))
@@ -290,7 +290,8 @@ Predictive_adversarial_sweep_config = {
         "increment": {"values": [True, False]},
         "epochs": {"values": [200, 500, 1000, 2000]},
         "n_discriminator": {"values": [1, 2, 4, 5]},
-        "n_gradient_ascent": {"values": [3, 8, 15, 30]}
+        "n_gradient_ascent": {"values": [3, 8, 15, 30]},
+        "domains": {"values": [10]}
     },
 }
 
