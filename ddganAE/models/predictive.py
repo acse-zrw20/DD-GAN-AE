@@ -304,7 +304,7 @@ class Predictive_adversarial:
                               boundaries.shape[2]))
         pred_vars[0] = boundaries[0]
         pred_vars[1:-1, :, 0] = init_values
-        pred_vars[3] = boundaries[1]
+        pred_vars[-1] = boundaries[1]
 
         for i in range(timesteps):
             # Outer "timesteps" loop
