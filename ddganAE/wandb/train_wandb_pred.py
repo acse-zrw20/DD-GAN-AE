@@ -62,7 +62,7 @@ def train_wandb_pred_aae(config=None):
         latent_vars_reshaped = np.moveaxis(latent_vars.reshape(800, 10, 10),
                                            0, 2)
 
-        train_data = latent_vars_reshaped
+        train_data = latent_vars_reshaped[:4]
 
         # Scaling the latent variables
         scaler = MinMaxScaler((-1, 1))
@@ -230,12 +230,12 @@ def train_wandb_pred_aae(config=None):
         init_values[0] = train_data[1][:, 0]
         init_values[1] = train_data[2][:, 0]
 
-        predicted = pred_adv.predict(boundaries, init_values, 50, iters=10)
+        predicted = pred_adv.predict(boundaries, init_values, 100, iters=5)
         train_data_int = train_data[:, :, ::config.interval]
 
         mse = tf.keras.losses.MeanSquaredError()
-        mse_pred = mse(predicted[:, :, :50],
-                       train_data_int[:4, :, :50]).numpy()
+        mse_pred = mse(predicted[:, :, :100],
+                       train_data_int[:4, :, :100]).numpy()
 
         log = {"prediction_mse": mse_pred}
 
