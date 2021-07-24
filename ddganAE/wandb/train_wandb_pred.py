@@ -234,8 +234,8 @@ def train_wandb_pred_aae(config=None):
         train_data_int = train_data[:, :, ::config.interval]
 
         mse = tf.keras.losses.MeanSquaredError()
-        mse_pred = mse(predicted[:, :, :100],
-                       train_data_int[:4, :, :100]).numpy()
+        mse_pred = mse(predicted[:, :, :300/config.interval],
+                       train_data_int[:4, :, :300/config.interval]).numpy()
 
         log = {"prediction_mse": mse_pred}
 
@@ -278,7 +278,7 @@ Predictive_adversarial_sweep_config = {
         "regularization": {"values": [1e-3, 1e-4, 1e-5, 1e-6, 0]},
         "savemodel": {"values": [False]},
         "latent_vars": {"values": [30]},
-        "interval": {"values": [1, 2, 5, 10]},
+        "interval": {"values": [1, 2, 4, 6]},
         "final_act": {
             "values": [
               "linear",

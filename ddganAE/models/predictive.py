@@ -286,7 +286,7 @@ class Predictive_adversarial:
 
         return d_loss, g_loss
 
-    def predict(self, boundaries, init_values, timesteps, iters=5):
+    def predict(self, boundaries, init_values, timesteps, iters=5, sor=1):
         """
         Predict in time using boundaries and initial values for a certain
         number of timesteps. The timestep shifts will be done in this function
@@ -326,9 +326,9 @@ class Predictive_adversarial:
                             self.adversarial_autoencoder.predict(
                                 pred_vars_t)[0]
                     else:
-                        pred_vars[k, :, i+1] = \
-                            self.adversarial_autoencoder.predict(
-                                pred_vars_t)[0]
+                        pred_vars[k, :, i+1] = pred_vars[k, :, i] + \
+                            (self.adversarial_autoencoder.predict(
+                                pred_vars_t)[0][0] - pred_vars[k, :, i]) * sor
 
                 for k in range(init_values.shape[0], 0, -1):
                     # Loop over the columns that are meant to be predicted
@@ -342,8 +342,8 @@ class Predictive_adversarial:
                             self.adversarial_autoencoder.predict(
                                 pred_vars_t)[0]
                     else:
-                        pred_vars[k, :, i+1] = \
-                            self.adversarial_autoencoder.predict(
-                                pred_vars_t)[0]
+                        pred_vars[k, :, i+1] = pred_vars[k, :, i] + \
+                            (self.adversarial_autoencoder.predict(
+                                pred_vars_t)[0][0] - pred_vars[k, :, i]) * sor
 
         return pred_vars
