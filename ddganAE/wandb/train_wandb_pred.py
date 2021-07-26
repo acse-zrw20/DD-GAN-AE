@@ -515,7 +515,7 @@ Predictive_adversarial_sweep_config = {
 
 # Configuration options for hyperparameter optimization
 Endless_predictive_adversarial_sweep_config = {
-    "method": "bayes",
+    "method": "random",
     "metric": {"name": "prediction_mse", "goal": "minimize"},
     "parameters": {
         "architecture": {
