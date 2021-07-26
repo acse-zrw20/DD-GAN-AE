@@ -464,7 +464,7 @@ def endless_train_wandb_pred_aae(config=None):
             os.mkdir(dirname)
             pred_adv.encoder.save(dirname + '/encoder')
             pred_adv.decoder.save(dirname + '/decoder')
-
+"""
 
 # Configuration options for hyperparameter optimization
 Predictive_adversarial_sweep_config = {
@@ -595,4 +595,3 @@ saving')
     sweep_id = wandb.sweep(Predictive_adversarial_sweep_config,
                            project='pred-aae', entity='zeff020')
     wandb.agent(sweep_id, train_wandb_pred_aae, count=arg_dict['niters'])
-"""
