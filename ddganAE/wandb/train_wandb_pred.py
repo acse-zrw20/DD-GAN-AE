@@ -29,8 +29,8 @@ from ddganAE.architectures.discriminators import (
     build_custom_discriminator,
     build_custom_wider_discriminator
 )
-from ddganAE.wandb.get_snapshots_3d_endless_learn import \
-    get_snapshots_3d_endless_learn
+# from ddganAE.wandb.get_snapshots_3d_endless_learn import \
+#    get_snapshots_3d_endless_learn
 import numpy as np
 from sklearn.model_selection import train_test_split
 
@@ -252,8 +252,9 @@ def train_wandb_pred_aae(config=None):
             pred_adv.decoder.save(dirname + '/decoder')
 
 
+"""
 def endless_train_wandb_pred_aae(config=None):
-    """
+    """"""
     Construct and subsequently train the model while reporting losses to
     weights and biases platform. Weights and biases also controls
     hyperparameters.
@@ -261,7 +262,7 @@ def endless_train_wandb_pred_aae(config=None):
     Args:
         config (dict, optional): Dictionary with hyperparameters, set by
                                  weights and biases. Defaults to None.
-    """
+    """"""
     with wandb.init(config=config):
         # If called by wandb.agent, as below,
         # this config will be set by Sweep Controller
@@ -594,3 +595,4 @@ saving')
     sweep_id = wandb.sweep(Predictive_adversarial_sweep_config,
                            project='pred-aae', entity='zeff020')
     wandb.agent(sweep_id, train_wandb_pred_aae, count=arg_dict['niters'])
+"""
