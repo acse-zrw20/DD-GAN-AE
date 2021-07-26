@@ -53,7 +53,7 @@ def train_wandb_pred_aae(config=None):
         config (dict, optional): Dictionary with hyperparameters, set by
                                  weights and biases. Defaults to None.
     """
-    with wandb.init(config=config):
+    with wandb.init(config=config, tags=["central_doms_pred_mse"]):
         # If called by wandb.agent, as below,
         # this config will be set by Sweep Controller
         config = wandb.config
@@ -225,12 +225,12 @@ def train_wandb_pred_aae(config=None):
 
         # Create boundaries and initial values arrays for prediction later
         boundaries = np.zeros((2, 10, 800))
-        boundaries[0] = train_data[0]
-        boundaries[1] = train_data[3]
+        boundaries[0] = train_data[4]
+        boundaries[1] = train_data[7]
 
         init_values = np.zeros((2, 10))
-        init_values[0] = train_data[1][:, 0]
-        init_values[1] = train_data[2][:, 0]
+        init_values[0] = train_data[5][:, 0]
+        init_values[1] = train_data[6][:, 0]
 
         predicted = pred_adv.predict(boundaries, init_values,
                                      int(800/config.interval), iters=5)
