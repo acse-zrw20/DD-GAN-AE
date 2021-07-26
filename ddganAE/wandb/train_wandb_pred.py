@@ -233,12 +233,12 @@ def train_wandb_pred_aae(config=None):
         init_values[1] = train_data[6][:, 0]
 
         predicted = pred_adv.predict(boundaries, init_values,
-                                     int(800/config.interval), iters=5)
+                                     int(800/config.interval)-1, iters=5)
         train_data_int = train_data[4:8, :, ::config.interval]
 
         mse = tf.keras.losses.MeanSquaredError()
-        mse_pred = mse(predicted[:, :, :int(800/config.interval)],
-                       train_data_int[:, :, :int(800/config.interval)])\
+        mse_pred = mse(predicted[:, :, :int(800/config.interval)-2],
+                       train_data_int[:, :, :int(800/config.interval)-2])\
             .numpy()
 
         log = {"prediction_mse": mse_pred}
