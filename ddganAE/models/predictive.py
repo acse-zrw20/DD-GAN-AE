@@ -308,9 +308,18 @@ class Predictive_adversarial:
 
         for i in range(timesteps):
             # Outer "timesteps" loop
+            
+            # Let's start with a linear extrapolation for the predictions
+            if i > 1:
+                for k in range(1, init_values.shape[0]+1):
+                    pred_vars[k, :, i+1] = pred_vars[k, :, i] + \
+                                           (pred_vars[k, :, i] -
+                                            pred_vars[k, :, i-1])
+
             for j in range(iters):
                 # Inner optimization loop within a timestep
                 for k in range(1, init_values.shape[0]+1):
+
                     # Loop over the columns that are meant to be predicted
                     # pred_vars[k, :, i+1] = \
                     #    self.adversarial_autoencoder.predict(
