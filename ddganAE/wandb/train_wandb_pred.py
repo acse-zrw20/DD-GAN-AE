@@ -516,7 +516,7 @@ Predictive_adversarial_sweep_config = {
         },
         "activation": {"values": ["relu", "elu", "sigmoid", "tanh"]},
         "discriminator_architecture": {"values": ["custom", "custom_wider"]},
-        "in_vars": {"values": [10]},
+        "in_vars": {"values": [100]},
         "dense_activation": {"values": ["relu", "linear"]},
         "batch_size": {"values": [32, 64, 128]},
         "learning_rate": {"values": [5e-3, 5e-4, 5e-5]},
@@ -585,11 +585,59 @@ Continuous_predictive_adversarial_sweep_config = {
         },
         "noise_std": {"values": [0.00001, 0.001, 0.01, 0.05, 0.1]},
         "increment": {"values": [True, False]},
-        "epochs": {"values": [200, 500, 1000, 2000]},
+        "epochs": {"values": [50, 100, 150]},
         "n_discriminator": {"values": [1]},
         "n_gradient_ascent": {"values": [3, 8, 15, 30]},
-        "domains": {"values": [4]},
-        "n_epochs": {"values": [4]}
+        "domains": {"values": [6]},
+        "n_epochs": {"values": [20]}
+    },
+}
+
+# Configuration options for hyperparameter optimization
+Continuous_predictive_adversarial_sweep_config = {
+    "method": "random",
+    "metric": {"name": "prediction_mse", "goal": "minimize"},
+    "parameters": {
+        "architecture": {
+            "values": [
+                "dense",
+                "deeper_dense",
+                "wider_dense",
+                "slimmer_dense",
+                "vinicius",
+                "smaller_vinicius",
+                "slimmer_vinicius",
+            ]
+        },
+        "activation": {"values": ["relu", "elu", "sigmoid", "tanh"]},
+        "discriminator_architecture": {"values": ["custom", "custom_wider"]},
+        "in_vars": {"values": [10]},
+        "dense_activation": {"values": ["relu", "linear"]},
+        "batch_size": {"values": [32, 64, 128]},
+        "learning_rate": {"values": [5e-3, 5e-4, 5e-5]},
+        "dropout": {"values": [0.3, 0.55, 0.8]},
+        "optimizer": {"values": ["nadam", "adam", "sgd"]},
+        "momentum": {"values": [0.8, 0.9, 0.98]},
+        "beta_2": {"values": [0.9, 0.999, 0.99999]},
+        "batch_normalization": {"values": [True, False]},
+        "regularization": {"values": [1e-3, 1e-4, 1e-5, 1e-6, 0]},
+        "savemodel": {"values": [False]},
+        "latent_vars": {"values": [30, 50, 100]},
+        "interval": {"values": [1]},
+        "final_act": {
+            "values": [
+              "linear",
+              "sigmoid",
+              "tanh"
+            ]
+        },
+        "noise_std": {"values": [0.00001, 0.001, 0.01, 0.05, 0.1]},
+        "increment": {"values": [True, False]},
+        "epochs": {"values": [50, 100, 150]},
+        "n_discriminator": {"values": [1]},
+        "n_gradient_ascent": {"values": [3, 8, 15, 30]},
+        "domains": {"values": [6]},
+        "n_epochs": {"values": [20]}
     },
 }
 
