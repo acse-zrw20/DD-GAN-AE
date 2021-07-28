@@ -10,6 +10,7 @@ import tensorflow as tf
 import argparse
 import os
 import json
+import keras
 from sklearn.preprocessing import MinMaxScaler
 from ddganAE.models import Predictive_adversarial
 from ddganAE.architectures.svdae import (
@@ -29,8 +30,8 @@ from ddganAE.architectures.discriminators import (
     build_custom_discriminator,
     build_custom_wider_discriminator
 )
-# from ddganAE.wandb.get_snapshots_3d_endless_learn import \
-#    get_snapshots_3d_endless_learn
+from ddganAE.wandb.get_snapshots_3d_continuous import \
+     get_snapshots_3D
 import numpy as np
 from sklearn.model_selection import train_test_split
 
@@ -58,11 +59,14 @@ def train_wandb_pred_aae(config=None):
         # this config will be set by Sweep Controller
         config = wandb.config
 
+        nfiles = 800
+
         # Data processing
         latent_vars = np.load(config.datafile)
 
-        latent_vars_reshaped = np.moveaxis(latent_vars.reshape(800, 10, 10),
-                                           0, 2)
+        latent_vars_reshaped = np.moveaxis(
+            latent_vars.reshape(nfiles, config.domains, config.in_vars),
+            0, 2)
 
         train_data = latent_vars_reshaped[:config.domains]
 
@@ -224,21 +228,21 @@ def train_wandb_pred_aae(config=None):
         # results
 
         # Create boundaries and initial values arrays for prediction later
-        boundaries = np.zeros((2, 10, 800))
+        boundaries = np.zeros((2, config.in_vars, nfiles))
         boundaries[0] = train_data[4]
         boundaries[1] = train_data[7]
 
-        init_values = np.zeros((2, 10))
+        init_values = np.zeros((2, config.in_vars))
         init_values[0] = train_data[5][:, 0]
         init_values[1] = train_data[6][:, 0]
 
         predicted = pred_adv.predict(boundaries, init_values,
-                                     int(800/config.interval)-1, iters=5)
+                                     int(nfiles/config.interval)-1, iters=5)
         train_data_int = train_data[4:8, :, ::config.interval]
 
         mse = tf.keras.losses.MeanSquaredError()
-        mse_pred = mse(predicted[:, :, :int(800/config.interval)-2],
-                       train_data_int[:, :, :int(800/config.interval)-2])\
+        mse_pred = mse(predicted[:, :, :int(nfiles/config.interval)-2],
+                       train_data_int[:, :, :int(nfiles/config.interval)-2])\
             .numpy()
 
         log = {"prediction_mse": mse_pred}
@@ -252,9 +256,8 @@ def train_wandb_pred_aae(config=None):
             pred_adv.decoder.save(dirname + '/decoder')
 
 
-"""
-def endless_train_wandb_pred_aae(config=None):
-    """"""
+def continuous_train_wandb_pred_aae(config=None):
+    """
     Construct and subsequently train the model while reporting losses to
     weights and biases platform. Weights and biases also controls
     hyperparameters.
@@ -262,7 +265,7 @@ def endless_train_wandb_pred_aae(config=None):
     Args:
         config (dict, optional): Dictionary with hyperparameters, set by
                                  weights and biases. Defaults to None.
-    """"""
+    """
     with wandb.init(config=config):
         # If called by wandb.agent, as below,
         # this config will be set by Sweep Controller
@@ -406,15 +409,42 @@ def endless_train_wandb_pred_aae(config=None):
                                           optimizer)
         pred_adv.compile(config.in_vars, increment=config.increment)
 
+        nfiles = 800
+
         for i in range(config.n_epochs):
 
             # Data processing
-            latent_vars = get_snapshots_3d_endless_learn()
+            grids = get_snapshots_3D(nfiles=nfiles,
+                                     ndomains=config.domains,
+                                     in_file_base=config.datafile,
+                                     save=False)
+
+            # Set all >0 to 0 and all <1 to 1 for alpha field
+            grids[:, :, :, :, 3][np.where(grids[:, :, :, :, 3] < 0)] = 0
+            grids[:, :, :, :, 3][np.where(grids[:, :, :, :, 3] > 1)] = 1
+
+            # Rescale all the velocity fields
+            scaler = MinMaxScaler()
+            grids[:, :, :, :, :3] = scaler.fit_transform(grids[:, :, :, :, :3]
+                                                         .reshape(-1, 1))\
+                .reshape(grids[:, :, :, :, :3].shape)
+
+            initializer = tf.keras.initializers.RandomNormal(mean=0.0,
+                                                             stddev=0.05,
+                                                             seed=None)
+            optimizer = tf.keras.optimizers.Adam(lr=0.0005, beta_1=0.98,
+                                                 beta_2=0.9)
+
+            encoder = keras.models.load_model(config.encoder_folder +
+                                              "/encoder")
+
+            latent_vars = encoder.predict(grids)
 
             latent_vars_reshaped = np.moveaxis(
-                latent_vars.reshape(800, 10, 10), 0, 2)
+                latent_vars.reshape(nfiles, config.domains, config.in_vars),
+                0, 2)
 
-            train_data = latent_vars_reshaped[:config.domains]
+            train_data = latent_vars_reshaped
 
             # Scaling the latent variables
             scaler = MinMaxScaler((-1, 1))
@@ -438,7 +468,7 @@ def endless_train_wandb_pred_aae(config=None):
             # results
 
             # Create boundaries and initial values arrays for prediction later
-            boundaries = np.zeros((2, 10, 800))
+            boundaries = np.zeros((2, config.in_vars, nfiles))
             boundaries[0] = train_data[0]
             boundaries[1] = train_data[3]
 
@@ -447,12 +477,14 @@ def endless_train_wandb_pred_aae(config=None):
             init_values[1] = train_data[2][:, 0]
 
             predicted = pred_adv.predict(boundaries, init_values,
-                                         int(800/config.interval), iters=5)
+                                         int(nfiles/config.interval)-1,
+                                         iters=5)
             train_data_int = train_data[:, :, ::config.interval]
 
             mse = tf.keras.losses.MeanSquaredError()
-            mse_pred = mse(predicted[:, :, :int(800/config.interval)],
-                           train_data_int[:4, :, :int(800/config.interval)])\
+            mse_pred = mse(predicted[:, :, :int(nfiles/config.interval)-2],
+                           train_data_int[:4, :, :int(nfiles/config.interval) -
+                           2])\
                 .numpy()
 
             log = {"prediction_mse": mse_pred}
@@ -464,7 +496,7 @@ def endless_train_wandb_pred_aae(config=None):
             os.mkdir(dirname)
             pred_adv.encoder.save(dirname + '/encoder')
             pred_adv.decoder.save(dirname + '/decoder')
-"""
+
 
 # Configuration options for hyperparameter optimization
 Predictive_adversarial_sweep_config = {
@@ -514,7 +546,7 @@ Predictive_adversarial_sweep_config = {
 }
 
 # Configuration options for hyperparameter optimization
-Endless_predictive_adversarial_sweep_config = {
+Continuous_predictive_adversarial_sweep_config = {
     "method": "random",
     "metric": {"name": "prediction_mse", "goal": "minimize"},
     "parameters": {
@@ -543,7 +575,7 @@ Endless_predictive_adversarial_sweep_config = {
         "regularization": {"values": [1e-3, 1e-4, 1e-5, 1e-6, 0]},
         "savemodel": {"values": [False]},
         "latent_vars": {"values": [30, 50, 100]},
-        "interval": {"values": [1, 2, 4, 6]},
+        "interval": {"values": [1]},
         "final_act": {
             "values": [
               "linear",
@@ -554,9 +586,9 @@ Endless_predictive_adversarial_sweep_config = {
         "noise_std": {"values": [0.00001, 0.001, 0.01, 0.05, 0.1]},
         "increment": {"values": [True, False]},
         "epochs": {"values": [200, 500, 1000, 2000]},
-        "n_discriminator": {"values": [1, 2, 4, 5]},
+        "n_discriminator": {"values": [1]},
         "n_gradient_ascent": {"values": [3, 8, 15, 30]},
-        "domains": {"values": [10]},
+        "domains": {"values": [4]},
         "n_epochs": {"values": [4]}
     },
 }
@@ -578,20 +610,50 @@ saving')
     parser.add_argument('--custom_config', type=str, nargs='?',
                         default=None,
                         help='json file with custom configurations for sweep')
+    parser.add_argument('--continuous', action='store_true', default=False, 
+                        help='whether to use continuous learning \
+functionality')
+    parser.add_argument('--encoder_folder', type=str, nargs='?',
+                        default=None,
+                        help='folder with autoencoder for generating latent \
+variables')
     args = parser.parse_args()
 
     arg_dict = vars(args)
 
-    if arg_dict['custom_config'] is not None:
-        with open(arg_dict["custom_config"]) as json_file:
-            Predictive_adversarial_sweep_config = json.load(json_file)
-    if arg_dict["savemodel"] == "True":
-        Predictive_adversarial_sweep_config['parameters']['savemodel'] = \
-            {'values': [True]}
+    if args.continuous:
+        if arg_dict['custom_config'] is not None:
+            with open(arg_dict["custom_config"]) as json_file:
+                Continuous_predictive_adversarial_sweep_config = \
+                    json.load(json_file)
+        if arg_dict["savemodel"] == "True":
+            Continuous_predictive_adversarial_sweep_config['parameters'][
+                'savemodel'] = \
+                {'values': [True]}
 
-    Predictive_adversarial_sweep_config['parameters']['datafile'] = \
-        {'values': [arg_dict['datafile']]}
+        Continuous_predictive_adversarial_sweep_config['parameters'][
+            'datafile'] = \
+            {'values': [arg_dict['datafile']]}
 
-    sweep_id = wandb.sweep(Predictive_adversarial_sweep_config,
-                           project='pred-aae', entity='zeff020')
-    wandb.agent(sweep_id, train_wandb_pred_aae, count=arg_dict['niters'])
+        Continuous_predictive_adversarial_sweep_config['parameters'][
+            'encoder_folder'] = \
+            {'values': [arg_dict['encoder_folder']]}
+
+        sweep_id = wandb.sweep(Continuous_predictive_adversarial_sweep_config,
+                               project='pred-aae', entity='zeff020')
+        wandb.agent(sweep_id, continuous_train_wandb_pred_aae, 
+                    count=arg_dict['niters'])
+    else:
+        if arg_dict['custom_config'] is not None:
+            with open(arg_dict["custom_config"]) as json_file:
+                Predictive_adversarial_sweep_config = json.load(json_file)
+        if arg_dict["savemodel"] == "True":
+            Predictive_adversarial_sweep_config['parameters']['savemodel'] = \
+                {'values': [True]}
+
+        Predictive_adversarial_sweep_config['parameters']['datafile'] = \
+            {'values': [arg_dict['datafile']]}
+
+        sweep_id = wandb.sweep(Predictive_adversarial_sweep_config,
+                               project='pred-aae', entity='zeff020')
+        wandb.agent(sweep_id, train_wandb_pred_aae, count=arg_dict['niters'])
