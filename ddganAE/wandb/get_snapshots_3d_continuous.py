@@ -20,7 +20,7 @@ else:
     import u2rpy3 # noqa
     u2r = u2rpy3
 
-import vtktools # noqa
+from . import vtktools # noqa
 
 __author__ = "Claire Heaney, Zef Wolffs"
 __credits__ = ["Jon Atli Tomasson"]
