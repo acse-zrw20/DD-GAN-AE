@@ -18,7 +18,6 @@ else:
     import u2rpy3 # noqa
     u2r = u2rpy3
 
-sys.path.append("/usr/lib/python2.7/dist-packages/")
 import vtktools # noqa
 
 __author__ = "Claire Heaney, Zef Wolffs"
@@ -31,7 +30,6 @@ __status__ = "Development"
 
 
 def get_snapshots_3D(
-    random=True,
     nfiles=2,
     offset=0,
     ndomains=4,
