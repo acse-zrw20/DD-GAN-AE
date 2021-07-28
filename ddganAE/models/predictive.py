@@ -61,7 +61,6 @@ class Predictive_adversarial:
     def preprocess(self, input_data):
 
         # Preprocessing
-        # For now only select first 4 subdomains
         for k in range(self.interval):
             grid_coeffs = np.array(input_data)[:, :, k::self.interval]
             train_data = np.zeros((grid_coeffs.shape[0] - 2,
@@ -135,8 +134,9 @@ class Predictive_adversarial:
 
         x_full, y_full = self.preprocess(input_data)
 
-        x_train, x_val, y_train, y_val = train_test_split(
-            x_full, y_full, test_size=val_size)
+        if val_size > 0:
+            x_train, x_val, y_train, y_val = train_test_split(
+                x_full, y_full, test_size=val_size)
 
         train_dataset = tf.data.Dataset.from_tensor_slices((x_train,
                                                             y_train))
@@ -151,14 +151,14 @@ class Predictive_adversarial:
             train_dataset = train_dataset.map(lambda x, y:
                                               (add_noise(float(x),
                                                          training=True), y))
-
-        val_dataset = tf.data.Dataset.from_tensor_slices((x_val,
-                                                          y_val))
-        val_dataset = val_dataset. \
-            shuffle(buffer_size=x_val.shape[0],
-                    reshuffle_each_iteration=True).\
-            batch(val_batch_size,
-                  drop_remainder=True)
+        if val_size > 0:
+            val_dataset = tf.data.Dataset.from_tensor_slices((x_val,
+                                                              y_val))
+            val_dataset = val_dataset. \
+                shuffle(buffer_size=x_val.shape[0],
+                        reshuffle_each_iteration=True).\
+                batch(val_batch_size,
+                      drop_remainder=True)
 
         # Set up tensorboard logging
         current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -213,7 +213,10 @@ class Predictive_adversarial:
                     g_step += 1
 
             d_loss = d_loss_cum/(step+1)
-            g_loss = g_loss_cum/(g_step)
+            if g_step > 0:
+                g_loss = g_loss_cum/(g_step)
+            else:
+                g_loss = 0
 
             with train_summary_writer.as_default():
                 tf.summary.scalar('loss - g', g_loss, step=epoch)
@@ -300,7 +303,7 @@ class Predictive_adversarial:
         """
         boundaries = boundaries[:, :, ::self.interval]
 
-        pred_vars = np.zeros((2 + init_values.shape[0], 10,
+        pred_vars = np.zeros((2 + init_values.shape[0], boundaries.shape[1],
                               boundaries.shape[2]))
         pred_vars[0] = boundaries[0]
         pred_vars[1:-1, :, 0] = init_values
