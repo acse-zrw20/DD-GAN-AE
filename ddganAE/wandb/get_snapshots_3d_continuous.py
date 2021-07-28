@@ -14,6 +14,8 @@ import argparse
 
 if sys.version_info[0] < 3:
     import u2r # noqa
+elif 'google.colab' in sys.modules:
+    u2r = None
 else:
     import u2rpy3 # noqa
     u2r = u2rpy3
