@@ -575,7 +575,7 @@ Continuous_predictive_adversarial_sweep_config = {
         "regularization": {"values": [1e-3, 1e-4, 1e-5, 1e-6, 0]},
         "savemodel": {"values": [False]},
         "latent_vars": {"values": [30, 50, 100]},
-        "interval": {"values": [1]},
+        "interval": {"values": [1, 2, 4, 6]},
         "final_act": {
             "values": [
               "linear",
