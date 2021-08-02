@@ -315,7 +315,7 @@ def train_wandb_aae(config=None):
         aae.compile(input_shape)
         aae.train(
             x_train,
-            100,
+            config.epochs,
             val_data=x_val,
             batch_size=config.batch_size,
             wandb_log=True,
@@ -556,6 +556,10 @@ aae_sweep_config = {
               "linear",
               "sigmoid"
             ]
+        },
+        "epochs": {
+            "values":
+            [100, 200, 500, 1000]
         }
     },
 }
