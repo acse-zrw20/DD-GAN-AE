@@ -527,7 +527,7 @@ Predictive_adversarial_sweep_config = {
         "batch_normalization": {"values": [True, False]},
         "regularization": {"values": [1e-3, 1e-4, 1e-5, 1e-6, 0]},
         "savemodel": {"values": [False]},
-        "latent_vars": {"values": [30, 50, 100]},
+        "latent_vars": {"values": [100, 300, 500]},
         "interval": {"values": [1, 2, 4, 6]},
         "final_act": {
             "values": [
