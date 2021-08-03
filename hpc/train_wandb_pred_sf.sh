@@ -20,7 +20,7 @@ pip install -e .
 
 cd /rds/general/user/zrw20/home/DD-GAN-AE/ddganAE/wandb
 nvidia-smi
-python train_wandb_pred.py --datafile="$HOME/data/processed/cae_latent_sf_100vars_800steps_restful.npy" --niters=200 --savemodel="False"
+python train_wandb_pred.py --model=$model --datafile=$datafile --niters=200 --savemodel="False"
 
 mkdir $WORK/$PBS_JOBID
 cp * $WORK/$PBS_JOBID
