@@ -534,8 +534,8 @@ cae_sweep_config = {
 
 # Configuration options for hyperparameter optimization
 aae_sweep_config = {
-    "method": "random",
-    "metric": {"name": "valid_loss", "goal": "minimize"},
+    "method": "bayes",
+    "metric": {"name": "g_valid_loss", "goal": "minimize"},
     "parameters": {
         "architecture": {"values": ["denser_omata",
                                     "densest_thinner_omata", "omata",
@@ -543,7 +543,7 @@ aae_sweep_config = {
         "activation": {"values": ["elu", "sigmoid", "relu", "tanh"]},
         "dense_activation": {"values": ["relu", None]},
         "batch_size": {"values": [32, 64, 128]},
-        "train_method": {"values": ["default", "combined_loss"]},
+        "train_method": {"values": ["combined_loss"]},
         "learning_rate": {"values": [5e-3, 5e-4, 5e-5, 5e-6]},
         "discriminator_architecture": {"values": ["custom", "custom_wider"]},
         "optimizer": {"values": ["nadam", "adam", "sgd"]},
