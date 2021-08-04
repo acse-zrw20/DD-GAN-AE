@@ -289,7 +289,8 @@ class Predictive_adversarial:
 
         return d_loss, g_loss
 
-    def predict(self, boundaries, init_values, timesteps, iters=5, sor=1):
+    def predict(self, boundaries, init_values, timesteps, iters=5, sor=1, 
+                pre_interval=False):
         """
         Predict in time using boundaries and initial values for a certain
         number of timesteps. The timestep shifts will be done in this function
@@ -301,7 +302,8 @@ class Predictive_adversarial:
             timesteps (int): Number of timesteps to predict
             iters (int): Number of iterations to do before a prediction
         """
-        boundaries = boundaries[:, :, ::self.interval]
+        if pre_interval == False:
+            boundaries = boundaries[:, :, ::self.interval]
 
         pred_vars = np.zeros((2 + init_values.shape[0], boundaries.shape[1],
                               boundaries.shape[2]))
