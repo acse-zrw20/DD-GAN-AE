@@ -904,7 +904,7 @@ variables')
             {'values': [arg_dict['datafile']]}
 
         sweep_id = wandb.sweep(Predictive_ae_sweep_config,
-                               project='pred-aae', entity='zeff020')
+                               project='pred-ae', entity='zeff020')
         wandb.agent(sweep_id, train_wandb_pred_ae, count=arg_dict['niters'])
     elif args.model == "aae":
         # Use the adversarial autoencoder for predictions
