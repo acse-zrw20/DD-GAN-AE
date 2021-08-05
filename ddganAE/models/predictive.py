@@ -6,12 +6,13 @@ Predictive Models
 
 from keras.layers import Input, Conv1D, GaussianNoise
 from keras.models import Model
-from sklearn import preprocessing
+import keras
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
 import datetime
 import numpy as np
 import wandb
+import os
 
 
 class Predictive_adversarial:
@@ -26,6 +27,22 @@ class Predictive_adversarial:
         self.latent_dim = self.decoder.layers[0].input_shape[1]
 
         self.optimizer = optimizer
+
+    @classmethod
+    def from_save(cls, dirname, optimizer):
+        """
+        Load model from savefile and override default constructor
+
+        Args:
+            dirname (str): Name of directory where model is saved
+            optimizer (Object): Tensorflow optimizer
+        """
+        encoder = keras.models.load_model(dirname + '/encoder')
+        decoder = keras.models.load_model(dirname + '/decoder')
+        discriminator = keras.models.load_model(dirname +
+                                                '/discriminator')
+
+        return cls(encoder, decoder, discriminator, optimizer)
 
     def reconstruct_from_pod(coeffs, R):
         return R @ coeffs
@@ -361,6 +378,20 @@ class Predictive_adversarial:
                                 pred_vars_t)[0][0] - pred_vars[k, :, i]) * sor
 
         return pred_vars
+
+    def save(self, dirname="model"):
+        """
+        Saves the model
+
+        Args:
+            dirname (str, optional): Directory to save model in. Defaults to
+            "model"
+        """
+
+        os.mkdir(dirname)
+        self.encoder.save(dirname + '/encoder')
+        self.decoder.save(dirname + '/decoder')
+        self.discriminator.save(dirname + '/discriminator')
 
 
 class Predictive:
