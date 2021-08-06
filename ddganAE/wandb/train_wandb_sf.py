@@ -550,7 +550,7 @@ aae_sweep_config = {
         "momentum": {"values": [0.8, 0.9, 0.98]},
         "beta_2": {"values": [0.9, 0.999, 0.99999]},
         "savemodel": {"values": [False]},
-        "latent_vars": {"values": [20, 100]},
+        "latent_vars": {"values": [10, 20, 100]},
         "final_act": {
             "values": [
               "linear",
