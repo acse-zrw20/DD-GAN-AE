@@ -115,9 +115,24 @@ class SVDAE:
             batch(batch_size)
 
         if val_data is not None:
-            coeffs = self.calc_pod(val_data, self.nPOD)
 
             # Reshape to have multiple subgrids account for multiple batches
+            out = np.zeros((val_data[0].shape[0],
+                            len(val_data)*val_data[0].shape[-1]))
+            for i, coeff in enumerate(val_data):
+                out[:, i*val_data[0].shape[-1]:(i+1)*val_data[0].shape[-1]] \
+                    = coeff
+
+            coeffs = []
+
+            for iGrid in range(len(val_data)):
+                snapshots_per_grid = \
+                    out[:, iGrid*val_data[0].shape[-1]:(iGrid+1) *
+                        val_data[0].shape[-1]]
+
+                coeffs.append(np.dot(self.R.T, snapshots_per_grid))
+
+            # Invert earlier operation of reshaping subgrids
             out = np.zeros((coeffs[0].shape[0],
                             len(coeffs)*coeffs[0].shape[-1]))
             for i, coeff in enumerate(coeffs):
