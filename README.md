@@ -50,14 +50,14 @@
 
 ## About The Project
 
-This project contains an intuitive library for interacting with compression methods for use in conjunction with a [domain decomposition predictive GAN](https://github.com/acse-jat20/DD-GAN). This draws on ideas from recent research on [domain decomposition methods for reduced order modelling](https://www.sciencedirect.com/science/article/pii/S0045793019300350) and [predictive GANs](https://arxiv.org/abs/2105.07729). It also contains some test examples.
-
+This project contains an intuitive library for interacting with compression and predictive methods for predicting fluid dynamics simulations efficiently. Code was built for a Msc thesis at the Imperial College London.
 <!-- GETTING STARTED -->
 
 ## Prerequisites
 
 * Python 3.8
 * Tensorflow and other packages in ```requirements.txt```
+* (Optional) GPU with CUDA
 
 ## Getting Started
 
