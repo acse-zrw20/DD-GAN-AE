@@ -11,10 +11,10 @@ from ddganAE.utils import mse_PI
 import tensorflow as tf
 import datetime
 import wandb
-import sys
 
 # Import get snapshots for "infinite" training with data generation for every n
 # training steps
+# import sys
 # sys.path.append('./../submodules/DD-GAN/preprocessing/src/')
 # from get_snapshots import get_snapshots  # noqa 
 
