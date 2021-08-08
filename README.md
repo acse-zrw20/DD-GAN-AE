@@ -105,8 +105,8 @@ recon_dataset = cae.predict(dataset) # pass the dataset through the model and ge
 
 ## Examples
 
-* A notebook with compression usage examples on flow past cylinder dataset: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1oxLf-SayXWrG_grniEptbmIwhMo4XMCD#offline=true&sandboxMode=true)
-* A notebook with compression usage examples on slug flow dataset: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1hsRsPp64dbQz0f3zG7nwcENvSKoCScoM#offline=true&sandboxMode=true)
+* Compression usage examples on flow past cylinder dataset [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1oxLf-SayXWrG_grniEptbmIwhMo4XMCD#offline=true&sandboxMode=true)
+* Compression usage examples on slug flow dataset [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1hsRsPp64dbQz0f3zG7nwcENvSKoCScoM#offline=true&sandboxMode=true)
 
 <!-- ACKNOWLEDGEMENTS 
 _For more information, please refer to the report in this repo_
