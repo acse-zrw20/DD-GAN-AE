@@ -27,9 +27,10 @@ class SVDAE:
     SVD Autoencoder class
     """
 
-    def __init__(self, encoder, decoder, optimizer):
+    def __init__(self, encoder, decoder, optimizer, seed=None):
         self.encoder = encoder
         self.decoder = decoder
+        self.seed = seed
         self.latent_dim = self.decoder.layers[0].input_shape[1]
 
         self.optimizer = optimizer
@@ -111,7 +112,8 @@ class SVDAE:
 
         train_dataset = tf.data.Dataset.from_tensor_slices(train_data)
         train_dataset = train_dataset.shuffle(buffer_size=train_data.shape[0],
-                                              reshuffle_each_iteration=True).\
+                                              reshuffle_each_iteration=True,
+                                              seed=self.seed).\
             batch(batch_size)
 
         if val_data is not None:
@@ -148,7 +150,8 @@ class SVDAE:
             val_dataset = tf.data.Dataset.from_tensor_slices(val_data)
             val_dataset = val_dataset.shuffle(
                 buffer_size=val_data.shape[0],
-                reshuffle_each_iteration=True).\
+                reshuffle_each_iteration=True,
+                seed=self.seed).\
                 batch(val_batch_size)
 
         # Set up tensorboard logging
