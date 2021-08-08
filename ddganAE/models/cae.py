@@ -11,6 +11,12 @@ from ddganAE.utils import mse_PI
 import tensorflow as tf
 import datetime
 import wandb
+import sys
+
+# Import get snapshots for "infinite" training with data generation for every n
+# training steps
+# sys.path.append('./../submodules/DD-GAN/preprocessing/src/')
+# from get_snapshots import get_snapshots  # noqa 
 
 __author__ = "Zef Wolffs"
 __credits__ = []
@@ -26,17 +32,17 @@ class CAE:
     Convolutional autoencoder class
     """
 
-    def __init__(self, encoder, decoder, optimizer):
+    def __init__(self, encoder, decoder, optimizer, seed=None):
         self.encoder = encoder
         self.decoder = decoder
+        self.seed = seed
         self.latent_dim = self.decoder.layers[0].input_shape[1]
 
         self.optimizer = optimizer
 
     def compile(self, input_shape, pi_loss=False):
         """
-        Compilation of models according to original paper on adversarial
-        autoencoders
+        Compile model
 
         Args:
             input_shape (tuple): Shape of input data
@@ -65,14 +71,16 @@ class CAE:
 
         train_dataset = tf.data.Dataset.from_tensor_slices(train_data)
         train_dataset = train_dataset.shuffle(buffer_size=train_data.shape[0],
-                                              reshuffle_each_iteration=True).\
+                                              reshuffle_each_iteration=True,
+                                              seed=self.seed).\
             batch(batch_size)
 
         if val_data is not None:
             val_dataset = tf.data.Dataset.from_tensor_slices(val_data)
             val_dataset = val_dataset.shuffle(
                 buffer_size=val_data.shape[0],
-                reshuffle_each_iteration=True).\
+                reshuffle_each_iteration=True,
+                seed=self.seed).\
                 batch(val_batch_size)
 
         # Set up tensorboard logging
@@ -138,6 +146,19 @@ class CAE:
         acc = acc_cum/(step+1)
 
         return loss, acc
+
+    def train_generate(self, data_file_base, val_data, epochs, regen_epochs):
+        """
+        Train and every `regen_epochs` epochs generate a new training set from
+        available vtu files.
+
+        Args:
+            data_file_base (string): Path to vtu files
+            val_data (np.array): Array to use as validation dataset
+            epochs (int): Number of total epochs to do
+            regen_epochs (int): Interval at which to regenerate a new dataset
+        """
+        pass
 
     def predict(self, data):
 
