@@ -253,7 +253,7 @@ class SVDAE:
 
         x_val_recon = \
             x_val_recon.reshape((len(data),
-                                 int(x_val_recon.shape[0]/len(val_data)),
+                                 int(x_val_recon.shape[0]/len(data)),
                                  -1))
 
         recon_grid = np.zeros(data.shape)
