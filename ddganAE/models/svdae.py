@@ -223,6 +223,45 @@ class SVDAE:
 
         return self.R @ gen_coeff[0]
 
+    def predict(self, data):
+
+        # Reshape to have multiple subgrids account for multiple batches
+        out = np.zeros((data[0].shape[0],
+                        len(data)*data[0].shape[-1]))
+        for i, coeff in enumerate(data):
+            out[:, i*data[0].shape[-1]:(i+1)*data[0].shape[-1]] \
+                = coeff
+
+        coeffs = []
+
+        for iGrid in range(len(data)):
+            snapshots_per_grid = \
+                out[:, iGrid*data[0].shape[-1]:(iGrid+1) *
+                    data[0].shape[-1]]
+
+            coeffs.append(np.dot(self.R.T, snapshots_per_grid))
+
+        # Invert earlier operation of reshaping subgrids
+        out = np.zeros((coeffs[0].shape[0],
+                        len(coeffs)*coeffs[0].shape[-1]))
+        for i, coeff in enumerate(coeffs):
+            out[:, i*coeffs[0].shape[-1]:(i+1)*coeffs[0].shape[-1]] = coeff
+
+        val_data = out.T
+
+        x_val_recon = self.autoencoder.predict(val_data)
+
+        x_val_recon = x_val_recon.reshape((len(val_data),
+                                           int(x_val_recon/len(val_data)),
+                                           -1))
+
+        recon_grid = np.zeros(data.shape)
+        for j in range(len(val_data)):
+            recon = self.R @ x_val_recon[j].T
+            recon_grid[j, :, :] = recon
+
+        return recon_grid
+
 
 def print_losses(loss, epoch, loss_val=None):
     print("%d: [loss: %f, acc: %.2f%%]" %
