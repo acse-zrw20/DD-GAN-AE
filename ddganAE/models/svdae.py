@@ -252,7 +252,7 @@ class SVDAE:
         x_val_recon = self.autoencoder.predict(val_data)
 
         x_val_recon = \
-            x_val_recon.reshape((len(val_data),
+            x_val_recon.reshape((len(data),
                                  int(x_val_recon.shape[0]/len(val_data)),
                                  -1))
 
