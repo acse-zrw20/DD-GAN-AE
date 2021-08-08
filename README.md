@@ -50,7 +50,9 @@
 
 ## About The Project
 
-This project contains an intuitive library for interacting with compression methods for use in conjunction with a [domain decomposition predictive GAN](https://github.com/acse-jat20/DD-GAN). This draws on ideas from recent research on [domain decomposition methods for reduced order modelling](https://www.sciencedirect.com/science/article/pii/S0045793019300350) and [predictive GANs](https://arxiv.org/abs/2105.07729). It also contains some test examples.
+This project contains an intuitive library for interacting with compressive and predictive methods for predicting fluid dynamics simulations efficiently. Code was built for a Msc thesis at the Imperial College London.
+
+Read the [documentation](https://github.com/acse-zrw20/DD-GAN-AE/blob/main/docs/docs.pdf) for further info!
 
 <!-- GETTING STARTED -->
 
@@ -58,14 +60,11 @@ This project contains an intuitive library for interacting with compression meth
 
 * Python 3.8
 * Tensorflow and other packages in ```requirements.txt```
-
-## Getting Started
-
-```sh
-git clone https://github.com/acse-zrw20/DD-GAN-AE
-```
+* (Optional) GPU with CUDA
 
 ## Installation
+
+Follow these steps to install:
 
 1. ```git clone https://github.com/acse-zrw20/DD-GAN-AE```
 2. ```cd ./DD-GAN-AE```
@@ -73,16 +72,43 @@ git clone https://github.com/acse-zrw20/DD-GAN-AE
 
 <!-- USAGE EXAMPLES -->
 
-## Usage
+## Getting Started
 
-In a python file, import the following to use all of the functions:
+In a python file, import the following to use all of the functionality:
 
 ```python
 import ddganAE
 ```
+Training a model for reconstruction:
 
-For examples, see examples folder which contains a jupyter notebook with examples
+```python
+from ddganAE.models import CAE
+from ddganAE.architectures.cae.D2 import *
+import tf
 
+input_shape = (55, 42, 2)
+dataset = np.load(...) # dataset with shape (nsamples, 55, 42, 2)
+
+optimizer = tf.keras.optimizers.Adam() # Define an optimizer
+initializer = tf.keras.initializers.RandomNormal() # Define a weights initializer
+
+# Define any encoder and decoder, see docs for more premade architectures
+encoder, decoder = build_omata_encoder_decoder(input_shape, 10, initializer)
+
+cae = CAE(encoder, decoder, optimizer) # define the model
+cae.compile(input_shape) # compile the model
+
+cae.train(dataset, 200) # train the model with 200 epochs
+
+recon_dataset = cae.predict(dataset) # pass the dataset through the model and generate outputs
+```
+
+## Examples
+
+* Compression usage examples on flow past cylinder dataset [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1oxLf-SayXWrG_grniEptbmIwhMo4XMCD#offline=true&sandboxMode=true)
+* Compression usage examples on slug flow dataset [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1hsRsPp64dbQz0f3zG7nwcENvSKoCScoM#offline=true&sandboxMode=true)
+
+These notebooks can also be found under examples in this repository
 <!-- ACKNOWLEDGEMENTS 
 _For more information, please refer to the report in this repo_
 -->
