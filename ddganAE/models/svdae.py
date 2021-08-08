@@ -257,7 +257,7 @@ class SVDAE:
                                  -1))
 
         recon_grid = np.zeros(data.shape)
-        for j in range(len(val_data)):
+        for j in range(len(data)):
             recon = self.R @ x_val_recon[j].T
             recon_grid[j, :, :] = recon
 
