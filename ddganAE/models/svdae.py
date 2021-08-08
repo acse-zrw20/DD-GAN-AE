@@ -251,9 +251,10 @@ class SVDAE:
 
         x_val_recon = self.autoencoder.predict(val_data)
 
-        x_val_recon = x_val_recon.reshape((len(val_data),
-                                           int(x_val_recon/len(val_data)),
-                                           -1))
+        x_val_recon = \
+            x_val_recon.reshape((len(val_data),
+                                 int(x_val_recon.shape[0]/len(val_data)),
+                                 -1))
 
         recon_grid = np.zeros(data.shape)
         for j in range(len(val_data)):
