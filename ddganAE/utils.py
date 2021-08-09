@@ -18,7 +18,7 @@ __email__ = "zefwolffs@gmail.com"
 __status__ = "Development"
 
 
-def calc_pod(snapshots, nPOD=-2, cumulative_tol=0.99):
+def calc_pod(snapshots, nPOD=-2, cumulative_tol=0.99, R=None):
     """
     Calculate POD coefficients and basis functions
 
@@ -38,42 +38,46 @@ def calc_pod(snapshots, nPOD=-2, cumulative_tol=0.99):
     for i, coeff in enumerate(snapshots):
         out[:, i*snapshots[0].shape[-1]:(i+1)*snapshots[0].shape[-1]] = coeff
 
-    snapshots_matrix = out
-    nrows, ncols = snapshots_matrix.shape
+    s = None
 
-    if nrows > ncols/4:
-        SSmatrix = np.dot(snapshots_matrix.T, snapshots_matrix)
-    else:
-        SSmatrix = np.dot(snapshots_matrix, snapshots_matrix.T)
-        print('WARNING - CHECK HOW THE BASIS FUNCTIONS ARE CALCULATED WITH THIS METHOD')
+    if R is None:
+        snapshots_matrix = out
+        nrows, ncols = snapshots_matrix.shape
 
-    print('SSmatrix', SSmatrix.shape)
-    eigvalues, v = np.linalg.eigh(SSmatrix)
-    eigvalues = eigvalues[::-1]
-    # get rid of small negative eigenvalues (there shouldn't be any as the
-    # eigenvalues of a real, symmetric
-    # matrix are non-negative, but sometimes very small negative values do
-    # appear)
-    eigvalues[eigvalues < 0] = 0
-    s = np.sqrt(eigvalues)
-    # print('s values', s_values[0:20]) 
-
-    cumulative_info = np.zeros(len(eigvalues))
-    for j in range(len(eigvalues)):
-        if j == 0:
-            cumulative_info[j] = eigvalues[j]
+        if nrows > ncols/4:
+            SSmatrix = np.dot(snapshots_matrix.T, snapshots_matrix)
         else:
-            cumulative_info[j] = cumulative_info[j-1] + eigvalues[j]
+            SSmatrix = np.dot(snapshots_matrix, snapshots_matrix.T)
+            print('WARNING - CHECK HOW THE BASIS FUNCTIONS ARE CALCULATED WITH \
+THIS METHOD')
 
-    cumulative_info = cumulative_info / cumulative_info[-1]
-    nAll = len(eigvalues)
+        print('SSmatrix', SSmatrix.shape)
+        eigvalues, v = np.linalg.eigh(SSmatrix)
+        eigvalues = eigvalues[::-1]
+        # get rid of small negative eigenvalues (there shouldn't be any as the
+        # eigenvalues of a real, symmetric
+        # matrix are non-negative, but sometimes very small negative values do
+        # appear)
+        eigvalues[eigvalues < 0] = 0
+        s = np.sqrt(eigvalues)
+        # print('s values', s_values[0:20]) 
 
-    basis_functions = np.zeros((out.shape[0], nPOD))  # nDim should be nScalar?
-    for j in reversed(range(nAll-nPOD, nAll)):
-        Av = np.dot(snapshots_matrix, v[:, j])
-        basis_functions[:, nAll-j-1] = Av/np.linalg.norm(Av)
+        cumulative_info = np.zeros(len(eigvalues))
+        for j in range(len(eigvalues)):
+            if j == 0:
+                cumulative_info[j] = eigvalues[j]
+            else:
+                cumulative_info[j] = cumulative_info[j-1] + eigvalues[j]
 
-    R = basis_functions
+        cumulative_info = cumulative_info / cumulative_info[-1]
+        nAll = len(eigvalues)
+
+        basis_functions = np.zeros((out.shape[0], nPOD))
+        for j in reversed(range(nAll-nPOD, nAll)):
+            Av = np.dot(snapshots_matrix, v[:, j])
+            basis_functions[:, nAll-j-1] = Av/np.linalg.norm(Av)
+
+        R = basis_functions
 
     coeffs = []
 
