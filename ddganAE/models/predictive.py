@@ -122,10 +122,27 @@ class Predictive_adversarial:
 
         return x_train_full, y_train_full
 
-
     def train(self, input_data, epochs, interval=5, val_size=0, val_data=None,
               batch_size=128, val_batch_size=128, wandb_log=False,
               n_discriminator=5, n_gradient_ascent=np.inf, noise_std=0):
+
+            self.interval = interval
+
+            x_full, y_full = self.preprocess(input_data)
+
+            self.train_preprocessed(x_full, y_full, epochs, interval=interval, 
+                                    val_size=val_size, val_data=val_data,
+                                    batch_size=batch_size, 
+                                    val_batch_size=val_batch_size, 
+                                    wandb_log=wandb_log,
+                                    n_discriminator=n_discriminator, 
+                                    n_gradient_ascent=n_gradient_ascent, 
+                                    noise_std=noise_std)
+
+    def train_preprocessed(self, x_full, y_full, epochs, interval=5, 
+                           val_size=0, val_data=None,
+                           batch_size=128, val_batch_size=128, wandb_log=False,
+                           n_discriminator=5, n_gradient_ascent=np.inf, noise_std=0):
         """
         Training model where we use a training method that weights
         the losses of the discriminator and autoencoder and as such combines
@@ -147,13 +164,12 @@ class Predictive_adversarial:
                 Defaults to False.
         """
 
-        d_loss_val = g_loss_val = None
         self.interval = interval
+
+        d_loss_val = g_loss_val = None
 
         if val_size > 0 and val_data is not None:
             raise NotImplementedError("Use either val_size > 0 or supply val_data, not both")
-
-        x_full, y_full = self.preprocess(input_data)
 
         if val_size > 0:
             x_train, x_val, y_train, y_val = train_test_split(
