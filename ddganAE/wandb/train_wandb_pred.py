@@ -762,7 +762,7 @@ Predictive_ae_sweep_config = {
             ]
         },
         "activation": {"values": ["relu", "elu", "sigmoid", "tanh"]},
-        "in_vars": {"values": [100]},
+        "in_vars": {"values": [20]},
         "dense_activation": {"values": ["relu", "linear"]},
         "batch_size": {"values": [32, 64, 128]},
         "learning_rate": {"values": [5e-3, 5e-4, 5e-5]},
