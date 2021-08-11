@@ -333,7 +333,7 @@ class Predictive_adversarial:
         return d_loss, g_loss
 
     def predict(self, boundaries, init_values, timesteps, iters=5, sor=1, 
-                pre_interval=False):
+                pre_interval=False, timestep_print_interval=None):
         """
         Predict in time using boundaries and initial values for a certain
         number of timesteps. The timestep shifts will be done in this function
@@ -357,6 +357,9 @@ class Predictive_adversarial:
         for i in range(timesteps):
             # Outer "timesteps" loop
             
+            if timestep_print_interval is not None and i % timestep_print_interval == 0:
+                print("At timestep number ", i)
+
             # Let's start with a linear extrapolation for the predictions
             if i > 1:
                 for k in range(1, init_values.shape[0]+1):
