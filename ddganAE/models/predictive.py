@@ -634,7 +634,8 @@ class Predictive:
 
         return loss, acc
 
-    def predict(self, boundaries, init_values, timesteps, iters=5, sor=1):
+    def predict(self, boundaries, init_values, timesteps, iters=5, sor=1, 
+                timestep_print_interval=None):
         """
         Predict in time using boundaries and initial values for a certain
         number of timesteps. The timestep shifts will be done in this function
@@ -656,6 +657,9 @@ class Predictive:
 
         for i in range(timesteps):
             # Outer "timesteps" loop
+
+            if timestep_print_interval is not None and i % timestep_print_interval == 0:
+                print("At timestep number ", i)
             
             # Let's start with a linear extrapolation for the predictions
             if i > 1:
