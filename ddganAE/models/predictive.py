@@ -508,7 +508,7 @@ class Predictive:
 
         return x_train_full, y_train_full
 
-    def train(self, input_data, epochs, interval=5, val_size=0,
+    def train(self, input_data, epochs, interval=5, val_size=0, val_data=None,
               batch_size=128, val_batch_size=128, wandb_log=False,
               n_discriminator=5, n_gradient_ascent=np.inf, noise_std=0):
         """
@@ -535,11 +535,16 @@ class Predictive:
         val_dataset = None
         self.interval = interval
 
+        if val_size > 0 and val_data is not None:
+            raise NotImplementedError("Use either val_size > 0 or supply val_data, not both")
+
         x_full, y_full = self.preprocess(input_data)
 
         if val_size > 0:
             x_train, x_val, y_train, y_val = train_test_split(
                 x_full, y_full, test_size=val_size, random_state=self.seed)
+        else:
+            x_train, y_train = x_full, y_full
 
         train_dataset = tf.data.Dataset.from_tensor_slices((x_train,
                                                             y_train))
@@ -554,7 +559,12 @@ class Predictive:
             train_dataset = train_dataset.map(lambda x, y:
                                               (add_noise(float(x),
                                                          training=True), y))
-        if val_size > 0:
+
+        if val_size > 0 or val_data is not None:
+            if val_data is not None:
+
+                x_val, y_val = self.preprocess(val_data)
+
             val_dataset = tf.data.Dataset.from_tensor_slices((x_val,
                                                               y_val))
             val_dataset = val_dataset. \
