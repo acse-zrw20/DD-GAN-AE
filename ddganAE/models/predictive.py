@@ -428,7 +428,8 @@ class Predictive:
     Predictive Autoencoder class
     """
 
-    def __init__(self, encoder, decoder, optimizer):
+    def __init__(self, encoder, decoder, optimizer, seed=None):
+        self.seed = seed
         self.encoder = encoder
         self.decoder = decoder
         self.latent_dim = self.decoder.layers[0].input_shape[1]
@@ -538,7 +539,7 @@ class Predictive:
 
         if val_size > 0:
             x_train, x_val, y_train, y_val = train_test_split(
-                x_full, y_full, test_size=val_size)
+                x_full, y_full, test_size=val_size, random_state=self.seed)
 
         train_dataset = tf.data.Dataset.from_tensor_slices((x_train,
                                                             y_train))
