@@ -387,8 +387,8 @@ class Predictive_adversarial:
                                 pred_vars_t)[0]
                     else:
                         pred_vars[k, :, i+1] = pred_vars[k, :, i] + \
-                            (self.adversarial_autoencoder.predict(
-                                pred_vars_t)[0][0] - pred_vars[k, :, i]) * sor
+                            (self.decoder(self.encoder(pred_vars_t))[0]
+                             - pred_vars[k, :, i]) * sor
 
                 for k in range(init_values.shape[0], 0, -1):
                     # Loop over the columns that are meant to be predicted
@@ -403,8 +403,8 @@ class Predictive_adversarial:
                                 pred_vars_t)[0]
                     else:
                         pred_vars[k, :, i+1] = pred_vars[k, :, i] + \
-                            (self.adversarial_autoencoder.predict(
-                                pred_vars_t)[0][0] - pred_vars[k, :, i]) * sor
+                            (self.decoder(self.encoder(pred_vars_t))[0]
+                             - pred_vars[k, :, i]) * sor
 
         return pred_vars
 
