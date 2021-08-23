@@ -67,6 +67,18 @@
             "values": [
                 false
             ]
+        },
+        "latent_vars": {
+            "values": [
+              10,
+              100
+            ]
+        },
+        "final_act": {
+            "values": [
+              "linear",
+              "sigmoid"
+            ]
         }
     }
 }

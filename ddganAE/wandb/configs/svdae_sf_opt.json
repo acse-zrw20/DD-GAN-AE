@@ -64,6 +64,11 @@
             "values": [
                 false
             ]
+        },
+        "latent_vars": {
+            "values": [
+              10
+            ]
         }
     }
 }
