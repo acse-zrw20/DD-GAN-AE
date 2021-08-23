@@ -56,6 +56,19 @@ Read the [documentation](https://github.com/acse-zrw20/DD-GAN-AE/blob/main/docs/
 
 <!-- GETTING STARTED -->
 
+- `ddganAE` contains the main source code of the developed package with four subfolders: 
+  - `architectures` functions as a library of model architectures
+  - `wandb` contains some subroutines for hyperparameter-optimizing the developed models with wandb
+  - `models` contains the main logic that the implemented models use, everything except for the architecture
+  - `preprocessing` contains any preprocessing subroutines included in the package.
+- `docs` contains the accompanying documentation.
+- `examples` contains example notebooks. Links to their Colab versions which can be readily executed are also provided below.
+- `hpc` contains bash scripts for interacting with Imperial College London's Research Computing Service (high performance computer).
+- `images` contains any accompanying images.
+- `preprocessing` contains some preprocessing functions specific to the data used in this research and therefore not included in the main package.
+- `submodules` contains any relevant submodules.
+- `tests` contains any tests written for the produced package.
+
 ## Prerequisites
 
 * Python 3.8
@@ -130,7 +143,7 @@ pred_adv.train(dataset, 200)
 
 # Select the boundaries with all timesteps
 boundaries = np.zeros((2, 10, <ntimesteps>))
-boundaries[0], boundaries[1]  = dataset[2], dataset[9]
+boundaries[0], boundaries[1]  = dataset[2], dataset[9] # third and 10th subdomains used as boundaries
 
 # Select the initial values at the first timestep
 init_values = val_data[3:9, :, 0]
