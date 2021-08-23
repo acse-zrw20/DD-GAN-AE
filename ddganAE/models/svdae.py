@@ -225,21 +225,7 @@ class SVDAE:
 
     def predict(self, data):
 
-        # Reshape to have multiple subgrids account for multiple batches
-        out = np.zeros((data[0].shape[0],
-                        len(data)*data[0].shape[-1]))
-        for i, coeff in enumerate(data):
-            out[:, i*data[0].shape[-1]:(i+1)*data[0].shape[-1]] \
-                = coeff
-
-        coeffs = []
-
-        for iGrid in range(len(data)):
-            snapshots_per_grid = \
-                out[:, iGrid*data[0].shape[-1]:(iGrid+1) *
-                    data[0].shape[-1]]
-
-            coeffs.append(np.dot(self.R.T, snapshots_per_grid))
+        coeffs, _, _ = calc_pod(data, nPOD=self.nPOD, R=self.R)
 
         # Invert earlier operation of reshaping subgrids
         out = np.zeros((coeffs[0].shape[0],
