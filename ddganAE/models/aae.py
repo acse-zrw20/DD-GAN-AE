@@ -34,6 +34,17 @@ class AAE:
     """
 
     def __init__(self, encoder, decoder, discriminator, optimizer, seed=None):
+        """
+        Constructor of adversarial autoencoder class
+
+        Args:
+            encoder (tf.keras.Model): Encoder model
+            decoder (tf.keras.Model): Decoder model
+            discriminator (tf.keras.Model): Discriminator model
+            optimizer (tf.keras.optimizers.Optimizer): Optimization method
+            seed (int, optional): Seed that will be used wherever possible.
+                                  Defaults to None.
+        """
         self.encoder = encoder
         self.decoder = decoder
         self.discriminator = discriminator
@@ -81,17 +92,18 @@ class AAE:
         Training model according to original paper on adversarial autoencoders
 
         Args:
-            train_data (np.ndarray): Array with train data
-            epochs (int): Number of epochs
-            val_data (np.ndarray, optional): Array with validation data.
-                Defaults to None.
-            batch_size (int, optional): Batch size. Defaults to 128.
-            plot_losses (bool, optional): Whether to plot losses.
-                Defaults to False.
-            print_losses (bool, optional): Whether to print losses.
-                Defaults to False.
+            train_data (np.ndarray): Train dataset
+            epochs (int): Number of training epochs to execute
+            val_data (np.ndarray, optional): Validation dataset. Defaults to
+                                             None.
+            batch_size (int, optional): Training batch size. Defaults to 128.
+            val_batch_size (int, optional): Validation batch size. Defaults to
+                                            128.
+            wandb_log (bool, optional): Whether to log results to wandb. Note
+                                        function needs to be called in
+                                        wandb.init() scope for this to work.
+                                        Defaults to False.
         """
-
         d_loss_val = g_loss_val = None
 
         train_dataset = tf.data.Dataset.from_tensor_slices(train_data)
@@ -199,7 +211,7 @@ class AAE:
         Validate model on previously unseen dataset.
 
         Args:
-            val_dataset (np.array): Validation dataset
+            val_dataset (np.ndarray): Validation dataset
             val_batch_size (int, optional): Validation batch size. Defaults to
                                             128.
 
@@ -251,6 +263,17 @@ class AAE_combined_loss:
     """
 
     def __init__(self, encoder, decoder, discriminator, optimizer, seed=None):
+        """
+        Constructor of adversarial autoencoder class
+
+        Args:
+            encoder (tf.keras.Model): Encoder model
+            decoder (tf.keras.Model): Decoder model
+            discriminator (tf.keras.Model): Discriminator model
+            optimizer (tf.keras.optimizers.Optimizer): Optimization method
+            seed (int, optional): Seed that will be used wherever possible.
+                                  Defaults to None.
+        """
         self.encoder = encoder
         self.decoder = decoder
         self.discriminator = discriminator
@@ -294,20 +317,20 @@ class AAE_combined_loss:
               batch_size=128, val_batch_size=128, wandb_log=False,
               n_discriminator=5):
         """
-        Training model where we use a training method that weights
-        the losses of the discriminator and autoencoder and as such combines
-        them into one loss and trains on them simultaneously.
+        Training model with combined loss strategy
 
         Args:
-            train_data (np.ndarray): Array with train data
-            epochs (int): Number of epochs
-            val_data (np.ndarray, optional): Array with validation data.
-                Defaults to None.
-            batch_size (int, optional): Batch size. Defaults to 128.
-            plot_losses (bool, optional): Whether to plot losses.
-                Defaults to False.
-            print_losses (bool, optional): Whether to print losses.
-                Defaults to False.
+            train_data (np.ndarray): Train dataset
+            epochs (int): Number of training epochs to execute
+            val_data (np.ndarray, optional): Validation dataset. Defaults to
+                                             None.
+            batch_size (int, optional): Training batch size. Defaults to 128.
+            val_batch_size (int, optional): Validation batch size. Defaults to
+                                            128.
+            wandb_log (bool, optional): Whether to log results to wandb. Note
+                                        function needs to be called in
+                                        wandb.init() scope for this to work.
+                                        Defaults to False.
         """
 
         d_loss_val = g_loss_val = None

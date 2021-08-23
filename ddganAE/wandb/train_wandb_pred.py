@@ -1,7 +1,7 @@
 """
 
-Functions used for weights and biases hyperparameter optimization on slug flow
-dataset
+Functions used for weights and biases hyperparameter optimization of
+predictive models on slug flow dataset.
 
 """
 
@@ -837,6 +837,7 @@ Continuous_predictive_adversarial_sweep_config = {
     },
 }
 
+# Build a small CLI
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Do hyperparameter \
 optimization on slug flow dataset")

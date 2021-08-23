@@ -1,7 +1,7 @@
 """
 
-Library of a collection of encoders and decoders that can readily be imported
-and used by the 3D adversarial and convolutional autoencoder models.
+Collection of discriminators that can readily be imported and used by the
+adversarial autoencoder and predictive models
 
 """
 
@@ -18,6 +18,17 @@ __status__ = "Development"
 
 
 def build_custom_discriminator(latent_dim, initializer, info=False):
+    """
+    Build a discriminator
+
+    Args:
+        latent_dim (int): Number of latent variables.
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print model info. Defaults to False.
+
+    Returns:
+        tf.keras.Model: discriminator
+    """
     discriminator = Sequential()
     discriminator.add(Dense(100, activation='relu',
                             kernel_initializer=initializer,
@@ -37,6 +48,17 @@ def build_custom_discriminator(latent_dim, initializer, info=False):
 
 
 def build_custom_wider_discriminator(latent_dim, initializer, info=False):
+    """
+    Build a discriminator
+
+    Args:
+        latent_dim (int): Number of latent variables.
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print model info. Defaults to False.
+
+    Returns:
+        tf.keras.Model: discriminator
+    """
     discriminator = Sequential()
     discriminator.add(Dense(1000, activation='relu',
                             kernel_initializer=initializer,

@@ -28,6 +28,16 @@ class SVDAE:
     """
 
     def __init__(self, encoder, decoder, optimizer, seed=None):
+        """
+        Constructor, create an instance of SVD autoencoder
+
+        Args:
+            encoder (tf.keras.Model): Encoder model
+            decoder (tf.keras.Model): Decoder model
+            optimizer (tf.keras.optimizers.Optimizer): Optimization method
+            seed (int, optional): Seed that will be used wherever possible.
+                                  Defaults to None.
+        """
         self.encoder = encoder
         self.decoder = decoder
         self.seed = seed
@@ -43,6 +53,12 @@ class SVDAE:
             snapshots (list of ndarrays): List of arrays with subgrid
                                           snapshots. shape:
                                           (n_grids, n_nodes, n_timelevels)
+            nPOD (int): number of pod coefficients to use. Set to
+                                     -2 for dynamic setting where a tolerance
+                                     determines the number of POD coefficients.
+                                     Defaults to -2.
+            cumulative_tol (float): Tolerance value to use if this option is
+                                    selected in `nPOD` parameter.
 
         Returns:
             list of ndarrays: POD coefficients per subgrid
@@ -55,9 +71,29 @@ class SVDAE:
         return coeffs
 
     def reconstruct_from_pod(coeffs, R):
+        """
+        Convenience function to reconstruct a grid from bases and coefficients
+
+        Args:
+            coeffs (np.ndarray): POD coefficients
+            R (np.ndarray): POD basis matrix
+
+        Returns:
+            np.ndarray: Grid reconstructed through POD
+        """
         return R @ coeffs
 
     def compile(self, nPOD, weight_loss=False):
+        """
+        Compile SVD autoencoder
+
+        Args:
+            nPOD (int): Number of POD coefficients to use
+            weight_loss (bool, optional): Whether to weight losses by singular
+                                          value magnitudes, note this feature
+                                          is currently in experimental phase.
+                                          Defaults to False.
+        """     
 
         self.nPOD = nPOD
         if isinstance(self.encoder.layers[0], Conv1D):
@@ -88,6 +124,22 @@ class SVDAE:
 
     def train(self, train_data, epochs, val_data=None, batch_size=128,
               val_batch_size=128, wandb_log=False):
+        """
+        Training SVD autoencoder model
+
+        Args:
+            train_data (np.ndarray): Train dataset
+            epochs (int): Number of training epochs to execute
+            val_data (np.ndarray, optional): Validation dataset. Defaults to
+                                             None.
+            batch_size (int, optional): Training batch size. Defaults to 128.
+            val_batch_size (int, optional): Validation batch size. Defaults to
+                                            128.
+            wandb_log (bool, optional): Whether to log results to wandb. Note
+                                        function needs to be called in
+                                        wandb.init() scope for this to work.
+                                        Defaults to False.
+        """
 
         loss_val = None
         # Returns POD as list of pod coefficients per subgrid
@@ -200,6 +252,15 @@ class SVDAE:
                 wandb.log(log)
 
     def validate(self, val_dataset):
+        """
+        Validate model on validation dataset.
+
+        Args:
+            val_dataset (np.ndarray): Validation dataset
+
+        Returns:
+            tuple: Validation losses and accuracies
+        """
         loss_cum = 0
         acc_cum = 0
         for step, val_grids in enumerate(val_dataset):
@@ -217,6 +278,15 @@ class SVDAE:
         return loss, acc
 
     def predict_single(self, snapshot):
+        """
+        Pass single array through full model including POD and the autoencoder
+
+        Args:
+            snapshot (np.ndarray): Grid to be predicted
+
+        Returns:
+            np.ndarray: Grid reconstructed by SVD autoencoder
+        """
         coeff = (self.R.T@snapshot).reshape(1, -1)
 
         gen_coeff = self.autoencoder.predict(coeff)
@@ -224,6 +294,15 @@ class SVDAE:
         return self.R @ gen_coeff[0]
 
     def predict(self, data):
+        """
+        Pass a collection of grids through the model
+
+        Args:
+            data (np.ndarray): Dataset that is to be passed through the model
+
+        Returns:
+            np.ndarray: Reconstructed dataset
+        """
 
         coeffs, _, _ = calc_pod(data, nPOD=self.nPOD, R=self.R)
 
@@ -251,6 +330,14 @@ class SVDAE:
 
 
 def print_losses(loss, epoch, loss_val=None):
+    """
+    Convenience function to print a set of losses. can be used by SVD
+    autoencoder.
+
+    Args:
+        loss (float): Loss value
+        epoch (int): Current epoch
+    """
     print("%d: [loss: %f, acc: %.2f%%]" %
           (epoch, loss[0], 100*loss[1]))
 
@@ -260,6 +347,16 @@ def print_losses(loss, epoch, loss_val=None):
 
 
 def plot_losses(loss, liveloss, loss_val=None):
+    """
+    Convenience function to plot a set of losses. Can be used by SVD
+    autoencoder.
+
+    Args:
+        loss (float): loss value
+        livaloss (object): livelossplot class instance
+        loss_val (float, optional): Validation loss value.
+                                    Defaults to None.
+    """
 
     if loss_val is not None:
         liveloss.update({'val_loss': loss[0],

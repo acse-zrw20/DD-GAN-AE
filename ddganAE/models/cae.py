@@ -1,7 +1,6 @@
 """
 
-Convolutional autoencoder model. Can be used with any of the convolutional
-encoder and decoder architectures in architectures directory.
+Convolutional autoencoder model.
 
 """
 
@@ -33,6 +32,16 @@ class CAE:
     """
 
     def __init__(self, encoder, decoder, optimizer, seed=None):
+        """
+        Constructor of convolutional autoencoder class
+
+        Args:
+            encoder (tf.keras.Model): Encoder model
+            decoder (tf.keras.Model): Decoder model
+            optimizer (tf.keras.optimizers.Optimizer): Optimization method
+            seed (int, optional): Seed that will be used wherever possible.
+                                  Defaults to None.
+        """
         self.encoder = encoder
         self.decoder = decoder
         self.seed = seed
@@ -46,6 +55,9 @@ class CAE:
 
         Args:
             input_shape (tuple): Shape of input data
+            pi_loss (bool, optional): Whether to use physics informed loss,
+                                      note this is currently in experimental
+                                      stage. Defaults to False.
         """
 
         self.input_shape = input_shape
@@ -66,7 +78,22 @@ class CAE:
 
     def train(self, train_data, epochs, val_data=None, batch_size=128,
               val_batch_size=128, wandb_log=False):
+        """
+        Training convolutional autoencoder model
 
+        Args:
+            train_data (np.ndarray): Train dataset
+            epochs (int): Number of training epochs to execute
+            val_data (np.ndarray, optional): Validation dataset. Defaults to
+                                             None.
+            batch_size (int, optional): Training batch size. Defaults to 128.
+            val_batch_size (int, optional): Validation batch size. Defaults to
+                                            128.
+            wandb_log (bool, optional): Whether to log results to wandb. Note
+                                        function needs to be called in
+                                        wandb.init() scope for this to work.
+                                        Defaults to False.
+        """
         loss_val = None
 
         train_dataset = tf.data.Dataset.from_tensor_slices(train_data)
@@ -129,7 +156,17 @@ class CAE:
                 wandb.log(log)
 
     def validate(self, val_dataset):
+        """
+        Validate model on validation dataset.
 
+        Args:
+            val_dataset (np.ndarray): Validation dataset
+            val_batch_size (int, optional): Validation batch size. Defaults to
+                                            128.
+
+        Returns:
+            tuple: Validation losses and accuracies
+        """
         loss_cum = 0
         acc_cum = 0
         step = 0
@@ -152,6 +189,8 @@ class CAE:
         Train and every `regen_epochs` epochs generate a new training set from
         available vtu files.
 
+        Currently in development.
+
         Args:
             data_file_base (string): Path to vtu files
             val_data (np.array): Array to use as validation dataset
@@ -161,5 +200,16 @@ class CAE:
         pass
 
     def predict(self, data):
+        """
+        Convenience function that gives class predict method that just does
+        forward pass through model.
+
+        Args:
+            data (np.ndarray): Input grids that are to be reconstructed by this
+                               model
+
+        Returns:
+            np.ndarray: Reconstructed grids
+        """
 
         return self.autoencoder.predict(data)

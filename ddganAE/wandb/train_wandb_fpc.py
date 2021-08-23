@@ -1,6 +1,7 @@
 """
 
-Functions used for weights and biases hyperparameter optimization
+Functions used for weights and biases hyperparameter optimization of
+autoencoders on FPC dataset.
 
 """
 
@@ -536,6 +537,7 @@ svdae_sweep_config = {
     },
 }
 
+# Build a small CLI
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Do hyperparameter \
 optimization on flow past cylinder dataset")

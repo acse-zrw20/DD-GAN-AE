@@ -3,6 +3,14 @@ import vtktools
 import numpy as np
 import u2r
 
+__author__ = "Claire Heaney"
+__credits__ = []
+__license__ = "MIT"
+__version__ = "1.0.0"
+__maintainer__ = "Zef Wolffs"
+__email__ = "zefwolffs@gmail.com"
+__status__ = "Development"
+
 
 class Mesh_Information():
     def __init__(self):

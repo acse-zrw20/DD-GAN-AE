@@ -1,6 +1,6 @@
 """
 
-Library of a collection of encoders and decoders that can readily be imported
+Collection of encoders and decoders that can readily be imported
 and used by the SVD autoencoder model.
 
 """
@@ -22,6 +22,19 @@ __status__ = "Development"
 
 def build_dense_encoder(latent_dim, initializer, info=False,
                         act='relu', dropout=0.6):
+    """
+    Builds a dense encoder
+
+    Args:
+        input_shape (tuple): Shape tuple of input grids
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+        dropout (int, optional): Dropout factor to use. Defaults to 0.6.
+
+    Returns:
+        tf.keras.Model: encoder
+    """
     encoder = Sequential()
     encoder.add(Dense(1000, activation=act, kernel_initializer=initializer,
                       bias_initializer=initializer))
@@ -42,7 +55,22 @@ def build_conv_encoder_decoder(input_dim, latent_dim, initializer, info=False,
                                act='relu', dense_act='relu', dropout=0.6, 
                                final_act="linear"):
     """
-    These show terrible performance
+    Create a 1D convolutional encoder and decoder
+
+    Args:
+        input_dim (tuple): Shape tuple of input grids
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+        act (str, optional): Activation function to use. Defaults to "elu".
+        dense_act (str, optional): Dense layer activation function to use.
+                                      Defaults to None.
+        dropout (int, optional): Dropout factor to use. Defaults to 0.6.
+        final_act (str, optional): Dense layer activation function to use.
+                                   Defaults to "linear".
+
+    Returns:
+        tuple: encoder, decoder pair
     """
     encoder = Sequential()
     encoder.add(Conv1D(16, 3, kernel_initializer=initializer,
@@ -72,7 +100,22 @@ def build_wider_conv_encoder_decoder(input_dim, latent_dim, initializer,
                                      info=False, act='relu', dense_act='relu',
                                      dropout=0.6, final_act="linear"):
     """
-    These show terrible performance
+    Create a 1D convolutional encoder and decoder
+
+    Args:
+        input_dim (tuple): Shape tuple of input grids
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+        act (str, optional): Activation function to use. Defaults to "elu".
+        dense_act (str, optional): Dense layer activation function to use.
+                                      Defaults to None.
+        dropout (int, optional): Dropout factor to use. Defaults to 0.6.
+        final_act (str, optional): Dense layer activation function to use.
+                                   Defaults to "linear".
+
+    Returns:
+        tuple: encoder, decoder pair
     """
     encoder = Sequential()
     encoder.add(Conv1D(64, 3, kernel_initializer=initializer,
@@ -99,9 +142,23 @@ def build_wider_conv_encoder_decoder(input_dim, latent_dim, initializer,
     return encoder, decoder
 
 
-# We make the decoder model
 def build_dense_decoder(input_dim, latent_dim, initializer, info=False,
                         act='relu', dropout=0.6, final_act="linear"):
+    """
+    Builds a dense decoder
+
+    Args:
+        input_shape (tuple): Shape tuple of input grids
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+        dropout (int, optional): Dropout factor to use. Defaults to 0.6.
+        final_act (str, optional): Dense layer activation function to use.
+                                   Defaults to "linear".
+
+    Returns:
+        tf.keras.Model: encoder
+    """
     decoder = Sequential()
     decoder.add(Dense(1000, activation=act, input_dim=latent_dim,
                       kernel_initializer=initializer,
@@ -124,7 +181,27 @@ def build_vinicius_encoder_decoder(input_dim, latent_dim, initializer,
                                    info=False, act='elu', dense_act='elu',
                                    dropout=0.6, reg=1e-3, batchnorm=True,
                                    final_act="linear"):
+    """
+    This encoder-decoder pair currently works for 60 by 20 by 20 grids
 
+    Args:
+        input_shape (tuple): Shape tuple of input grids
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+        act (str, optional): Activation function to use. Defaults to "elu".
+        dense_act (str, optional): Dense layer activation function to use.
+                                      Defaults to None.
+        dropout (float): Dropout factor to use in dense layers.
+        reg (float): Level of weights regularization to use.
+        batchnorm (bool, optional): Whether to use batch normalization layers.
+                                    Defaults to True.
+        final_act (str, optional): Dense layer activation function to use.
+                                   Defaults to "linear".
+
+    Returns:
+        tuple: encoder, decoder pair
+    """
     encoder = Sequential()
     encoder.add(Dense(8*8*128, activation=act,
                       kernel_regularizer=l2(reg), bias_regularizer=l2(reg),
@@ -199,7 +276,27 @@ def build_slimmer_vinicius_encoder_decoder(input_dim, latent_dim, initializer,
                                            dense_act='elu',
                                            dropout=0.6, reg=1e-3,
                                            batchnorm=True, final_act="linear"):
+    """
+    This encoder-decoder pair currently works for 60 by 20 by 20 grids
 
+    Args:
+        input_shape (tuple): Shape tuple of input grids
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+        act (str, optional): Activation function to use. Defaults to "elu".
+        dense_act (str, optional): Dense layer activation function to use.
+                                      Defaults to None.
+        dropout (float): Dropout factor to use in dense layers.
+        reg (float): Level of weights regularization to use.
+        batchnorm (bool, optional): Whether to use batch normalization layers.
+                                    Defaults to True.
+        final_act (str, optional): Dense layer activation function to use.
+                                   Defaults to "linear".
+
+    Returns:
+        tuple: encoder, decoder pair
+    """
     encoder = Sequential()
     encoder.add(Dense(8*8*64, activation=act,
                       kernel_regularizer=l2(reg), bias_regularizer=l2(reg),
@@ -274,6 +371,27 @@ def build_smaller_vinicius_encoder_decoder(input_dim, latent_dim, initializer,
                                            dense_act='elu',
                                            dropout=0.6, reg=1e-3,
                                            batchnorm=True, final_act="linear"):
+    """
+    This encoder-decoder pair currently works for 60 by 20 by 20 grids
+
+    Args:
+        input_shape (tuple): Shape tuple of input grids
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+        act (str, optional): Activation function to use. Defaults to "elu".
+        dense_act (str, optional): Dense layer activation function to use.
+                                      Defaults to None.
+        dropout (float): Dropout factor to use in dense layers.
+        reg (float): Level of weights regularization to use.
+        batchnorm (bool, optional): Whether to use batch normalization layers.
+                                    Defaults to True.
+        final_act (str, optional): Dense layer activation function to use.
+                                   Defaults to "linear".
+
+    Returns:
+        tuple: encoder, decoder pair
+    """
 
     encoder = Sequential()
     encoder.add(Dense(4*4*64, activation=act,
@@ -344,9 +462,21 @@ def build_smaller_vinicius_encoder_decoder(input_dim, latent_dim, initializer,
     return encoder, decoder
 
 
-# We make the encoder model
 def build_wider_dense_encoder(latent_dim, initializer, info=False,
                               act='relu', dropout=0.6):
+    """
+    Builds a dense encoder
+
+    Args:
+        input_shape (tuple): Shape tuple of input grids
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+        dropout (int, optional): Dropout factor to use. Defaults to 0.6.
+
+    Returns:
+        tf.keras.Model: encoder
+    """
     encoder = Sequential()
     encoder.add(Dense(1500, activation=act, kernel_initializer=initializer,
                       bias_initializer=initializer))
@@ -363,9 +493,23 @@ def build_wider_dense_encoder(latent_dim, initializer, info=False,
     return encoder
 
 
-# We make the decoder model
 def build_wider_dense_decoder(input_dim, latent_dim, initializer, info=False,
                               act='relu', dropout=0.6, final_act="linear"):
+    """
+    Builds a dense decoder
+
+    Args:
+        input_shape (tuple): Shape tuple of input grids
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+        dropout (int, optional): Dropout factor to use. Defaults to 0.6.
+        final_act (str, optional): Dense layer activation function to use.
+                                   Defaults to "linear".
+
+    Returns:
+        tf.keras.Model: encoder
+    """
     decoder = Sequential()
     decoder.add(Dense(1500, activation=act, input_dim=latent_dim,
                       kernel_initializer=initializer,
@@ -384,9 +528,21 @@ def build_wider_dense_decoder(input_dim, latent_dim, initializer, info=False,
     return decoder
 
 
-# We make the encoder model
 def build_slimmer_dense_encoder(latent_dim, initializer, info=False,
                                 act='relu', dropout=0.6):
+    """
+    Builds a dense encoder
+
+    Args:
+        input_shape (tuple): Shape tuple of input grids
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+        dropout (int, optional): Dropout factor to use. Defaults to 0.6.
+
+    Returns:
+        tf.keras.Model: encoder
+    """
     encoder = Sequential()
     encoder.add(Dense(500, activation=act, kernel_initializer=initializer,
                       bias_initializer=initializer))
@@ -403,9 +559,23 @@ def build_slimmer_dense_encoder(latent_dim, initializer, info=False,
     return encoder
 
 
-# We make the decoder model
 def build_slimmer_dense_decoder(input_dim, latent_dim, initializer, info=False,
                                 act='relu', dropout=0.6, final_act="linear"):
+    """
+    Builds a dense decoder
+
+    Args:
+        input_shape (tuple): Shape tuple of input grids
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+        dropout (int, optional): Dropout factor to use. Defaults to 0.6.
+        final_act (str, optional): Dense layer activation function to use.
+                                   Defaults to "linear".
+
+    Returns:
+        tf.keras.Model: encoder
+    """
     decoder = Sequential()
     decoder.add(Dense(500, activation=act, input_dim=latent_dim,
                       kernel_initializer=initializer,
@@ -424,9 +594,21 @@ def build_slimmer_dense_decoder(input_dim, latent_dim, initializer, info=False,
     return decoder
 
 
-# We make the encoder model
 def build_deeper_dense_encoder(latent_dim, initializer, info=False,
                                act='relu', dropout=0.6):
+    """
+    Builds a dense encoder
+
+    Args:
+        input_shape (tuple): Shape tuple of input grids
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+        dropout (int, optional): Dropout factor to use. Defaults to 0.6.
+
+    Returns:
+        tf.keras.Model: encoder
+    """
     encoder = Sequential()
     encoder.add(Dense(1000, activation=act, kernel_initializer=initializer,
                       bias_initializer=initializer))
@@ -446,9 +628,23 @@ def build_deeper_dense_encoder(latent_dim, initializer, info=False,
     return encoder
 
 
-# We make the decoder model
 def build_deeper_dense_decoder(input_dim, latent_dim, initializer, info=False,
                                act='relu', dropout=0.6, final_act="linear"):
+    """
+    Builds a dense decoder
+
+    Args:
+        input_shape (tuple): Shape tuple of input grids
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+        dropout (int, optional): Dropout factor to use. Defaults to 0.6.
+        final_act (str, optional): Dense layer activation function to use.
+                                   Defaults to "linear".
+
+    Returns:
+        tf.keras.Model: encoder
+    """
     decoder = Sequential()
     decoder.add(Dense(1000, activation=act, input_dim=latent_dim,
                       kernel_initializer=initializer,

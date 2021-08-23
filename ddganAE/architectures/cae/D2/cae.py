@@ -1,9 +1,10 @@
 """
 
-Library of a collection of encoders and decoders that can readily be imported
-and used by the adversarial and convolutional autoencoder models.
+Collection of encoders and decoders that can readily be imported
+and used by the 2D adversarial and convolutional autoencoder and predictive
+models.
 
-Shapes are adjusted to the flow past a cylinder problem.
+Note that these models are currently adjusted to a 55 by 42 input shape.
 
 """
 
@@ -22,6 +23,18 @@ __status__ = "Development"
 
 def build_custom_conv_encoder(input_shape, latent_dim, initializer,
                               info=False):
+    """
+    Builds a 2D convolutional encoder
+
+    Args:
+        input_shape (tuple): Shape tuple of input grids
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+
+    Returns:
+        tf.keras.Model: encoder
+    """
     encoder = Sequential()
     encoder.add(Conv2D(32, (5, 5), padding="same", activation="relu",
                        input_shape=input_shape,
@@ -40,6 +53,17 @@ def build_custom_conv_encoder(input_shape, latent_dim, initializer,
 
 
 def build_custom_conv_decoder(latent_dim, initializer, info=False):
+    """
+    Builds a 2D convolutional decoder
+
+    Args:
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+
+    Returns:
+        tf.keras.Model: encoder
+    """
     decoder = Sequential()
     decoder.add(Dense(78848, input_dim=latent_dim,
                       kernel_initializer=initializer))
@@ -62,7 +86,19 @@ def build_custom_conv_decoder(latent_dim, initializer, info=False):
 def build_omata_encoder_decoder(input_shape, latent_dim, initializer,
                                 info=False, act="elu", dense_act=None):
     """
-    This encoder-decoder pair works for 55 by 42 grids
+    This encoder-decoder pair currently works for 55 by 42 grids
+
+    Args:
+        input_shape (tuple): Shape tuple of input grids
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+        act (str, optional): Activation function to use. Defaults to "elu".
+        dense_act (str, optional): Dense layer activation function to use.
+                                      Defaults to None.
+
+    Returns:
+        tuple: encoder, decoder pair
     """
     encoder = Sequential()
     encoder.add(Conv2D(16, (3, 3), padding="same", activation=act,
@@ -109,7 +145,19 @@ def build_omata_encoder_decoder(input_shape, latent_dim, initializer,
 def build_wider_omata_encoder_decoder(input_shape, latent_dim, initializer,
                                       info=False, act="elu", dense_act=None):
     """
-    This encoder-decoder pair works for 55 by 42 grids
+    This encoder-decoder pair currently works for 55 by 42 grids
+
+    Args:
+        input_shape (tuple): Shape tuple of input grids
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+        act (str, optional): Activation function to use. Defaults to "elu".
+        dense_act (str, optional): Dense layer activation function to use.
+                                      Defaults to None.
+
+    Returns:
+        tuple: encoder, decoder pair
     """
     encoder = Sequential()
     encoder.add(Conv2D(16, (5, 5), padding="same", activation=act,
@@ -156,10 +204,19 @@ def build_wider_omata_encoder_decoder(input_shape, latent_dim, initializer,
 def build_wide_omata_encoder_decoder(input_shape, latent_dim, initializer,
                                      info=False, act="elu", dense_act=None):
     """
-    relatively wide model omata encoder decoder
+    This encoder-decoder pair currently works for 55 by 42 grids
 
+    Args:
+        input_shape (tuple): Shape tuple of input grids
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+        act (str, optional): Activation function to use. Defaults to "elu".
+        dense_act (str, optional): Dense layer activation function to use.
+                                      Defaults to None.
 
-    This encoder-decoder pair works for 55 by 42 grids
+    Returns:
+        tuple: encoder, decoder pair
     """
     encoder = Sequential()
     encoder.add(Conv2D(32, (5, 5), padding="same", activation=act,
@@ -206,7 +263,19 @@ def build_wide_omata_encoder_decoder(input_shape, latent_dim, initializer,
 def build_deeper_omata_encoder_decoder(input_shape, latent_dim, initializer,
                                        info=False, act="elu", dense_act=None):
     """
-    This encoder-decoder pair works for 55 by 42 grids
+    This encoder-decoder pair currently works for 55 by 42 grids
+
+    Args:
+        input_shape (tuple): Shape tuple of input grids
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+        act (str, optional): Activation function to use. Defaults to "elu".
+        dense_act (str, optional): Dense layer activation function to use.
+                                      Defaults to None.
+
+    Returns:
+        tuple: encoder, decoder pair
     """
     encoder = Sequential()
     encoder.add(Conv2D(32, (5, 5), padding="same", activation=act,
@@ -259,7 +328,19 @@ def build_deeper_omata_encoder_decoder(input_shape, latent_dim, initializer,
 def build_denser_omata_encoder_decoder(input_shape, latent_dim, initializer,
                                        info=False, act="elu", dense_act=None):
     """
-    This encoder-decoder pair works for 55 by 42 grids
+    This encoder-decoder pair currently works for 55 by 42 grids
+
+    Args:
+        input_shape (tuple): Shape tuple of input grids
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+        act (str, optional): Activation function to use. Defaults to "elu".
+        dense_act (str, optional): Dense layer activation function to use.
+                                      Defaults to None.
+
+    Returns:
+        tuple: encoder, decoder pair
     """
     encoder = Sequential()
     encoder.add(Conv2D(32, (5, 5), padding="same", activation=act,
@@ -316,7 +397,19 @@ def build_denser_omata_encoder_decoder(input_shape, latent_dim, initializer,
 def build_densest_omata_encoder_decoder(input_shape, latent_dim, initializer,
                                         info=False, act="elu", dense_act=None):
     """
-    This encoder-decoder pair works for 55 by 42 grids
+    This encoder-decoder pair currently works for 55 by 42 grids
+
+    Args:
+        input_shape (tuple): Shape tuple of input grids
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+        act (str, optional): Activation function to use. Defaults to "elu".
+        dense_act (str, optional): Dense layer activation function to use.
+                                      Defaults to None.
+
+    Returns:
+        tuple: encoder, decoder pair
     """
     encoder = Sequential()
     encoder.add(Conv2D(32, (5, 5), padding="same", activation=act,
@@ -374,7 +467,16 @@ def build_densest_omata_encoder_decoder(input_shape, latent_dim, initializer,
 def build_agostini_encoder_decoder(input_shape, latent_dim, initializer,
                                    info=False):
     """
-    This encoder-decoder pair works for 221 by 42 grids
+    This encoder-decoder pair currently works for 221 by 42 grids
+
+    Args:
+        input_shape (tuple): Shape tuple of input grids
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+
+    Returns:
+        tuple: encoder, decoder pair
     """
     encoder = Sequential()
     encoder.add(Conv2D(16, (5, 5), padding="same", activation="relu",
@@ -419,7 +521,17 @@ def build_agostini_encoder_decoder(input_shape, latent_dim, initializer,
 def build_mnist_wide_omata_encoder_decoder(input_shape, latent_dim,
                                            initializer, info=False):
     """
-    This encoder-decoder pair works for 28 by 28 grids
+    This encoder-decoder pair currently works for 28 by 28 grids so can work
+    on MNIST dataset as a test
+
+    Args:
+        input_shape (tuple): Shape tuple of input grids
+        latent_dim (int): Number of latent variables
+        initializer (tf.keras.initializers.Initializer): Weights initializer
+        info (bool, optional): Whether to print info. Defaults to False.
+
+    Returns:
+        tuple: encoder, decoder pair
     """
     encoder = Sequential()
     encoder.add(Conv2D(128, (3, 3), padding="same", activation="relu",
