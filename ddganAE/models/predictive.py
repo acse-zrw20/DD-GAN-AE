@@ -17,10 +17,20 @@ import os
 
 class Predictive_adversarial:
     """
-    Predictive adversarial Autoencoder class
+    Predictive Adversarial Neural Network class
     """
 
     def __init__(self, encoder, decoder, discriminator, optimizer):
+        """
+        Constructor, create an instance of predictive adversarial neural
+        network
+
+        Args:
+            encoder (Tensorflow model): [description]
+            decoder ([type]): [description]
+            discriminator ([type]): [description]
+            optimizer ([type]): [description]
+        """
         self.encoder = encoder
         self.decoder = decoder
         self.discriminator = discriminator
@@ -44,10 +54,18 @@ class Predictive_adversarial:
 
         return cls(encoder, decoder, discriminator, optimizer)
 
-    def reconstruct_from_pod(coeffs, R):
-        return R @ coeffs
-
     def compile(self, nPOD, increment=False):
+        """
+        Compile the model with a weighted loss between the autoencoder and
+        generator
+
+        Args:
+            nPOD (np.ndarray): Number of input coefficients, can be POD
+                               coefficients but also latent variables
+            increment (bool, optional): Whether to predict and train on
+                                        increments or whole values. Defaults
+                                        to False.
+        """
         self.increment = increment
         self.nPOD = nPOD
         if isinstance(self.encoder.layers[0], Conv1D):
@@ -76,6 +94,24 @@ class Predictive_adversarial:
                                              optimizer=self.optimizer)
 
     def preprocess(self, input_data):
+        """
+        Preprocessing function to transform dataset. Will be called on input
+        data when function `train` is called. Will not be used when
+        `train_preprocessed` is used instead, as the latter assumes the user
+        has done the preprocessing in advance.
+
+        Args:
+            input_data (np.ndarray): Input data in shape (<number of domains>,
+                                                          <number of pod
+                                                           coeffcients or
+                                                           latent variables
+                                                           per domain>,
+                                                           <number of
+                                                           timesteps>)
+
+        Returns:
+            tuple: Tuple containing x (samples) and y (targets) datasets
+        """
 
         # Preprocessing
         for k in range(self.interval):
@@ -125,43 +161,96 @@ class Predictive_adversarial:
     def train(self, input_data, epochs, interval=5, val_size=0, val_data=None,
               batch_size=128, val_batch_size=128, wandb_log=False,
               n_discriminator=5, n_gradient_ascent=np.inf, noise_std=0):
-
-            self.interval = interval
-
-            x_full, y_full = self.preprocess(input_data)
-
-            self.train_preprocessed(x_full, y_full, epochs, interval=interval, 
-                                    val_size=val_size, val_data=val_data,
-                                    batch_size=batch_size, 
-                                    val_batch_size=val_batch_size, 
-                                    wandb_log=wandb_log,
-                                    n_discriminator=n_discriminator, 
-                                    n_gradient_ascent=n_gradient_ascent, 
-                                    noise_std=noise_std)
-
-    def train_preprocessed(self, x_full, y_full, epochs, interval=5, 
-                           val_size=0, val_data=None,
-                           batch_size=128, val_batch_size=128, wandb_log=False,
-                           n_discriminator=5, n_gradient_ascent=np.inf, noise_std=0):
         """
-        Training model where we use a training method that weights
-        the losses of the discriminator and autoencoder and as such combines
-        them into one loss and trains on them simultaneously. Takes in POD
-        coefficients or latent variables. The timestep shifts will be done in
-        this function.
+        Train the model and do preprocessing within this function.
 
         Args:
-            train_data (np.ndarray): Array with train data, in shape
-                                     (ngrids, nvars, ntime) (rescaled)
-            epochs (int): Number of epochs
-            interval (int): choose every `interval` variables to model
-            val_data (np.ndarray, optional): Array with validation data.
-                Defaults to None.
-            batch_size (int, optional): Batch size. Defaults to 128.
-            plot_losses (bool, optional): Whether to plot losses.
-                Defaults to False.
-            print_losses (bool, optional): Whether to print losses.
-                Defaults to False.
+            input_data (np.ndarray): Input data in shape
+            epochs (int): Number of epochs to train for
+            interval (int, optional): Interval at which to train data.
+                                      Defaults to 5.
+            val_size (float, optional): Relative size of validation set, if not
+                                      supplied as the next argument. Number
+                                      between 0 and 1. Defaults to 0.
+            val_data (np.ndarray, optional): User-supplied validation dataset,
+                                             mutually exclusive with
+                                             val_size > 0. Defaults to None.
+            batch_size (int, optional): [description]. Defaults to 128.
+            val_batch_size (int, optional): Batch size on the validation set.
+                                            Defaults to 128.
+            wandb_log (bool, optional): Whether to log results to wandb, needs
+                                        to be called within wandb context if
+                                        set to true. Defaults to False.
+            n_discriminator (int, optional): Interval at which discriminator
+                                             is trained, i.e. it is trained on
+                                             every `n_discriminator` batches.
+                                             Defaults to 5.
+            n_gradient_ascent ([type], optional): Interval at which
+                                                  discriminator is made to do
+                                                  a step of gradient ascent,
+                                                  i.e. it does a step of
+                                                  gradient ascent every
+                                                  `n_gradient_ascent` batches.
+                                                  Defaults to np.inf.
+            noise_std (float, optional): Standard deviation of Gaussian noise
+                                         applied to training dataset, is
+                                         reapplied uniquely every epoch.
+                                         Defaults to 0.
+        """
+
+        self.interval = interval
+
+        x_full, y_full = self.preprocess(input_data)
+
+        self.train_preprocessed(x_full, y_full, epochs, interval=interval,
+                                val_size=val_size, val_data=val_data,
+                                batch_size=batch_size,
+                                val_batch_size=val_batch_size,
+                                wandb_log=wandb_log,
+                                n_discriminator=n_discriminator,
+                                n_gradient_ascent=n_gradient_ascent,
+                                noise_std=noise_std)
+
+    def train_preprocessed(self, x_full, y_full, epochs, interval=5,
+                           val_size=0, val_data=None,
+                           batch_size=128, val_batch_size=128, wandb_log=False,
+                           n_discriminator=5, n_gradient_ascent=np.inf,
+                           noise_std=0):
+        """
+        Train the model and do no preprocessing.
+
+        Args:
+            input_data (np.ndarray): Input data in shape
+            epochs (int): Number of epochs to train for
+            interval (int, optional): Interval at which to train data.
+                                      Defaults to 5.
+            val_size (float, optional): Relative size of validation set, if not
+                                      supplied as the next argument. Number
+                                      between 0 and 1. Defaults to 0.
+            val_data (np.ndarray, optional): User-supplied validation dataset,
+                                             mutually exclusive with
+                                             val_size > 0. Defaults to None.
+            batch_size (int, optional): [description]. Defaults to 128.
+            val_batch_size (int, optional): Batch size on the validation set.
+                                            Defaults to 128.
+            wandb_log (bool, optional): Whether to log results to wandb, needs
+                                        to be called within wandb context if
+                                        set to true. Defaults to False.
+            n_discriminator (int, optional): Interval at which discriminator
+                                             is trained, i.e. it is trained on
+                                             every `n_discriminator` batches.
+                                             Defaults to 5.
+            n_gradient_ascent ([type], optional): Interval at which
+                                                  discriminator is made to do
+                                                  a step of gradient ascent,
+                                                  i.e. it does a step of
+                                                  gradient ascent every
+                                                  `n_gradient_ascent` batches.
+                                                  Defaults to np.inf.
+            noise_std (float, optional): Standard deviation of Gaussian noise
+                                         applied to training dataset, is
+                                         reapplied uniquely every epoch.
+                                         Defaults to 0.
         """
 
         self.interval = interval
@@ -169,7 +258,8 @@ class Predictive_adversarial:
         d_loss_val = g_loss_val = None
 
         if val_size > 0 and val_data is not None:
-            raise NotImplementedError("Use either val_size > 0 or supply val_data, not both")
+            raise NotImplementedError("Use either val_size > 0 or supply \
+val_data, not both")
 
         if val_size > 0:
             x_train, x_val, y_train, y_val = train_test_split(
@@ -261,6 +351,7 @@ class Predictive_adversarial:
             else:
                 g_loss = 0
 
+            # From here on it is just validation and logging
             with train_summary_writer.as_default():
                 tf.summary.scalar('loss - g', g_loss, step=epoch)
                 tf.summary.scalar('loss - d', d_loss, step=epoch)
@@ -294,7 +385,7 @@ class Predictive_adversarial:
         Validate model on previously unseen dataset.
 
         Args:
-            val_dataset (np.array): Validation dataset
+            val_dataset (np.ndarray): Validation dataset
             val_batch_size (int, optional): Validation batch size. Defaults to
                                             128.
 
@@ -332,7 +423,7 @@ class Predictive_adversarial:
 
         return d_loss, g_loss
 
-    def predict(self, boundaries, init_values, timesteps, iters=5, sor=1, 
+    def predict(self, boundaries, init_values, timesteps, iters=5, sor=1,
                 pre_interval=False, timestep_print_interval=None):
         """
         Predict in time using boundaries and initial values for a certain
@@ -343,9 +434,17 @@ class Predictive_adversarial:
                                      (nboundaries (2), nvars, ntimesteps)
             init_values (np.ndarray): Initial values in shape (ngrids, nvars)
             timesteps (int): Number of timesteps to predict
-            iters (int): Number of iterations to do before a prediction
+            iters (int): Number of iterations to do before a prediction.
+                         Defaults to 5.
+            sor (float): Successive overrelaxation factor. Defaults to 1.
+            pre_interval (bool): Whether intervals have already been applied
+                                 outside of this function. If False, this
+                                 function will do it. Defaults to False.
+            timestep_print_interval: Interval at which to print the current
+                                     timestep to see progress, defaults to
+                                     None.
         """
-        if pre_interval == False:
+        if pre_interval is False:
             boundaries = boundaries[:, :, ::self.interval]
 
         pred_vars = np.zeros((2 + init_values.shape[0], boundaries.shape[1],
@@ -355,9 +454,10 @@ class Predictive_adversarial:
         pred_vars[-1] = boundaries[1]
 
         for i in range(timesteps):
+
             # Outer "timesteps" loop
-            
-            if timestep_print_interval is not None and i % timestep_print_interval == 0:
+            if timestep_print_interval is not None and i % \
+               timestep_print_interval == 0:
                 print("At timestep number ", i)
 
             # Let's start with a linear extrapolation for the predictions
@@ -425,7 +525,7 @@ class Predictive_adversarial:
 
 class Predictive:
     """
-    Predictive Autoencoder class
+    Predictive Neural Network class
     """
 
     def __init__(self, encoder, decoder, optimizer, seed=None):
@@ -438,10 +538,14 @@ class Predictive:
 
     def compile(self, nPOD, increment=False):
         """
-        Compile model
+        Compile the model
 
         Args:
-            input_shape (tuple): Shape of input data
+            nPOD (np.ndarray): Number of input coefficients, can be POD
+                               coefficients but also latent variables
+            increment (bool, optional): Whether to predict and train on
+                                        increments or whole values. Defaults
+                                        to False.
         """
 
         self.increment = increment
@@ -462,6 +566,24 @@ class Predictive:
                                  metrics=['accuracy'])
 
     def preprocess(self, input_data):
+        """
+        Preprocessing function to transform dataset. Will be called on input
+        data when function `train` is called. Will not be used when
+        `train_preprocessed` is used instead, as the latter assumes the user
+        has done the preprocessing in advance.
+
+        Args:
+            input_data (np.ndarray): Input data in shape (<number of domains>,
+                                                          <number of pod
+                                                           coeffcients or
+                                                           latent variables
+                                                           per domain>,
+                                                           <number of
+                                                           timesteps>)
+
+        Returns:
+            tuple: Tuple containing x (samples) and y (targets) datasets
+        """
 
         # Preprocessing
         for k in range(self.interval):
@@ -512,31 +634,48 @@ class Predictive:
               batch_size=128, val_batch_size=128, wandb_log=False,
               n_discriminator=5, n_gradient_ascent=np.inf, noise_std=0):
         """
-        Training model where we use a training method that weights
-        the losses of the discriminator and autoencoder and as such combines
-        them into one loss and trains on them simultaneously. Takes in POD
-        coefficients or latent variables. The timestep shifts will be done in
-        this function.
+        Train the model and do preprocessing within this function.
 
         Args:
-            train_data (np.ndarray): Array with train data, in shape
-                                     (ngrids, nvars, ntime) (rescaled)
-            epochs (int): Number of epochs
-            interval (int): choose every `interval` variables to model
-            val_data (np.ndarray, optional): Array with validation data.
-                Defaults to None.
-            batch_size (int, optional): Batch size. Defaults to 128.
-            plot_losses (bool, optional): Whether to plot losses.
-                Defaults to False.
-            print_losses (bool, optional): Whether to print losses.
-                Defaults to False.
+            input_data (np.ndarray): Input data in shape
+            epochs (int): Number of epochs to train for
+            interval (int, optional): Interval at which to train data.
+                                      Defaults to 5.
+            val_size (float, optional): Relative size of validation set, if not
+                                      supplied as the next argument. Number
+                                      between 0 and 1. Defaults to 0.
+            val_data (np.ndarray, optional): User-supplied validation dataset,
+                                             mutually exclusive with
+                                             val_size > 0. Defaults to None.
+            batch_size (int, optional): [description]. Defaults to 128.
+            val_batch_size (int, optional): Batch size on the validation set.
+                                            Defaults to 128.
+            wandb_log (bool, optional): Whether to log results to wandb, needs
+                                        to be called within wandb context if
+                                        set to true. Defaults to False.
+            n_discriminator (int, optional): Interval at which discriminator
+                                             is trained, i.e. it is trained on
+                                             every `n_discriminator` batches.
+                                             Defaults to 5.
+            n_gradient_ascent ([type], optional): Interval at which
+                                                  discriminator is made to do
+                                                  a step of gradient ascent,
+                                                  i.e. it does a step of
+                                                  gradient ascent every
+                                                  `n_gradient_ascent` batches.
+                                                  Defaults to np.inf.
+            noise_std (float, optional): Standard deviation of Gaussian noise
+                                         applied to training dataset, is
+                                         reapplied uniquely every epoch.
+                                         Defaults to 0.
         """
 
         val_dataset = None
         self.interval = interval
 
         if val_size > 0 and val_data is not None:
-            raise NotImplementedError("Use either val_size > 0 or supply val_data, not both")
+            raise NotImplementedError("Use either val_size > 0 or supply \
+val_data, not both")
 
         x_full, y_full = self.preprocess(input_data)
 
@@ -648,7 +787,7 @@ class Predictive:
 
         return loss, acc
 
-    def predict(self, boundaries, init_values, timesteps, iters=5, sor=1, 
+    def predict(self, boundaries, init_values, timesteps, iters=5, sor=1,
                 timestep_print_interval=None):
         """
         Predict in time using boundaries and initial values for a certain
@@ -659,7 +798,12 @@ class Predictive:
                                      (nboundaries (2), nvars, ntimesteps)
             init_values (np.ndarray): Initial values in shape (ngrids, nvars)
             timesteps (int): Number of timesteps to predict
-            iters (int): Number of iterations to do before a prediction
+            iters (int): Number of iterations to do before a prediction.
+                         Defaults to 5.
+            sor (float): Successive overrelaxation factor. Defaults to 1.
+            timestep_print_interval: Interval at which to print the current
+                                     timestep to see progress, defaults to
+                                     None.
         """
         boundaries = boundaries[:, :, ::self.interval]
 
@@ -672,9 +816,10 @@ class Predictive:
         for i in range(timesteps):
             # Outer "timesteps" loop
 
-            if timestep_print_interval is not None and i % timestep_print_interval == 0:
+            if timestep_print_interval is not None and i % \
+               timestep_print_interval == 0:
                 print("At timestep number ", i)
-            
+
             # Let's start with a linear extrapolation for the predictions
             if i > 1:
                 for k in range(1, init_values.shape[0]+1):
