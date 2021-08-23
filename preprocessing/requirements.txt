@@ -1,0 +1,6 @@
+# Requirements file for preprocessing, needs python 2.7
+numpy
+vtk
+argparse
+pytest
+scipy
