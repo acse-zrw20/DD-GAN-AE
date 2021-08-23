@@ -87,7 +87,7 @@ from ddganAE.architectures.cae.D2 import *
 import tf
 
 input_shape = (55, 42, 2)
-dataset = np.load(...) # dataset with shape (nsamples, 55, 42, 2)
+dataset = np.load(...) # dataset with shape (<nsamples>, 55, 42, 2)
 
 optimizer = tf.keras.optimizers.Adam() # Define an optimizer
 initializer = tf.keras.initializers.RandomNormal() # Define a weights initializer
@@ -101,6 +101,42 @@ cae.compile(input_shape) # compile the model
 cae.train(dataset, 200) # train the model with 200 epochs
 
 recon_dataset = cae.predict(dataset) # pass the dataset through the model and generate outputs
+```
+
+Training a model for prediction:
+
+```python
+from ddganAE.models import Predictive_adversarial
+from ddganAE.architectures.svdae import *
+import tf
+
+latent_vars = 100  # Define the number of variables the predictive model will use in discriminator layer
+n_predicted_vars = 10 # Define the number of predicted variables
+
+dataset = np.load(...) # dataset with shape (<ndomains>, 10, <ntimesteps>)
+
+optimizer = tf.keras.optimizers.Adam() # Define an optimizer
+initializer = tf.keras.initializers.RandomNormal() # Define a weights initializer
+
+# Define any encoder and decoder, see docs for more premade architectures. Note for predictive
+# models we don't necessarily need to use encoders or decoders
+encoder = build_slimmer_dense_encoder(latent_vars, initializer)
+decoder = build_slimmer_dense_decoder(n_predicted_vars, latent_vars, initializer)
+discriminator = build_custom_discriminator(latent_vars, initializer)
+
+pred_adv = Predictive_adversarial(encoder, decoder, discriminator, optimizer)
+pred_adv.compile(n_predicted_vars, increment=False)
+pred_adv.train(dataset, 2000)
+
+# Select the boundaries with all timesteps
+boundaries = np.zeros((2, 10, <ntimesteps>))
+boundaries[0], boundaries[1]  = dataset[2], dataset[9]
+
+# Select the initial values at the first timestep
+init_values = val_data[3:9, :, 0]
+
+predicted_latent = pred_adv.predict(boundaries, init_values, 50, # Predict 50 steps forward 
+                                    iters=4, sor=1, pre_interval=False)
 ```
 
 ## Examples
