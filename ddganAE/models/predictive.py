@@ -26,10 +26,12 @@ class Predictive_adversarial:
         network
 
         Args:
-            encoder (Tensorflow model): [description]
-            decoder ([type]): [description]
-            discriminator ([type]): [description]
-            optimizer ([type]): [description]
+            encoder (tf.keras.Model): Encoder model
+            decoder (tf.keras.Model): Decoder model
+            discriminator (tf.keras.Model): Discriminator model
+            optimizer (tf.keras.optimizers.Optimizer): Optimization method
+            seed (int, optional): Seed that will be used wherever possible.
+                                  Defaults to None.
         """
         self.encoder = encoder
         self.decoder = decoder
@@ -382,7 +384,7 @@ val_data, not both")
 
     def validate(self, val_dataset, val_batch_size):
         """
-        Validate model on previously unseen dataset.
+        Validate model on validation dataset.
 
         Args:
             val_dataset (np.ndarray): Validation dataset
@@ -529,6 +531,17 @@ class Predictive:
     """
 
     def __init__(self, encoder, decoder, optimizer, seed=None):
+        """
+        Constructor, create an instance of predictive neural
+        network
+
+        Args:
+            encoder (tf.keras.Model): Encoder model
+            decoder (tf.keras.Model): Decoder model
+            optimizer (tf.keras.optimizers.Optimizer): Optimization method
+            seed (int, optional): Seed that will be used wherever possible.
+                                  Defaults to None.
+        """
         self.seed = seed
         self.encoder = encoder
         self.decoder = decoder
@@ -567,10 +580,7 @@ class Predictive:
 
     def preprocess(self, input_data):
         """
-        Preprocessing function to transform dataset. Will be called on input
-        data when function `train` is called. Will not be used when
-        `train_preprocessed` is used instead, as the latter assumes the user
-        has done the preprocessing in advance.
+        Preprocessing function to transform dataset.
 
         Args:
             input_data (np.ndarray): Input data in shape (<number of domains>,
@@ -657,13 +667,13 @@ class Predictive:
                                              is trained, i.e. it is trained on
                                              every `n_discriminator` batches.
                                              Defaults to 5.
-            n_gradient_ascent ([type], optional): Interval at which
-                                                  discriminator is made to do
-                                                  a step of gradient ascent,
-                                                  i.e. it does a step of
-                                                  gradient ascent every
-                                                  `n_gradient_ascent` batches.
-                                                  Defaults to np.inf.
+            n_gradient_ascent (int, optional): Interval at which
+                                               discriminator is made to do
+                                               a step of gradient ascent,
+                                               i.e. it does a step of
+                                               gradient ascent every
+                                               `n_gradient_ascent` batches.
+                                               Defaults to np.inf.
             noise_std (float, optional): Standard deviation of Gaussian noise
                                          applied to training dataset, is
                                          reapplied uniquely every epoch.
@@ -759,10 +769,10 @@ val_data, not both")
 
     def validate(self, val_dataset, val_batch_size):
         """
-        Validate model on previously unseen dataset.
+        Validate model on validation dataset.
 
         Args:
-            val_dataset (np.array): Validation dataset
+            val_dataset (np.ndarray): Validation dataset
             val_batch_size (int, optional): Validation batch size. Defaults to
                                             128.
 
@@ -801,9 +811,9 @@ val_data, not both")
             iters (int): Number of iterations to do before a prediction.
                          Defaults to 5.
             sor (float): Successive overrelaxation factor. Defaults to 1.
-            timestep_print_interval: Interval at which to print the current
-                                     timestep to see progress, defaults to
-                                     None.
+            timestep_print_interval (int): Interval at which to print the
+                                           current timestep to see progress,
+                                           defaults to None.
         """
         boundaries = boundaries[:, :, ::self.interval]
 

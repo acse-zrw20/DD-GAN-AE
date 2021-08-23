@@ -5,7 +5,7 @@ decompose given slug flow problem.
 Code is not very general and likely only works for exact slug flow data
 used in this project. Note this code is meant to be a wrapper for legacy code
 that is intended to not be used used very often or in a critical/production
-setting. Therefore sustainability  may be lacking.
+setting. Therefore sustainability may be lacking.
 """
 
 import numpy as np

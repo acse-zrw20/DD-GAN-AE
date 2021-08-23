@@ -1,5 +1,7 @@
 numpy
 sklearn
 tensorflow
+keras
+wandb
 flake8
 pytest-cov
