@@ -126,7 +126,7 @@ discriminator = build_custom_discriminator(latent_vars, initializer)
 
 pred_adv = Predictive_adversarial(encoder, decoder, discriminator, optimizer)
 pred_adv.compile(n_predicted_vars, increment=False)
-pred_adv.train(dataset, 2000)
+pred_adv.train(dataset, 200)
 
 # Select the boundaries with all timesteps
 boundaries = np.zeros((2, 10, <ntimesteps>))
