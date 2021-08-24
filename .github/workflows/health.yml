@@ -47,7 +47,8 @@ jobs:
     # Run tests
     - name: run tests
       run: |
-        cd ./submodules/DD-GAN/data/
+        ls
+        cd ./submodules/DD-GAN
         ls
         python -m pytest --cov=. --cov-report=xml ./tests/tests.py
         python -m pytest --cov=. --cov-report=xml ./preprocessing/tests/tests.py
