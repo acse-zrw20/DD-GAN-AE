@@ -1,7 +1,12 @@
 import sys
 import vtktools
 import numpy as np
-import u2r
+
+if sys.version_info[0] < 3:
+    import u2r # noqa
+else:
+    import u2rpy3 # noqa
+    u2r = u2rpy3
 
 __author__ = "Claire Heaney"
 __credits__ = []
