@@ -8,14 +8,15 @@ that is intended to not be used used very often or in a critical/production
 setting. Therefore sustainability may be lacking.
 """
 
-import u2r
+import u2r  # noqa
 import numpy as np
 import argparse
-import sys, os
+import sys
+import os
 from utils import get_grid_end_points
 
 sys.path.append("/usr/lib/python2.7/dist-packages/")
-import vtktools
+import vtktools  # noqa
 
 __author__ = "Claire Heaney, Zef Wolffs"
 __credits__ = ["Jon Atli Tomasson"]
@@ -70,7 +71,7 @@ def create_vtu_file_v_and_a(
     # streamwise component only
     v_difference = v_difference / np.max(velocity_field)
 
-    #### ALPHA ####
+    # ALPHA #
     alpha_field = np.zeros((nNodes, 3))
     alpha_field[:, 0:nDim] = np.transpose(a_value_mesh_twice_interp[0:nDim, :])
 
@@ -158,7 +159,7 @@ def reconstruct_3D(
     x_ndgln = np.zeros((nEl * nloc), dtype=int)
     for iEl in range(nEl):
         n = vtu_file.GetCellPoints(iEl) + 1
-        x_ndgln[iEl * nloc : (iEl + 1) * nloc] = n
+        x_ndgln[iEl * nloc: (iEl + 1) * nloc] = n
 
     nx = 60
     ny = 20
@@ -275,7 +276,8 @@ def reconstruct_3D(
     for iGrid in range(nGrids):
 
         reconstruction_grid = velocity_reconstructed[iGrid, :, :, :, :, :]
-        # reconstruction_grid here has the shape of (nScalar, nx, ny, nz, nTime)
+        # reconstruction_grid here has the shape of (nScalar, nx, ny, nz,
+        #                                            nTime)
 
         block_x_start = get_grid_end_points(grid_origin, grid_width, iGrid)
 
@@ -300,9 +302,9 @@ def reconstruct_3D(
             )
 
             reconstruction_on_mesh[
-                nScalar * iTime : nScalar * (iTime + 1), :
+                nScalar * iTime: nScalar * (iTime + 1), :
             ] = reconstruction_on_mesh[
-                nScalar * iTime : nScalar * (iTime + 1), :
+                nScalar * iTime: nScalar * (iTime + 1), :
             ] + np.squeeze(
                 reconstruction_on_mesh_from_one_grid
             )
@@ -322,14 +324,15 @@ def reconstruct_3D(
         vtu_data = vtktools.vtu(filename)
 
         my_field = vtu_data.GetField("phase1::Velocity")[:, 0:nDim]
-        original_velocity[:, iTime * nDim : (iTime + 1) * nDim] = my_field
+        original_velocity[:, iTime * nDim: (iTime + 1) * nDim] = my_field
 
     reconstruction_on_mesh = np.zeros((nScalar_alpha * nTime, nNodes))
 
     for iGrid in range(nGrids):
 
         reconstruction_grid = alpha_reconstructed[iGrid, :, :, :, :, :]
-        # reconstruction_grid here has the shape of (nScalar, nx, ny, nz, nTime)
+        # reconstruction_grid here has the shape of (nScalar, nx, ny, nz,
+        #                                            nTime)
 
         block_x_start = get_grid_end_points(grid_origin, grid_width, iGrid)
 
@@ -356,9 +359,9 @@ def reconstruct_3D(
             )
 
             reconstruction_on_mesh[
-                nScalar_alpha * iTime : nScalar_alpha * (iTime + 1), :
+                nScalar_alpha * iTime: nScalar_alpha * (iTime + 1), :
             ] = reconstruction_on_mesh[
-                nScalar_alpha * iTime : nScalar_alpha * (iTime + 1), :
+                nScalar_alpha * iTime: nScalar_alpha * (iTime + 1), :
             ] + np.squeeze(
                 reconstruction_on_mesh_from_one_grid
             )
@@ -380,7 +383,7 @@ def reconstruct_3D(
         my_field = vtu_data.GetField(
             "Component1::ComponentMassFractionPhase1"
         )[:, 0:nDim]
-        original_alpha[:, iTime * nDim : (iTime + 1) * nDim] = my_field
+        original_alpha[:, iTime * nDim: (iTime + 1) * nDim] = my_field
 
     # make diretory for results
     path_to_reconstructed_results = "reconstructed_results/"
@@ -393,37 +396,51 @@ def reconstruct_3D(
             path_to_reconstructed_results,
             nNodes,
             velocity_reconstruction_on_mesh[
-                iTime * nScalar : (iTime + 1) * nScalar, :
+                iTime * nScalar: (iTime + 1) * nScalar, :
             ],
             alpha_reconstruction_on_mesh[
-                iTime * nScalar_alpha : (iTime + 1) * nScalar_alpha, :
+                iTime * nScalar_alpha: (iTime + 1) * nScalar_alpha, :
             ],
             template_vtu,
-            original_velocity[:, iTime * nDim : (iTime + 1) * nDim],
-            original_alpha[:, iTime * nDim : (iTime + 1) * nDim],
+            original_velocity[:, iTime * nDim: (iTime + 1) * nDim],
+            original_alpha[:, iTime * nDim: (iTime + 1) * nDim],
             iTime,
         )
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Module that wraps some \
+    parser = argparse.ArgumentParser(
+        description="Module that wraps some \
 legacy code to interpolate data from  a structured mesh to an unstructured \
-mesh and calculate vtu files from output for 3D slug flow dataset.")
-    parser.add_argument('--out_file_base', type=str, nargs='?',
-                        default="slug_255_exp_projected_",
-                        help=' Example file base, will also be used for\
- original velocity and alpha')
-    parser.add_argument('--offset', type=int, nargs='?',
-                        default=0,
-                        help='vtu file to start from')
-    parser.add_argument('--nTime', type=int, nargs='?',
-                        default=2,
-                        help='number of timesteps')
-    parser.add_argument('--input_array', type=str, nargs='?',
-                        default="cae_reconstruction_sf.npy",
-                        help='Input array to convert to vtu,\
+mesh and calculate vtu files from output for 3D slug flow dataset."
+    )
+    parser.add_argument(
+        "--out_file_base",
+        type=str,
+        nargs="?",
+        default="slug_255_exp_projected_",
+        help=" Example file base, will also be used for\
+ original velocity and alpha",
+    )
+    parser.add_argument(
+        "--offset",
+        type=int,
+        nargs="?",
+        default=0,
+        help="vtu file to start from",
+    )
+    parser.add_argument(
+        "--nTime", type=int, nargs="?", default=2, help="number of timesteps"
+    )
+    parser.add_argument(
+        "--input_array",
+        type=str,
+        nargs="?",
+        default="cae_reconstruction_sf.npy",
+        help="Input array to convert to vtu,\
  expects shape to be (ngrids*ntime, nx,\
- ny, nz, nscalar_vel+nscalar_alpha)')
+ ny, nz, nscalar_vel+nscalar_alpha)",
+    )
     args = parser.parse_args()
 
     arg_dict = vars(args)

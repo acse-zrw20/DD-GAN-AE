@@ -93,7 +93,7 @@ class SVDAE:
                                           value magnitudes, note this feature
                                           is currently in experimental phase.
                                           Defaults to False.
-        """     
+        """
 
         self.nPOD = nPOD
         if isinstance(self.encoder.layers[0], Conv1D):

@@ -94,16 +94,12 @@ def get_snapshots_3D(
             # rectangular domain so
             y0 = min(coordinates[:, 1])
             z0 = min(coordinates[:, 2])
-            yN = max(coordinates[:, 1])
-            zN = max(coordinates[:, 2])
 
             # Let's pick a random block along x axis of 1m length
             if random:
                 x0 = float(np.random.randint(0, 9000)) / 1000
-                xN = x0 + 1
             else:
                 x0 = float(i)
-                xN = x0 + 1
 
             # print('(x0,y0,z0)',x0, y0, z0)
             # print('(xN,yN,zN)',xN, yN, zN)
