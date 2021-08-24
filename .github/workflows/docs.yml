@@ -27,7 +27,7 @@ jobs:
 
     - name: move docs
       run: |
-        sudo mv docs/build/latex/dd-gan-ae.pdf docs/docs.pdf
+        sudo mv docs/build/latex/DD-GAN-AE.pdf docs/docs.pdf
 
     - name: commit files
       run: |
