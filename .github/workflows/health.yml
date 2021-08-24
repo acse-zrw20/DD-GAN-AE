@@ -47,6 +47,8 @@ jobs:
     # Run tests
     - name: run tests
       run: |
+        cd ./submodules/DD-GAN/data/
+        ls
         python -m pytest --cov=. --cov-report=xml ./tests/tests.py
         python -m pytest --cov=. --cov-report=xml ./preprocessing/tests/tests.py
     - uses: codecov/codecov-action@v1
