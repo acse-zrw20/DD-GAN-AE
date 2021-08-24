@@ -52,7 +52,7 @@ def build_dense_encoder(latent_dim, initializer, info=False,
 
 
 def build_conv_encoder_decoder(input_dim, latent_dim, initializer, info=False,
-                               act='relu', dense_act='relu', dropout=0.6, 
+                               act='relu', dense_act='relu', dropout=0.6,
                                final_act="linear"):
     """
     Create a 1D convolutional encoder and decoder

@@ -208,7 +208,7 @@ def train_wandb_pred_aae(config=None):
                 config.latent_vars, initializer, info=False
             )
 
-        pred_adv = Predictive_adversarial(encoder, decoder, discriminator, 
+        pred_adv = Predictive_adversarial(encoder, decoder, discriminator,
                                           optimizer)
         pred_adv.compile(config.in_vars, increment=config.increment)
         pred_adv.train(
@@ -605,7 +605,7 @@ def continuous_train_wandb_pred_aae(config=None):
                 config.latent_vars, initializer, info=False
             )
 
-        pred_adv = Predictive_adversarial(encoder, decoder, discriminator, 
+        pred_adv = Predictive_adversarial(encoder, decoder, discriminator,
                                           optimizer)
         pred_adv.compile(config.in_vars, increment=config.increment)
 
@@ -855,7 +855,7 @@ saving')
     parser.add_argument('--custom_config', type=str, nargs='?',
                         default=None,
                         help='json file with custom configurations for sweep')
-    parser.add_argument('--continuous', action='store_true', default=False, 
+    parser.add_argument('--continuous', action='store_true', default=False,
                         help='whether to use continuous learning \
 functionality')
     parser.add_argument('--encoder_folder', type=str, nargs='?',
@@ -890,7 +890,7 @@ variables')
 
         sweep_id = wandb.sweep(Continuous_predictive_adversarial_sweep_config,
                                project='pred-aae', entity='zeff020')
-        wandb.agent(sweep_id, continuous_train_wandb_pred_aae, 
+        wandb.agent(sweep_id, continuous_train_wandb_pred_aae,
                     count=arg_dict['niters'])
     if args.model == "ae":
         # Use the normal autoencoder for predictions

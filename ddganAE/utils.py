@@ -7,7 +7,6 @@ General utilities for package
 import numpy as np
 import keras.backend as K
 from keras.losses import mse
-from scipy.sparse.linalg import svds
 
 __author__ = "Zef Wolffs"
 __credits__ = ["Claire Heaney"]
@@ -25,7 +24,7 @@ def calc_pod(snapshots, nPOD=-2, cumulative_tol=0.99, R=None):
     Args:
         snapshots (list of ndarrays): List of arrays with subgrid
                                         snapshots. shape:
-                                        (n_grids, n_nodes*n_scalar, 
+                                        (n_grids, n_nodes*n_scalar,
                                         n_timelevels)
 
     Returns:
@@ -60,7 +59,7 @@ THIS METHOD')
         # appear)
         eigvalues[eigvalues < 0] = 0
         s = np.sqrt(eigvalues)
-        # print('s values', s_values[0:20]) 
+        # print('s values', s_values[0:20])
 
         cumulative_info = np.zeros(len(eigvalues))
         for j in range(len(eigvalues)):

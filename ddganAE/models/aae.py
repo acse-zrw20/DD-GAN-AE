@@ -471,7 +471,7 @@ def print_losses(d_loss, g_loss, epoch, d_loss_val=None, g_loss_val=None):
         d_loss (float): Discriminator loss value
         g_loss (float): Generator loss value
         epoch (int): Current epoch
-        d_loss_val (float, optional): Validation discriminator loss value. 
+        d_loss_val (float, optional): Validation discriminator loss value.
                                       Defaults to None.
         g_loss_val (float, optional): Validation generator loss value.
                                       Defaults to None.
