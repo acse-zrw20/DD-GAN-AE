@@ -6,6 +6,7 @@
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/acse-zrw20/DD-GAN-AE/blob/main/LICENSE)
 [![Documentation Status](https://github.com/acse-zrw20/DD-GAN-AE/actions/workflows/docs.yml/badge.svg)](https://github.com/acse-zrw220/DD-GAN-AE/blob/main/docs/docs.pdf)
 ![example workflow](https://github.com/acse-zrw20/DD-GAN-AE/actions/workflows/health.yml/badge.svg)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 <!-- PROJECT LOGO -->
 
@@ -156,6 +157,8 @@ predicted_latent = pred_adv.predict(boundaries, init_values, 50, # Predict 50 st
 
 * Compression usage examples on flow past cylinder dataset [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1oxLf-SayXWrG_grniEptbmIwhMo4XMCD#offline=true&sandboxMode=true)
 * Compression usage examples on slug flow dataset [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1hsRsPp64dbQz0f3zG7nwcENvSKoCScoM#offline=true&sandboxMode=true)
+* Prediction usage examples on slug flow dataset [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1X5pm2K_JdwnMXniuJNMIk6zkxOdMb19i#offline=true&sandboxMode=true)
+
 
 These notebooks can also be found under examples in this repository
 <!-- ACKNOWLEDGEMENTS 
