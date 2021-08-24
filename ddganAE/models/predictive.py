@@ -1,6 +1,12 @@
 """
 
-Predictive Models
+Predictive Models. Note that these models contain multiple vestigial elements
+from having been autoencoders before. For example the naming of the attributes
+on the classes, e.g. "encoder" and "decoder". Note that in a production release
+these would likely be named differently. However, since other students rely on
+this code in their codebases and use the present version such a change would
+require a coordination with other students as well, for which there was no
+time in this project.
 
 """
 
