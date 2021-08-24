@@ -24,7 +24,7 @@ __email__ = "zefwolffs@gmail.com"
 __status__ = "Development"
 
 
-def get_pod_coeffs(data_dir='./../../data/FPC_Re3900_2D_CG_new/',
+def get_pod_coeffs(data_dir='./submodules/DD-GAN/data/FPC_Re3900_2D_CG_old/',
                    data_file_base='fpc_',
                    out_dir='./../../data/processed/', nTime=1400,
                    offset=20, field_names=['Velocity'], nGrids=4, xlength=2.2,
@@ -36,7 +36,7 @@ def get_pod_coeffs(data_dir='./../../data/FPC_Re3900_2D_CG_new/',
 
     Args:
         data_dir (str, optional): Input data folder.
-            Defaults to './../../data/FPC_Re3900_2D_CG_new/'.
+            Defaults to './submodules/DD-GAN/data/FPC_Re3900_2D_CG_old/'.
         data_file_base (str, optional): Base filename, timesteps will be
             appended. Defaults to 'fpc_'.
         out_dir (str, optional): Output data folder. Defaults to
@@ -310,7 +310,8 @@ Note that output will be saved under the folder specified by out_dir as \
 The shape of the output matrix will be (num_subgrids, num_pod_coeffs, \
 num_time_levels)")
     parser.add_argument('--data_dir', type=str, nargs='?',
-                        default="./../../data/FPC_Re3900_2D_CG_new/",
+                        default="./submodules/DD-GAN/data/\
+FPC_Re3900_2D_CG_old/",
                         help='Input data folder')
     parser.add_argument('--data_file_base', type=str, nargs='?',
                         default="fpc_",
