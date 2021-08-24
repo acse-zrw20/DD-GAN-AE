@@ -2,7 +2,7 @@ import sys
 import os
 import numpy as np
 import pytest
-sys.path.insert(1, './../src/')
+sys.path.insert(1, './preprocessing/src/')
 sys.path.insert(1, './preprocessing/tests/')
 from get_pod_coeffs import get_pod_coeffs  # noqa F401
 from get_snapshots import get_subgrid_snapshots  # noqa F401
