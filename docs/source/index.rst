@@ -102,7 +102,7 @@ Discriminator Architectures
    :undoc-members:
 
 Mixed architectures for SVD Autoencoder
------------------------------
+----------------------------------------
 
 .. automodule:: architectures.svdae.svdae
    :members:
