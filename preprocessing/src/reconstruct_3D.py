@@ -8,7 +8,6 @@ that is intended to not be used used very often or in a critical/production
 setting. Therefore sustainability may be lacking.
 """
 
-import u2r  # noqa
 import numpy as np
 import argparse
 import sys
@@ -17,6 +16,12 @@ from utils import get_grid_end_points
 
 sys.path.append("/usr/lib/python2.7/dist-packages/")
 import vtktools  # noqa
+
+if sys.version_info[0] < 3:
+    import u2r # noqa
+else:
+    import u2rpy3 # noqa
+    u2r = u2rpy3
 
 __author__ = "Claire Heaney, Zef Wolffs"
 __credits__ = ["Jon Atli Tomasson"]

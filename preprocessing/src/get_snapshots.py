@@ -8,11 +8,17 @@ that is intended to not be used used very often or in a critical/production
 setting. Therefore sustainability may be lacking.
 """
 
-import u2r
 import vtktools
 import numpy as np
 from utils import get_grid_end_points
 import argparse
+import sys
+
+if sys.version_info[0] < 3:
+    import u2r # noqa
+else:
+    import u2rpy3 # noqa
+    u2r = u2rpy3
 
 __author__ = " Claire Heaney, Zef Wolffs"
 __credits__ = ["Jon Atli Tomasson"]
