@@ -32,6 +32,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: recursive
 
     # Install dependencies
     - name: Set up Python 3.8
@@ -47,9 +49,6 @@ jobs:
     # Run tests
     - name: run tests
       run: |
-        ls
-        cd ./submodules/DD-GAN
-        ls
         python -m pytest --cov=. --cov-report=xml ./tests/tests.py
         python -m pytest --cov=. --cov-report=xml ./preprocessing/tests/tests.py
     - uses: codecov/codecov-action@v1
