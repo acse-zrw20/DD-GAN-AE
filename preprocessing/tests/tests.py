@@ -44,7 +44,7 @@ def test_get_pod_coeffs():
     """
     Regression test with correct results from before
     """
-    get_pod_coeffs(out_dir='.')
+    get_pod_coeffs(out_dir='.', nTime=200)
     coeffs = np.load('pod_coeffs_field_Velocity.npy')
     assert coeffs.shape == (4, 10, 200)
 
@@ -58,7 +58,7 @@ def test_get_subgrid_snapshots():
     """
     Regression test with correct results from before
     """
-    subgrid_snapshots = get_subgrid_snapshots()
+    subgrid_snapshots = get_subgrid_snapshots(nTime=200)
 
     subgrid_snapshots_corr = np.load('./test_data/subgrid_snapshots.npy')
 
