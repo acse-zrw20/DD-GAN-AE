@@ -63,7 +63,7 @@ Read the [documentation](https://github.com/acse-zrw20/DD-GAN-AE/blob/main/docs/
   - `preprocessing` contains any preprocessing subroutines included in the package.
 - `docs` contains the accompanying documentation.
 - `examples` contains example notebooks. Links to their Colab versions which can be readily executed are also provided below.
-- `hpc` contains bash scripts for interacting with Imperial College London's Research Computing Service (high performance computer).
+- `hpc` contains bash scripts for interacting with Imperial College London's Research Computing Service (high performance computer). Note that this folder also contains a subfolder titled `Colab` with notebooks for running hyperparameter optimization on Google Colab.
 - `images` contains any accompanying images.
 - `preprocessing` contains some preprocessing functions specific to the data used in this research and thus not included in the package.
 - `submodules` contains any relevant submodules.
