@@ -32,7 +32,7 @@ __status__ = "Development"
 
 
 def get_pod_coeffs(data_dir='./submodules/DD-GAN/data/FPC_Re3900_2D_CG_old/',
-                   data_file_base='fpc_',
+                   data_file_base='fpc_2D_Re3900_CG_',
                    out_dir='./../../data/processed/', nTime=1400,
                    offset=20, field_names=['Velocity'], nGrids=4, xlength=2.2,
                    ylength=0.41, nloc=3, nScalar=2, nDim=2):
