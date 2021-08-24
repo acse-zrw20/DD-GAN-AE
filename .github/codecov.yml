@@ -1,0 +1,2 @@
+ignore:
+  - "vtktools.py" # Ignore this, not made by me so assume it's well-tested
