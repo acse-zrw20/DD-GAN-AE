@@ -9,7 +9,7 @@ not be used used very often or in a critical/production setting. Therefore
 sustainability  may be lacking.
 """
 
-import u2r
+import u2r  # noqa
 import vtktools
 import numpy as np
 from utils import get_grid_end_points
@@ -248,6 +248,7 @@ def get_pod_coeffs(data_dir='./../../data/FPC_Re3900_2D_CG_new/',
     # if nPOD > 0 use nPOD coefficients as defined by the user
 
         if nPOD[iField] == -1:
+            raise NotImplementedError("Option not yet implemented!")
             # SVD truncation - percentage of information captured or number
             cumulative_tol = nirom_options.compression.cumulative_tol[iField] # noqa
             nPOD_iField = sum(cumulative_info <= cumulative_tol)  # tolerance
