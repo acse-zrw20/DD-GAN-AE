@@ -1,6 +1,6 @@
 # DD-GAN-AE
 
-## Autoencoders for the DD-GAN
+## Domain Decomposition, Autoencoders, and Adversarial Networks for Modelling Fluid Flow
 
 [![codecov](https://codecov.io/gh/acse-zrw20/DD-GAN-AE/branch/main/graph/badge.svg?token=1LU7UG5OF9)](https://codecov.io/gh/acse-zrw20/DD-GAN-AE)
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/acse-zrw20/DD-GAN-AE/blob/main/LICENSE)
