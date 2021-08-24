@@ -49,7 +49,8 @@ def test_get_pod_coeffs():
     assert coeffs.shape == (4, 10, 200)
 
     # Regression test on data calculated earlier
-    coeffs_correct = np.load('./test_data/pod_coeffs_field_Velocity.npy')
+    coeffs_correct = np.load('./preprocessing/tests/test_data/\
+pod_coeffs_field_Velocity.npy')
 
     assert (coeffs == coeffs_correct).all
 
@@ -60,6 +61,7 @@ def test_get_subgrid_snapshots():
     """
     subgrid_snapshots = get_subgrid_snapshots(nTime=200)
 
-    subgrid_snapshots_corr = np.load('./test_data/subgrid_snapshots.npy')
+    subgrid_snapshots_corr = np.load('./preprocessing/tests/test_data/\
+subgrid_snapshots.npy')
 
     assert (subgrid_snapshots == subgrid_snapshots_corr).all()
