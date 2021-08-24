@@ -82,8 +82,6 @@ def test_convert_2D(snapshots):
 
     assert np.allclose(snapshots_corr, snapshots)
 
-
-
 def test_cae(snapshots):
 
     x_train, x_val = train_test_split(snapshots, test_size=0.1)
