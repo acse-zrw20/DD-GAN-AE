@@ -172,6 +172,19 @@ _For more information, please refer to the report in this repo_
 
 Note that the above notebooks come with their original outputs that were also included in the results of the accompanying report. However, due to the fact that these datasets were too large to be shared over github any user interacting this package cannot reproduce the results unless they have the datasets. Small test datasets are provided in `tests/data` to show the workings of the models and these can be used in the notebooks. Furthermore the models that were used to produce the final results are stored in `models`.
 
+## Hyperparameter optimization
+
+Hyperparameter optimization was done with the help of wandb. The link to the wandb reports are as follows:
+
+* Ordinary predictive network: https://wandb.ai/zeff020/pred-ae
+* Predictive adversarial network: https://wandb.ai/zeff020/pred-aae
+* SVD autoencoder on slug flow: https://wandb.ai/zeff020/svdae-sf
+* adversarial autoencoder on slug flow: https://wandb.ai/zeff020/aae-sf
+* Convolutional autoencoder on slug flow: https://wandb.ai/zeff020/cae-sf
+* adversarial autoencoder on fpc: https://wandb.ai/zeff020/aae-fpc
+* Convolutional autoencoder on fpc: https://wandb.ai/zeff020/cae-fpc
+* SVD autoencoder on fpc: https://wandb.ai/zeff020/svdae-fpc
+
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
