@@ -179,11 +179,13 @@ Hyperparameter optimization was done with the help of wandb. The link to the wan
 * Ordinary predictive network: https://wandb.ai/zeff020/pred-ae
 * Predictive adversarial network: https://wandb.ai/zeff020/pred-aae
 * SVD autoencoder on slug flow: https://wandb.ai/zeff020/svdae-sf
-* adversarial autoencoder on slug flow: https://wandb.ai/zeff020/aae-sf
+* Adversarial autoencoder on slug flow: https://wandb.ai/zeff020/aae-sf
 * Convolutional autoencoder on slug flow: https://wandb.ai/zeff020/cae-sf
-* adversarial autoencoder on fpc: https://wandb.ai/zeff020/aae-fpc
+* Adversarial autoencoder on fpc: https://wandb.ai/zeff020/aae-fpc
 * Convolutional autoencoder on fpc: https://wandb.ai/zeff020/cae-fpc
 * SVD autoencoder on fpc: https://wandb.ai/zeff020/svdae-fpc
+
+Note that all of the models in the `examples/models` folder will have names corresponding to the names found on wandb, such that these runs can be traced back entirely to the runs that generated them.
 
 ## License
 
