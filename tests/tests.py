@@ -10,9 +10,6 @@ from tensorflow.keras.layers.experimental import preprocessing
 import tensorflow as tf
 from ddganAE.utils import calc_pod
 from ddganAE.preprocessing import convert_2d
-from ddganAE.models import CAE
-from ddganAE.architectures import *
-from sklearn.model_selection import train_test_split
 
 __author__ = "Zef Wolffs"
 __credits__ = []
@@ -82,12 +79,3 @@ def test_convert_2D(snapshots):
         "./tests/data/test_snapshots_fpc_2D_converted.npy")
 
     assert np.allclose(snapshots_corr, snapshots)
-
-"""
-def test_cae(snapshots):
-
-    x_train, x_val = train_test_split(snapshots, test_size=0.1)
-
-    initializer = tf.keras.initializers.RandomNormal(mean=0.0, stddev=0.05, seed=None)
-    optimizer = tf.keras.optimizers.Adam(lr=0.0005, beta_1=0.98, beta_2=0.9)
-"""
