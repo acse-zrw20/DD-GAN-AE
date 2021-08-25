@@ -70,7 +70,7 @@ Read the [documentation](https://github.com/acse-zrw20/DD-GAN-AE/blob/main/docs/
 - `submodules` contains any relevant submodules.
 - `tests` contains any tests written for the produced package and example datasets. These datasets can be used in the example notebooks mentioned above and provided below in the form of Colab notebooks.
 
-Note that for this project testing was mostly done in the form of global runs through the entire built software in jupyter notebooks and assertion with benchmark test cases such as the FPC dataset. These notebooks be found in the Colab links provided below. Wherever relevant (preprocessing, utils functions, etc...) unittests were written and automatically executed through github workflows.
+Note that for this project testing was mostly done in the form of global runs through the entire built software in jupyter notebooks and assertion with benchmark test cases such as the FPC dataset. These notebooks be found in the Colab links provided below. Wherever relevant (preprocessing, utils functions, etc...) unittests were written and automatically executed through Github workflows.
 
 ## Prerequisites
 
@@ -170,7 +170,7 @@ _For more information, please refer to the report in this repo_
 
 ## Reproduction of reported results
 
-Note that the above notebooks come with their original outputs that were also included in the results of the accompanying report. However, due to the fact that these datasets were too large to be shared over github any user interacting this package cannot reproduce the results without the datasets (unless they have the datasets). Small test datasets are provided in `tests/data` to show the workings of the models and these can be used in the notebooks. Furthermore the models that were used to produce the final results are stored in `models`.
+Note that the above notebooks come with their original outputs that were also included in the results of the accompanying report. However, due to the fact that these datasets were too large to be shared over github any user interacting this package cannot reproduce the results unless they have the datasets. Small test datasets are provided in `tests/data` to show the workings of the models and these can be used in the notebooks. Furthermore the models that were used to produce the final results are stored in `models`.
 
 ## License
 
