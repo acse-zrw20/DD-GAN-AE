@@ -35,6 +35,12 @@ SVD Autoencoder
    :members:
    :undoc-members:
 
+Predictive models
+--------------------------
+.. automodule:: models.predictive
+   :members:
+   :undoc-members:
+
 Hyperparameter optimization
 ===========================
 
@@ -101,9 +107,8 @@ Discriminator Architectures
    :members:
    :undoc-members:
 
-Mixed architectures for SVD Autoencoder
-----------------------------------------
-
+Mixed architectures for SVD Autoencoder and predictive networks
+---------------------------------------------------------------
 .. automodule:: architectures.svdae.svdae
    :members:
    :undoc-members:
