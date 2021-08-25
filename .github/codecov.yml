@@ -1,3 +1,6 @@
 ignore:
   - "vtktools.py" # Ignore this, not made by me so assume it's well-tested
   - "submodules" # Ignore submodules
+  - "ddganAE/architectures" # The subsequent three are just tested in notebooks through entire workflow
+  - "ddganAE/models"
+  - "ddganAE/wandb"
