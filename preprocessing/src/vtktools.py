@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # flake8: noqa
 
+# Not written by me
+
 import math
 import sys
 import numpy

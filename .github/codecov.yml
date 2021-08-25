@@ -1,6 +1,7 @@
 ignore:
-  - "preprocessing/src/vtktools.py" # Ignore this, not made by me so assume it's well-tested
-  - "ddganAE/wandb/vtktools.py" # Ignore this, not made by me so assume it's well-tested
+  - "preprocessing/src/vtktools.py" # Ignore this, not made by me
+  - "ddganAE/wandb/vtktools.py" # Ignore this, not made by me
+  - "preprocessing/src/utils.py" # Ignore this, not made by me
   - "submodules" # Ignore submodules
   - "ddganAE/architectures" # The subsequent three are just tested in notebooks through entire workflow
   - "ddganAE/models"
