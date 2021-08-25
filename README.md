@@ -170,7 +170,22 @@ _For more information, please refer to the report in this repo_
 
 ## Reproduction of reported results
 
-Note that the above notebooks come with their original outputs that were also included in the results of the accompanying report. However, due to the fact that these datasets were too large to be shared over github any user interacting this package cannot reproduce the results unless they have the datasets. Small test datasets are provided in `tests/data` to show the workings of the models and these can be used in the notebooks. Furthermore the models that were used to produce the final results are stored in `models`.
+Note that the above notebooks come with their original outputs that were also included in the results of the accompanying report. However, due to the fact that the datasets were too large (over 150gb for the SF dataset) to be shared over github any user interacting with this package cannot reproduce the results unless they have the datasets. Small test datasets are provided in `tests/data` to show the workings of the models and these can be used in the notebooks. Furthermore the models that were used to produce the final results are stored in `models`.
+
+## Hyperparameter optimization
+
+Hyperparameter optimization was done with the help of wandb. The link to the wandb reports are as follows:
+
+* Ordinary predictive network: https://wandb.ai/zeff020/pred-ae
+* Predictive adversarial network: https://wandb.ai/zeff020/pred-aae
+* SVD autoencoder on slug flow: https://wandb.ai/zeff020/svdae-sf
+* Adversarial autoencoder on slug flow: https://wandb.ai/zeff020/aae-sf
+* Convolutional autoencoder on slug flow: https://wandb.ai/zeff020/cae-sf
+* Adversarial autoencoder on fpc: https://wandb.ai/zeff020/aae-fpc
+* Convolutional autoencoder on fpc: https://wandb.ai/zeff020/cae-fpc
+* SVD autoencoder on fpc: https://wandb.ai/zeff020/svdae-fpc
+
+Note that all of the models in the `examples/models` folder will have names corresponding to the names found on wandb, such that these runs can be traced back entirely to the runs that generated them.
 
 ## License
 
