@@ -49,8 +49,8 @@ jobs:
     # Run tests
     - name: run tests
       run: |
-        python -m pytest --cov=. --cov-report=xml ./tests/tests.py
-        python -m pytest --cov=. --cov-report=xml ./preprocessing/tests/tests.py
+        python -m pytest --cov=. --cov-report=xml ./tests/tests.py preprocessing/tests/preprocessing_tests.py
+
     - uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
