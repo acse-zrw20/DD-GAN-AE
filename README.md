@@ -68,7 +68,9 @@ Read the [documentation](https://github.com/acse-zrw20/DD-GAN-AE/blob/main/docs/
 - `images` contains any accompanying images.
 - `preprocessing` contains some preprocessing functions specific to the data used in this research and thus not included in the package.
 - `submodules` contains any relevant submodules.
-- `tests` contains any tests written for the produced package.
+- `tests` contains any tests written for the produced package and example datasets. These datasets can be used in the example notebooks mentioned above and provided below in the form of Colab notebooks.
+
+Note that for this project testing was mostly done in the form of global runs through the entire built software in jupyter notebooks and assertion with benchmark test cases such as the FPC dataset. These notebooks be found in the Colab links provided below. Wherever relevant (preprocessing, utils functions, etc...) unittests are written and automatically executed through github workflows.
 
 ## Prerequisites
 
