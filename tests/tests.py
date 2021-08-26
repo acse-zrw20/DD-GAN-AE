@@ -82,7 +82,10 @@ def test_convert_2D(snapshots):
 
 
 def test_mse_weighted():
+    """
+    Test functionality of weighted MSE class
+    """
     loss = mse_weighted()
-    loss.weights = [1, 2]
+    loss.weights = np.array([1, 2])
 
-    assert 3 == loss([1, 1], [0, 0])
+    assert 3 == loss(np.array([1, 1]), np.array([0, 0]))
