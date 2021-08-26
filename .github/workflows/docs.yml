@@ -1,5 +1,8 @@
 name: generate-docs
-on: [push, pull_request]
+on: 
+  push:
+    branches:
+      - main
 
 jobs:
   # This job generates documentation
