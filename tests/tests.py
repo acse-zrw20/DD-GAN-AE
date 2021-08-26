@@ -93,7 +93,7 @@ def test_mse_weighted():
 
 def test_mse_pi():
     """
-    Very basic
+    Test functionality of physics informed loss class
     """
     loss = mse_PI(0.1, 0.1)
 
@@ -102,4 +102,4 @@ def test_mse_pi():
 
     snapshots_2 = snapshots_1 + 0.1
 
-    assert 2 == loss(snapshots_1, snapshots_2).numpy()
+    assert 0.01 == round(loss(snapshots_1, snapshots_2).numpy(), 2)
