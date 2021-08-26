@@ -187,7 +187,7 @@ Hyperparameter optimization was done with the help of wandb. The link to the wan
 * Convolutional autoencoder on fpc: https://wandb.ai/zeff020/cae-fpc
 * SVD autoencoder on fpc: https://wandb.ai/zeff020/svdae-fpc
 
-Note that all of the models in the `examples/models` folder will have names corresponding to the names found on wandb, such that these runs can be traced back entirely to the runs that generated them.
+Note that all of the models in the `examples/models` folder will have names corresponding to the names found on wandb, such that these models can be traced back entirely to the runs that generated them.
 
 ## License
 
