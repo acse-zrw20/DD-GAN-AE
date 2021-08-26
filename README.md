@@ -174,7 +174,7 @@ Note that the above notebooks come with their original outputs that were also in
 
 Please contact me for the original datasets, after they are loaded into the aforementioned notebooks the results can be reproduced.
 
-## Hyperparameter optimization
+## Hyperparameter optimization (wandb)
 
 Hyperparameter optimization was done with the help of wandb. The link to the wandb reports are as follows:
 
