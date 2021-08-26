@@ -160,7 +160,7 @@ predicted_latent = pred_adv.predict(boundaries, init_values, 50, # Predict 50 st
 * Compression usage examples on flow past cylinder dataset [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1oxLf-SayXWrG_grniEptbmIwhMo4XMCD#offline=true&sandboxMode=true)
 * Compression usage examples on slug flow dataset [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1hsRsPp64dbQz0f3zG7nwcENvSKoCScoM#offline=true&sandboxMode=true)
 * Prediction usage examples on slug flow dataset [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1X5pm2K_JdwnMXniuJNMIk6zkxOdMb19i#offline=true&sandboxMode=true)
-
+* (**under development**) Extended usage examples of prediction on slug flow dataset [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1-hlc_UyphuJpOXcKMHa3v9PfRov8Q301#offline=true&sandboxMode=true)
 
 These notebooks can also be found under examples in this repository
 <!-- ACKNOWLEDGEMENTS 
