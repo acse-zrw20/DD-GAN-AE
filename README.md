@@ -80,11 +80,16 @@ Note that for this project testing was mostly done in the form of global runs th
 
 ## Installation
 
-Follow these steps to install:
+Developers can follow these steps to install:
 
 1. ```git clone https://github.com/acse-zrw20/DD-GAN-AE```
 2. ```cd ./DD-GAN-AE```
-3. ```pip install -e .```
+3. ```pip install -r requirements.txt```
+4. ```pip install -e .```
+
+End users can install through (does not include saved models or example datasets):
+
+
 
 <!-- USAGE EXAMPLES -->
 
