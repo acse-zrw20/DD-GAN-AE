@@ -119,7 +119,7 @@ optimizer = tf.keras.optimizers.Adam() # Define an optimizer
 initializer = tf.keras.initializers.RandomNormal() # Define a weights initializer
 
 # Define any encoder and decoder, see docs for more premade architectures
-encoder, decoder = build_omata_encoder_decoder(input_shape, 10, initializer)
+encoder, decoder = build_wider_omata_encoder_decoder(input_shape, 10, initializer)
 
 cae = CAE(encoder, decoder, optimizer) # define the model
 cae.compile(input_shape) # compile the model
