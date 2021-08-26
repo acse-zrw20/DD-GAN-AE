@@ -63,28 +63,33 @@ Read the [documentation](https://github.com/acse-zrw20/DD-GAN-AE/blob/main/docs/
   - `models` contains the main logic that the implemented models use, everything except for the architecture
   - `preprocessing` contains any preprocessing subroutines included in the package.
 - `docs` contains the accompanying documentation.
-- `examples` contains example notebooks. Links to their Colab versions which can be readily executed are also provided below.
+- `examples` contains example notebooks. Links to their Colab versions which can be readily executed are also provided below. This folder contains a subfolder called models with its own readme which explains more about the saved models which were included for reproduceability.
 - `hpc` contains bash scripts for interacting with Imperial College London's Research Computing Service (high performance computer). Note that this folder also contains a subfolder titled `Colab` with notebooks for running hyperparameter optimization on Google Colab.
 - `images` contains any accompanying images.
 - `preprocessing` contains some preprocessing functions specific to the data used in this research and thus not included in the package.
 - `submodules` contains any relevant submodules.
 - `tests` contains any tests written for the produced package and example datasets. These datasets can be used in the example notebooks mentioned above and provided below in the form of Colab notebooks.
 
-Note that for this project testing was mostly done in the form of global runs through the entire built software in jupyter notebooks and assertion with benchmark test cases such as the FPC dataset. These notebooks be found in the Colab links provided below. Wherever relevant (preprocessing, utils functions, etc...) unittests were written and automatically executed through Github workflows.
+Note that for this project testing was mostly done in the form of global runs through the entire built software in jupyter notebooks and assertion with benchmark test cases such as the flow past cylinder (FPC) dataset. These notebooks be found in the Colab links provided below. Wherever relevant (preprocessing, utils functions, etc...) unittests were written and automatically executed through Github workflows.
 
 ## Prerequisites
 
 * Python 3.8
 * Tensorflow and other packages in ```requirements.txt```
-* (Optional) GPU with CUDA
+* (Recommended) GPU with CUDA 11
 
 ## Installation
 
-Follow these steps to install:
+Developers can follow these steps to install:
 
 1. ```git clone https://github.com/acse-zrw20/DD-GAN-AE```
 2. ```cd ./DD-GAN-AE```
-3. ```pip install -e .```
+3. ```pip install -r requirements.txt```
+4. ```pip install -e .```
+
+End users can install through (does not include saved models or example datasets):
+
+
 
 <!-- USAGE EXAMPLES -->
 
@@ -149,7 +154,7 @@ boundaries = np.zeros((2, 10, <ntimesteps>))
 boundaries[0], boundaries[1]  = dataset[2], dataset[9] # third and 10th subdomains used as boundaries
 
 # Select the initial values at the first timestep
-init_values = val_data[3:9, :, 0]
+init_values = dataset[3:9, :, 0]
 
 predicted_latent = pred_adv.predict(boundaries, init_values, 50, # Predict 50 steps forward 
                                     iters=4, sor=1, pre_interval=False)
@@ -160,7 +165,7 @@ predicted_latent = pred_adv.predict(boundaries, init_values, 50, # Predict 50 st
 * Compression usage examples on flow past cylinder dataset [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1oxLf-SayXWrG_grniEptbmIwhMo4XMCD#offline=true&sandboxMode=true)
 * Compression usage examples on slug flow dataset [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1hsRsPp64dbQz0f3zG7nwcENvSKoCScoM#offline=true&sandboxMode=true)
 * Prediction usage examples on slug flow dataset [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1X5pm2K_JdwnMXniuJNMIk6zkxOdMb19i#offline=true&sandboxMode=true)
-
+* (**under development**) Extended usage examples of prediction on slug flow dataset [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1-hlc_UyphuJpOXcKMHa3v9PfRov8Q301#offline=true&sandboxMode=true)
 
 These notebooks can also be found under examples in this repository
 <!-- ACKNOWLEDGEMENTS 
@@ -174,7 +179,7 @@ Note that the above notebooks come with their original outputs that were also in
 
 Please contact me for the original datasets, after they are loaded into the aforementioned notebooks the results can be reproduced.
 
-## Hyperparameter optimization
+## Hyperparameter optimization (wandb)
 
 Hyperparameter optimization was done with the help of wandb. The link to the wandb reports are as follows:
 
@@ -187,7 +192,7 @@ Hyperparameter optimization was done with the help of wandb. The link to the wan
 * Convolutional autoencoder on fpc: https://wandb.ai/zeff020/cae-fpc
 * SVD autoencoder on fpc: https://wandb.ai/zeff020/svdae-fpc
 
-Note that all of the models in the `examples/models` folder will have names corresponding to the names found on wandb, such that these runs can be traced back entirely to the runs that generated them.
+Note that all of the models in the `examples/models` folder will have names corresponding to the names found on wandb, such that these models can be traced back entirely to the runs that generated them.
 
 ## License
 
