@@ -7,6 +7,7 @@
 [![Documentation Status](https://github.com/acse-zrw20/DD-GAN-AE/actions/workflows/docs.yml/badge.svg)](https://github.com/acse-zrw220/DD-GAN-AE/blob/main/docs/docs.pdf)
 ![example workflow](https://github.com/acse-zrw20/DD-GAN-AE/actions/workflows/health.yml/badge.svg)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+ [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/acse-zrw20/DD-GAN-AE/main?filepath=examples%2Fgetting_started.ipynb)
 
 <!-- PROJECT LOGO -->
 
