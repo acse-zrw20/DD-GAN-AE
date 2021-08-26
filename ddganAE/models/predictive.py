@@ -20,6 +20,14 @@ import numpy as np
 import wandb
 import os
 
+__author__ = "Zef Wolffs"
+__credits__ = []
+__license__ = "MIT"
+__version__ = "1.0.0"
+__maintainer__ = "Zef Wolffs"
+__email__ = "zefwolffs@gmail.com"
+__status__ = "Development"
+
 
 class Predictive_adversarial:
     """
@@ -228,7 +236,7 @@ class Predictive_adversarial:
         Train the model and do no preprocessing.
 
         Args:
-            input_data (np.ndarray): Input data in shape
+            input_data (np.ndarray): Input data
             epochs (int): Number of epochs to train for
             interval (int, optional): Interval at which to train data.
                                       Defaults to 5.
@@ -804,7 +812,8 @@ val_data, not both")
         return loss, acc
 
     def predict(self, boundaries, init_values, timesteps, iters=5, sor=1,
-                timestep_print_interval=None):
+                timestep_print_interval=None, save_interval=None,
+                save_path=None):
         """
         Predict in time using boundaries and initial values for a certain
         number of timesteps. The timestep shifts will be done in this function
@@ -835,6 +844,9 @@ val_data, not both")
             if timestep_print_interval is not None and i % \
                timestep_print_interval == 0:
                 print("At timestep number ", i)
+
+            if save_interval is not None and i % save_interval == 0:
+                np.save(save_path + str(i), pred_vars)
 
             # Let's start with a linear extrapolation for the predictions
             if i > 1:
