@@ -87,9 +87,14 @@ Developers can follow these steps to install:
 3. ```pip install -r requirements.txt```
 4. ```pip install -e .```
 
-End users can install through (does not include saved models or example datasets):
+End users can install the newest release with:
 
+1. ```git clone https://github.com/acse-zrw20/DD-GAN-AE.git --branch v1.0.0```
+2. ```cd ./DD-GAN-AE```
+3. ```pip install -r requirements.txt```
+4. ```pip install -e .```
 
+The release does not include any saved models or datasets
 
 <!-- USAGE EXAMPLES -->
 
