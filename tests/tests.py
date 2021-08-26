@@ -102,6 +102,4 @@ def test_mse_pi():
 
     snapshots_2 = snapshots_1 + 0.1
 
-    loss(snapshots_1, snapshots_2))
-
-    assert 2 == loss(np.array([1, 1]), np.array([0, 0])).numpy()
+    assert 2 == loss(snapshots_1, snapshots_2).numpy()
