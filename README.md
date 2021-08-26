@@ -7,6 +7,7 @@
 [![Documentation Status](https://github.com/acse-zrw20/DD-GAN-AE/actions/workflows/docs.yml/badge.svg)](https://github.com/acse-zrw220/DD-GAN-AE/blob/main/docs/docs.pdf)
 ![example workflow](https://github.com/acse-zrw20/DD-GAN-AE/actions/workflows/health.yml/badge.svg)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+ [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/acse-zrw20/DD-GAN-AE/main?filepath=examples%2Fgetting_started.ipynb)
 
 <!-- PROJECT LOGO -->
 
@@ -87,9 +88,14 @@ Developers can follow these steps to install:
 3. ```pip install -r requirements.txt```
 4. ```pip install -e .```
 
-End users can install through (does not include saved models or example datasets):
+End users can install the newest release with:
 
+1. ```git clone https://github.com/acse-zrw20/DD-GAN-AE.git --branch v1.0.0```
+2. ```cd ./DD-GAN-AE```
+3. ```pip install -r requirements.txt```
+4. ```pip install -e .```
 
+The release does not include any saved models or datasets
 
 <!-- USAGE EXAMPLES -->
 
@@ -105,7 +111,8 @@ Training a model for reconstruction:
 ```python
 from ddganAE.models import CAE
 from ddganAE.architectures.cae.D2 import *
-import tf
+import numpy as np
+import tensorflow as tf
 
 input_shape = (55, 42, 2)
 dataset = np.load(...) # dataset with shape (<nsamples>, 55, 42, 2)
@@ -114,12 +121,12 @@ optimizer = tf.keras.optimizers.Adam() # Define an optimizer
 initializer = tf.keras.initializers.RandomNormal() # Define a weights initializer
 
 # Define any encoder and decoder, see docs for more premade architectures
-encoder, decoder = build_omata_encoder_decoder(input_shape, 10, initializer)
+encoder, decoder = build_wider_omata_encoder_decoder(input_shape, 10, initializer)
 
 cae = CAE(encoder, decoder, optimizer) # define the model
 cae.compile(input_shape) # compile the model
 
-cae.train(dataset, 200) # train the model with 200 epochs
+cae.train(dataset, 200, batch_size=32) # train the model with 200 epochs, batch_size needs to be smaller than nsamples
 
 recon_dataset = cae.predict(dataset) # pass the dataset through the model and generate outputs
 ```
@@ -129,7 +136,9 @@ Training a model for prediction:
 ```python
 from ddganAE.models import Predictive_adversarial
 from ddganAE.architectures.svdae import *
-import tf
+from ddganAE.architectures.discriminators import *
+import tensorflow as tf
+import numpy as np
 
 latent_vars = 100  # Define the number of variables the predictive model will use in discriminator layer
 n_predicted_vars = 10 # Define the number of predicted variables
@@ -147,21 +156,25 @@ discriminator = build_custom_discriminator(latent_vars, initializer)
 
 pred_adv = Predictive_adversarial(encoder, decoder, discriminator, optimizer)
 pred_adv.compile(n_predicted_vars, increment=False)
-pred_adv.train(dataset, 200)
+pred_adv.train(dataset, 200, val_size=0.1)
 
 # Select the boundaries with all timesteps
 boundaries = np.zeros((2, 10, <ntimesteps>))
-boundaries[0], boundaries[1]  = dataset[2], dataset[9] # third and 10th subdomains used as boundaries
+boundaries[0], boundaries[1]  = dataset[2], dataset[9] # third and tenth subdomains used as boundaries
 
 # Select the initial values at the first timestep
 init_values = dataset[3:9, :, 0]
 
-predicted_latent = pred_adv.predict(boundaries, init_values, 50, # Predict 50 steps forward 
+predicted_latent = pred_adv.predict(boundaries, init_values, 10, # Predict 10 steps forward 
                                     iters=4, sor=1, pre_interval=False)
 ```
 
 ## Examples
 
+For beginners the following Binder link will open an example notebook with the above getting started examples that can be executed right away:
+* Getting started examples on flow past cylinder dataset [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/acse-zrw20/DD-GAN-AE/main?filepath=examples%2Fgetting_started.ipynb)
+
+For anyone curious to go a bit further and see how the report results were produced see:
 * Compression usage examples on flow past cylinder dataset [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1oxLf-SayXWrG_grniEptbmIwhMo4XMCD#offline=true&sandboxMode=true)
 * Compression usage examples on slug flow dataset [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1hsRsPp64dbQz0f3zG7nwcENvSKoCScoM#offline=true&sandboxMode=true)
 * Prediction usage examples on slug flow dataset [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1X5pm2K_JdwnMXniuJNMIk6zkxOdMb19i#offline=true&sandboxMode=true)
@@ -177,7 +190,7 @@ _For more information, please refer to the report in this repo_
 
 Note that the above notebooks come with their original outputs that were also included in the results of the accompanying report. However, due to the fact that the datasets were too large (over 150gb for the SF dataset) to be shared over github any user interacting with this package cannot reproduce the results unless they have the datasets. Small test datasets are provided in `tests/data` to show the workings of the models and these can be used in the notebooks. Furthermore the models that were used to produce the final results are stored in `models`.
 
-Please contact me for the original datasets, after they are loaded into the aforementioned notebooks the results can be reproduced.
+Please contact me for the original datasets, after they are loaded into the above notebooks the results can be reproduced.
 
 ## Hyperparameter optimization (wandb)
 

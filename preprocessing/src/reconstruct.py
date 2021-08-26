@@ -96,11 +96,11 @@ def reconstruct(
     Args:
         snapshot_data_location (str, optional): location of sample vtu file.
                                                 Defaults to
-                                                "./../../data/FPC_Re3900_2D_CG_new/".
+                                                `./../../data/FPC_Re3900_2D_CG_new/`.
         snapshot_file_base (str, optional): file base of sample vtu file.
-                                            Defaults to "fpc_".
+                                            Defaults to `fpc_`.
         reconstructed_file (str, optional): reconstruction data file. Defaults
-                                            to "reconstruction_test.npy".
+                                            to `reconstruction_test.npy`.
         xlength (float, optional): length in x direction. Defaults to 2.2.
         ylength (float, optional): length in y direction. Defaults to 0.41.
         nTime (int, optional): number of timesteps. Defaults to 300.

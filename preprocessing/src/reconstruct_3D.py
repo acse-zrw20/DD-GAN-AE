@@ -139,7 +139,7 @@ def reconstruct_3D(
     Args:
         out_file_base (str, optional): Example file base, will also be used for
                                    original velocity and alpha. Defaults to
-                                   "slug_255_exp_projected_".
+                                   `slug_255_exp_projected_`.
         nGrids (int, optional): Number of grids. Defaults to 10.
         offset (int, optional): Time offset. Defaults to 0.
         nTime (int, optional): Number of timesteps. Defaults to 2.

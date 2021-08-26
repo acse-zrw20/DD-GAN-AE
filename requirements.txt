@@ -6,3 +6,4 @@ wandb
 flake8
 pytest-cov
 vtk
+matplotlib

@@ -44,17 +44,17 @@ def get_subgrid_snapshots(
 
     Args:
         data_dir (str, optional): Input data folder.
-            Defaults to './../../data/FPC_Re3900_2D_CG_old/'.
+            Defaults to `./../../data/FPC_Re3900_2D_CG_old/`.
         data_file_base (str, optional): Base filename, timesteps will be
-            appended. Defaults to 'fpc_2D_Re3900_CG_'.
+            appended. Defaults to `fpc_2D_Re3900_CG_`.
         out_dir (str, optional): Output data folder. Defaults to
-            './../../data/processed/'.
+            `./../../data/processed/`.
         nTime (int, optional): Number of timesteps to include in snapshots
             matrix. Defaults to 200.
         offset (int, optional): At which time level to start taking the
             snapshots. Defaults to 500.
         field_names (list, optional): Names of fields to include from vtu
-            data file. Defaults to ['Velocity'].
+            data file. Defaults to [`Velocity`].
         nGrids (int, optional): Number of grids of decomposed domain,
             choose 1 or 4. Defaults to 4.
         xlength (float, optional): Length of interpolated domain in x.

@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to DD-GAN's documentation!
-==================================
+Welcome to DD-GAN-AE's documentation!
+======================================
 
 .. toctree::
    :maxdepth: 2
@@ -46,7 +46,8 @@ Hyperparameter optimization
 
 This package contains some functionality for doing hyperparameter optimization
 with the Weights and Biases platform. Below is the documentation for the
-functions that handle this for the flow past cylinder and slug flow problems.
+functions that handle this for the flow past cylinder and slug flow problems
+and predictive models.
 
 Flow Past Cylinder
 --------------------------
@@ -57,6 +58,12 @@ Flow Past Cylinder
 Slug Flow
 --------------------------
 .. automodule:: wandb.train_wandb_sf
+   :members:
+   :undoc-members:
+
+Predictive models
+--------------------------
+.. automodule:: wandb.train_wandb_pred
    :members:
    :undoc-members:
 
@@ -110,5 +117,33 @@ Discriminator Architectures
 Mixed architectures for SVD Autoencoder and predictive networks
 ---------------------------------------------------------------
 .. automodule:: architectures.svdae.svdae
+   :members:
+   :undoc-members:
+
+Preprocessing
+===========================
+
+Finally, separately from the package this repo contains some preprocessing
+utilities which were note included in the main package due to the fact that
+they are specific to the dataset we are using in the research presented in
+the accompanying report.
+
+.. automodule:: get_pod_coeffs
+   :members:
+   :undoc-members:
+
+.. automodule:: get_snapshots_3D
+   :members:
+   :undoc-members:
+
+.. automodule:: get_snapshots
+   :members:
+   :undoc-members:
+
+.. automodule:: reconstruct
+   :members:
+   :undoc-members:
+
+.. automodule:: reconstruct_3D
    :members:
    :undoc-members:
