@@ -5,7 +5,7 @@
 #PBS -lwalltime=24:00:00
 set -vx
 
-cd /rds/general/user/zrw20/home/DD-GAN-AE/submodules/DD-GAN/preprocessing/src
+cd /rds/general/user/zrw20/home/DD-GAN-AE/preprocessing/src
 module purge
 module load anaconda3/personal
 source activate py2
