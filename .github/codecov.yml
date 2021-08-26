@@ -3,6 +3,7 @@ ignore:
   - "ddganAE/wandb/vtktools.py" # Ignore this, not made by me
   - "preprocessing/src/utils.py" # Ignore this, not made by me
   - "submodules" # Ignore submodules
-  - "ddganAE/architectures" # The subsequent three are just tested in notebooks through entire workflow
+  - "ddganAE/architectures" # The subsequent three are tested in notebooks through entire workflow
   - "ddganAE/models"
   - "ddganAE/wandb"
+  - "setup.py" # Installation file for pip
