@@ -112,7 +112,7 @@ class mse_weighted:
     def __init__(self) -> None:
         """
         Constructor, name is required for TensorFlow custom losses. Since
-        we only know weights after compiling the model needs to be attributes
+        we only know weights after compiling the weights needs to be attributes
         """
         self.weights = None
         self.__name__ = "mse_weighted"
