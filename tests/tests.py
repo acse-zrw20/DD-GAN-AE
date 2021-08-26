@@ -8,7 +8,7 @@ from pytest import fixture
 import numpy as np
 from tensorflow.keras.layers.experimental import preprocessing
 import tensorflow as tf
-from ddganAE.utils import calc_pod
+from ddganAE.utils import calc_pod, mse_weighted
 from ddganAE.preprocessing import convert_2d
 
 __author__ = "Zef Wolffs"
@@ -79,3 +79,10 @@ def test_convert_2D(snapshots):
         "./tests/data/test_snapshots_fpc_2D_converted.npy")
 
     assert np.allclose(snapshots_corr, snapshots)
+
+
+def test_mse_weighted():
+    loss = mse_weighted()
+    loss.weights = [1, 2]
+
+    assert 3 == loss([1, 1], [0, 0])
