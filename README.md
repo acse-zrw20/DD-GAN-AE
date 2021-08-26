@@ -110,6 +110,7 @@ Training a model for reconstruction:
 ```python
 from ddganAE.models import CAE
 from ddganAE.architectures.cae.D2 import *
+import numpy as np
 import tensorflow as tf
 
 input_shape = (55, 42, 2)
