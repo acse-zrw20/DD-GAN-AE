@@ -1,6 +1,9 @@
 # General code health checks
 name: run-health
-on: [push, pull_request]
+on: 
+  push:
+    branches:
+      - main
 
 jobs:
   # This job installs dependencies and runs flake8
