@@ -88,4 +88,4 @@ def test_mse_weighted():
     loss = mse_weighted()
     loss.weights = np.array([1, 2])
 
-    assert 3 == loss(np.array([1, 1]), np.array([0, 0])).numpy()
+    assert 2 == loss(np.array([1, 1]), np.array([0, 0])).numpy()
