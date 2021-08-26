@@ -76,7 +76,7 @@ Note that for this project testing was mostly done in the form of global runs th
 
 * Python 3.8
 * Tensorflow and other packages in ```requirements.txt```
-* (Optional) GPU with CUDA
+* (Recommended) GPU with CUDA 11
 
 ## Installation
 
