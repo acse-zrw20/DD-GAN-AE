@@ -149,7 +149,7 @@ boundaries = np.zeros((2, 10, <ntimesteps>))
 boundaries[0], boundaries[1]  = dataset[2], dataset[9] # third and 10th subdomains used as boundaries
 
 # Select the initial values at the first timestep
-init_values = val_data[3:9, :, 0]
+init_values = dataset[3:9, :, 0]
 
 predicted_latent = pred_adv.predict(boundaries, init_values, 50, # Predict 50 steps forward 
                                     iters=4, sor=1, pre_interval=False)
