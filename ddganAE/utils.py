@@ -166,7 +166,6 @@ class mse_PI:
         count = 0
 
         for k in range(y_pred.shape[0]):
-            print(k)
             # K is the grid in the batch
             for i in range(1, y_pred.shape[1]-1):
                 # index in x direction
