@@ -90,7 +90,7 @@ Developers can follow these steps to install:
 
 End users can install the newest release with:
 
-1. ```git clone https://github.com/acse-zrw20/DD-GAN-AE.git --branch v1.0.0```
+1. ```git clone https://github.com/acse-zrw20/DD-GAN-AE.git --branch v1.1.0```
 2. ```cd ./DD-GAN-AE```
 3. ```pip install -r requirements.txt```
 4. ```pip install -e .```
