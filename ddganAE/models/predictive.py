@@ -440,7 +440,8 @@ val_data, not both")
         return d_loss, g_loss
 
     def predict(self, boundaries, init_values, timesteps, iters=5, sor=1,
-                pre_interval=False, timestep_print_interval=None):
+                pre_interval=False, timestep_print_interval=None, 
+                save_interval=None, save_path=None):
         """
         Predict in time using boundaries and initial values for a certain
         number of timesteps. The timestep shifts will be done in this function
@@ -475,6 +476,10 @@ val_data, not both")
             if timestep_print_interval is not None and i % \
                timestep_print_interval == 0:
                 print("At timestep number ", i)
+            
+            if save_interval is not None and i % save_interval == 0:
+                np.save(save_path + str(i), pred_vars)
+
 
             # Let's start with a linear extrapolation for the predictions
             if i > 1:
