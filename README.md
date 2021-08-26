@@ -7,6 +7,7 @@
 [![Documentation Status](https://github.com/acse-zrw20/DD-GAN-AE/actions/workflows/docs.yml/badge.svg)](https://github.com/acse-zrw220/DD-GAN-AE/blob/main/docs/docs.pdf)
 ![example workflow](https://github.com/acse-zrw20/DD-GAN-AE/actions/workflows/health.yml/badge.svg)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+ [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/acse-zrw20/DD-GAN-AE/main?filepath=examples%2Fgetting_started.ipynb)
 
 <!-- PROJECT LOGO -->
 
@@ -171,7 +172,7 @@ predicted_latent = pred_adv.predict(boundaries, init_values, 10, # Predict 10 st
 ## Examples
 
 For beginners the following Binder link will open an example notebook with the above getting started examples that can be executed right away:
-* Getting started examples on FPC dataset [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/acse-zrw20/DD-GAN-AE/main?filepath=examples%2Fgetting_started.ipynb)
+* Getting started examples on flow past cylinder dataset [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/acse-zrw20/DD-GAN-AE/main?filepath=examples%2Fgetting_started.ipynb)
 
 For anyone curious to go a bit further and see how the report results were produced see:
 * Compression usage examples on flow past cylinder dataset [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1oxLf-SayXWrG_grniEptbmIwhMo4XMCD#offline=true&sandboxMode=true)
