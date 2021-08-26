@@ -110,7 +110,7 @@ Training a model for reconstruction:
 ```python
 from ddganAE.models import CAE
 from ddganAE.architectures.cae.D2 import *
-import tf
+import tensorflow as tf
 
 input_shape = (55, 42, 2)
 dataset = np.load(...) # dataset with shape (<nsamples>, 55, 42, 2)
@@ -124,7 +124,7 @@ encoder, decoder = build_omata_encoder_decoder(input_shape, 10, initializer)
 cae = CAE(encoder, decoder, optimizer) # define the model
 cae.compile(input_shape) # compile the model
 
-cae.train(dataset, 200) # train the model with 200 epochs
+cae.train(dataset, 200, batch_size=32) # train the model with 200 epochs, batch_size needs to be smaller than nsamples
 
 recon_dataset = cae.predict(dataset) # pass the dataset through the model and generate outputs
 ```
@@ -134,7 +134,8 @@ Training a model for prediction:
 ```python
 from ddganAE.models import Predictive_adversarial
 from ddganAE.architectures.svdae import *
-import tf
+import tensorflow as tf
+import numpy as np
 
 latent_vars = 100  # Define the number of variables the predictive model will use in discriminator layer
 n_predicted_vars = 10 # Define the number of predicted variables
@@ -152,16 +153,16 @@ discriminator = build_custom_discriminator(latent_vars, initializer)
 
 pred_adv = Predictive_adversarial(encoder, decoder, discriminator, optimizer)
 pred_adv.compile(n_predicted_vars, increment=False)
-pred_adv.train(dataset, 200)
+pred_adv.train(dataset, 200, val_size=0.1)
 
 # Select the boundaries with all timesteps
 boundaries = np.zeros((2, 10, <ntimesteps>))
-boundaries[0], boundaries[1]  = dataset[2], dataset[9] # third and 10th subdomains used as boundaries
+boundaries[0], boundaries[1]  = dataset[2], dataset[9] # third and tenth subdomains used as boundaries
 
 # Select the initial values at the first timestep
 init_values = dataset[3:9, :, 0]
 
-predicted_latent = pred_adv.predict(boundaries, init_values, 50, # Predict 50 steps forward 
+predicted_latent = pred_adv.predict(boundaries, init_values, 10, # Predict 10 steps forward 
                                     iters=4, sor=1, pre_interval=False)
 ```
 
