@@ -2,7 +2,7 @@
 
 Predictive Models. Note that these models contain multiple vestigial elements
 from having been autoencoders before. For example the naming of the attributes
-on the classes, e.g. "encoder" and "decoder". Note that in a production release
+on the classes, e.g. `encoder` and `decoder`. Note that in a production release
 these would likely be named differently. However, since other students rely on
 this code in their codebases and use the present version such a change would
 require a coordination with other students as well, for which there was no
@@ -118,12 +118,9 @@ class Predictive_adversarial:
 
         Args:
             input_data (np.ndarray): Input data in shape (<number of domains>,
-                                                          <number of pod
-                                                           coeffcients or
-                                                           latent variables
-                                                           per domain>,
-                                                           <number of
-                                                           timesteps>)
+                                     <number of pod coeffcients or
+                                     latent variables per domain>,
+                                     <number of timesteps>)
 
         Returns:
             tuple: Tuple containing x (samples) and y (targets) datasets
@@ -602,12 +599,9 @@ class Predictive:
 
         Args:
             input_data (np.ndarray): Input data in shape (<number of domains>,
-                                                          <number of pod
-                                                           coeffcients or
-                                                           latent variables
-                                                           per domain>,
-                                                           <number of
-                                                           timesteps>)
+                                     <number of pod coeffcients or
+                                     latent variables per domain>,
+                                     <number of timesteps>)
 
         Returns:
             tuple: Tuple containing x (samples) and y (targets) datasets
