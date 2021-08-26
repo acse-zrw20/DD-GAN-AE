@@ -134,6 +134,7 @@ Training a model for prediction:
 ```python
 from ddganAE.models import Predictive_adversarial
 from ddganAE.architectures.svdae import *
+from ddganAE.architectures.discriminators import *
 import tensorflow as tf
 import numpy as np
 
