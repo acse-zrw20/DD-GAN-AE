@@ -83,7 +83,7 @@ Below is a short description of folders two layers deep. Please look inside of f
     └── data             # Test datasets
 ```
 
-Note that for this project testing was mostly done in the form of global runs through the entire built software in jupyter notebooks and assertion with benchmark test cases such as the flow past cylinder (FPC) dataset. These notebooks be found in the Colab links provided below. Wherever relevant (preprocessing, utils functions, etc...) unittests were written and automatically executed through Github workflows.
+Note that for this project testing was mostly done in the form of global runs through the entire built software in jupyter notebooks and component testing of smaller partitions with benchmark test cases such as the flow past cylinder (FPC) dataset. These notebooks which do this can be found in the Colab links provided below. Wherever relevant (preprocessing, utils functions, etc...) unittests were written and automatically executed through Github workflows, these are included in the Codecov report displayed above.
 
 ## Prerequisites
 
