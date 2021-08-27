@@ -58,20 +58,32 @@ Read the [documentation](https://github.com/acse-zrw20/DD-GAN-AE/blob/main/docs/
 
 <!-- GETTING STARTED -->
 
-- `ddganAE` contains the main source code of the developed package with four subfolders: 
-  - `architectures` functions as a library of model architectures
-  - `wandb` contains some subroutines for hyperparameter-optimizing the developed models with wandb
-  - `models` contains the main logic that the implemented models use, everything except for the architecture
-  - `preprocessing` contains any preprocessing subroutines included in the package.
-- `docs` contains the accompanying documentation.
-- `examples` contains example notebooks. Links to their Colab versions which can be readily executed are also provided below. This folder contains a subfolder called models with its own readme which explains more about the saved models which were included for reproduceability.
-- `hpc` contains bash scripts for interacting with Imperial College London's Research Computing Service (high performance computer). Note that this folder also contains a subfolder titled `Colab` with notebooks for running hyperparameter optimization on Google Colab.
-- `images` contains any accompanying images.
-- `preprocessing` contains some preprocessing functions specific to the data used in this research and thus not included in the package.
-- `submodules` contains any relevant submodules.
-- `tests` contains any tests written for the produced package and example datasets. These datasets can be used in the example notebooks mentioned above and provided below in the form of Colab notebooks.
+Below is a short description of folders two layers deep. Please look inside of folders to see actual built python files and notebooks, each of which contain docstrings at the top:
 
-Note that for this project testing was mostly done in the form of global runs through the entire built software in jupyter notebooks and assertion with benchmark test cases such as the flow past cylinder (FPC) dataset. These notebooks be found in the Colab links provided below. Wherever relevant (preprocessing, utils functions, etc...) unittests were written and automatically executed through Github workflows.
+```
+.
+├── ddganAE
+│   ├── architectures    # Library of architectures
+│   ├── models           # Logic of implemented models
+│   ├── preprocessing    # General preprocessing functions
+│   └── wandb            # Package wandb hyperparam-opt interaction
+├── docs
+│   └── source           # Documentation source code for Sphinx
+├── examples             # Example notebooks (also Colab and Binder links below)
+│   └── models           # Stored models for reproduceability. Contains readme
+├── hpc                  # Various ICL HPC bash scripts
+│   └── colab            # Colab notebooks to interact with wandb for hyperparam-opt
+├── images               # Various package-related images
+├── preprocessing        # Contains readme
+│   ├── src              # Dataset-specific preprocessing functions
+│   └── tests            # Preprocessing tests
+├── submodules        
+│   └── DD-GAN           # Jón Atli Tómasson's DD-GAN package
+└── tests                # Package tests
+    └── data             # Test datasets
+```
+
+Note that for this project testing was mostly done in the form of global runs through the entire built software in jupyter notebooks and component testing of smaller partitions with benchmark test cases such as the flow past cylinder (FPC) dataset. These notebooks which do this can be found in the Colab links provided below. Wherever relevant (preprocessing, utils functions, etc...) unittests were written and automatically executed through Github workflows, these are included in the Codecov report displayed above.
 
 ## Prerequisites
 
@@ -90,7 +102,7 @@ Developers can follow these steps to install:
 
 End users can install the newest release with:
 
-1. ```git clone https://github.com/acse-zrw20/DD-GAN-AE.git --branch v1.0.0```
+1. ```git clone https://github.com/acse-zrw20/DD-GAN-AE.git --branch v1.1.0```
 2. ```cd ./DD-GAN-AE```
 3. ```pip install -r requirements.txt```
 4. ```pip install -e .```
